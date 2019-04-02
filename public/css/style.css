@@ -1,0 +1,79 @@
+html,body {
+  margin: 0px;
+  padding: 0px;
+  font-size: 0.9em;
+}
+nav{
+  padding-top:0 !important;
+  padding-bottom: 0 !important;
+}
+.navbar-nav>li>a{
+  color:#84110a !important;
+  padding-top:0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  text-decoration: none !important;
+  }
+.navbar-nav>li>a.dropdown-item{
+  color:#84110a !important;
+  text-decoration: none;
+}
+.navbar-nav>li>a:hover{
+  text-decoration: none;
+  border-bottom: 1px solid #660505;
+}
+.icon-sm{
+  width: 1rem;
+  height: 1rem;
+}
+.icon-md{
+  width: 2rem;
+  height: 2rem;
+}
+  
+.icon-lg{
+  width: 3rem;
+  height: 3rem;
+}
+  
+.icon-xl{
+  width: 4rem;
+  height: 4rem;
+}
+
+.fa-clickable{
+  cursor:pointer;
+  outline:none;
+}
+  fieldset{
+  border: 1px solid #C1C1C1;
+  padding: 10px;
+  border-radius: 5px;
+  line-height: 1.5em;
+} 
+
+legend{
+  border-style: none;
+  border-width: 0;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 0;
+  width: auto;
+  padding: 0 10px;
+}
+#selectedContact{
+  display: none;
+}
+#reduced{
+  font-size: 8px !important;
+  font-weight: normal !important;
+}
+#loading,#records-list,#bdsDoc,#mcsDoc,#bdsValue,#mcsValue,#bdsTime,#mcsTime,#cssTime,#bdsQuality,#mcsQuality,#cssQuality,#bdsBusiness,#mcsBusiness,#cssBusiness,#Phase2,#doPhase1,#Phase3,#submitTargets{
+  display: none;
+}
+.error-marker {
+  border: 1px solid #f00;
+}
+
+#warn{
+  z-index: 99999 !important;
+}

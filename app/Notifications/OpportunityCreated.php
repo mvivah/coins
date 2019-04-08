@@ -6,19 +6,19 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use App\Opportunity;
 class OpportunityCreated extends Notification
 {
     use Queueable;
-
+    public $opportunity;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Opportunity $opportunity)
     {
-        //
+       $this->opportunity = $opportunity;
     }
 
     /**

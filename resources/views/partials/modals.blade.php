@@ -68,7 +68,7 @@
                 <div class="col-md-6">
                 <label>Team Leader:</label>
                 <select name="team_leader" id="team_leader" class="form-control">
-                        <option value="">-- Choose --</option>
+                        <option value="" disabled selected>-- Choose --</option>
                         @foreach(App\User::all() as  $user)
                         <option value="{{$user->id}}">{{$user->name}}</option>
                         @endforeach                                   
@@ -117,6 +117,109 @@
     </div>
 </div>
 
+{{--Opportunities--}}
+<div class="modal fade" id="add_opportunity" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form class="form-group" id="opportunityForm" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="opportunity_title">Create Opportunity</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>           
+                <div class="modal-body">
+                    @csrf
+                    <input type="hidden" name="opportunity_id" id="opportunity_id">
+                    <div class="form-row">
+                        <label for="opportunity_name">Opportunity Name:</label>
+                        <textarea name="opportunity_name" id="opportunity_name" class="form-control" rows="2"  placeholder="Enter opportunity"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-9">
+                            <label for="contacts">Contact Name</label>
+                                <input type="select-one" autocomplete="off" id="thisContact" class="form-control" placeholder="Type contact name here...">
+                            <select id="selectedContact" class="form-control" placeholder="Select a contact..." tabindex="1"></select>
+                            <input type="hidden" name="contact_id" id="the_contact_id">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputCountry">Country</label>
+                            <input list="countryList" name="country" id="country" class="form-control">
+                            <datalist id="countryList">
+                                {{ getCountry()}}                                                                          
+                            </datalist>
+                        </div> 
+                    </div>      
+                    <div class="form-row ">
+                        <div class="form-group col-md-7">
+                            <label for="inputProject">Funder</label>
+                            <input type="text" class="form-control" name="funder" id="funder" placeholder="Enter Funder's name" value="{{old('funder')}}">
+                        </div>
+                        <div class="form-group col-md-2">
+                                <label for="assigned_team">Team </label>
+                                <select name="team_id" id="assignedTeam" class="form-control">
+                                    <option value="" disabled selected>-- Choose Team--</option>
+                                    @foreach(App\Team::all() as  $team)
+                                        <option value="{{$team->id}}">{{$team->team_code}}</option>
+                                    @endforeach
+                                </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputType">Type</label>
+                            <select name="type" id="type" class="form-control">
+                                <option value="" disabled selected>-- Choose Type--</option>
+                                @foreach(['Pre-Qualification', 'EOI', 'Proposal'] as $value =>$type)
+                                <option value="{{ $type }}">{{ $type }} </option>
+                                @endforeach
+                            </select>
+                        </div>                               
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputRef">Revenue (USD)</label>
+                            <input type="number" class="form-control" name="revenue" id="revenue" placeholder="Revenue">
+                        </div>                   
+                        <div class="form-group col-md-4">
+                            <label for="source">Leads Source</label>
+                            <select id="lead_source"  name="lead_source" class="form-control">
+                                <option value="" disabled selected>-- Choose Leads Source--</option>
+                                @foreach(['Cold call', 'Existing customer', 'Self Generated', 'Employee', 'Partner', 'Public Relations', 'Direct Mail', 'Conference', 'Trade Show', 'website', 'word of mouth', 'Email', 'Compaign', 'other'] as $value)
+                                <option value="{{$value}}">{{$value}}</option> 
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="sales_stage">Sales Stage</label>
+                            <select name="sales_stage" id="sales_stage" class="form-control">
+                                <option value="" disabled selected>-- Choose Stage--</option>
+                                @foreach(['Under Qualification','Under Preparation','Under Review','Submitted','Not Submitted','Did Not Persue','Dropped','Closed Won','Closed Lost'] as $value =>$sales_stage)
+                                <option value="{{ $sales_stage }}">{{ $sales_stage }} </option>
+                                @endforeach
+                            </select>
+                        </div>                      
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="external_deadline">Expected Close Date</label>
+                            <input type="date" name="external_deadline" id="external_deadline" class="form-control">  
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="internal_deadline">Internal Deadline</label>
+                            <input type="date" name = "internal_deadline" id="internal_deadline" class="form-control" >
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="Probability">Probability(%)</label>
+                            <input type="number" name="probability" id="probability" class="form-control"  placeholder="Probability %">
+                        </div>                                          
+                    </div>
+                </div>
+                {{-- Modal footer --}}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-danger"><i class="fa fa-save"></i> Save</button>
+                </div>
+            </form>   
+        </div>
+    </div>
+</div>
+
 {{-- Timesheets --}}
 <div class="modal fade bs-example" id="addTimesheet" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -133,7 +236,7 @@
                     <div class="col-md-6">
                         <label>Beneficiary:</label>
                         <select name="beneficiary" id="beneficiary" class="form-control getBeneficiary">
-                            <option>- Select Beneficiary -</option>
+                            <option value="" disabled selected>- Select Beneficiary -</option>
                             <option value="Business Development">Business Development</option>
                             <option value="Opportunities">Opportunities and Projects</option>
                             <option value="Administration">Administration</option>
@@ -196,7 +299,7 @@
                         <div class="col-md-3">
                             <label>OM Number:</label>
                             <input type="text" id="omnumber" class="form-control" readonly>
-                            <input type="hidden" name="opportunity_id" id="opportunity_id">
+                            <input type="hidden" name="opportunity_id" id="this_opportunity_id">
                         </div>
                         <div class="col-md-5">
                             <label>Bid opening date:</label><br>
@@ -346,7 +449,7 @@
                             <div class="col-md-4">
                                 <label>Reporting to</label>
                                 <select name="reportsTo" id="reportsTo" class="form-control">
-                                    <option value="">-- Choose --</option>
+                                    <option value="" disabled selected>-- Choose --</option>
                                     @foreach(App\User::all() as  $user)
                                     <option value="{{$user->name}}">{{$user->name}}</option>
                                     @endforeach                                   
@@ -466,7 +569,7 @@
                         <input type="hidden" name="project_id" id="projectAssociate">
                         <label>Associate Name</label>
                         <select name="associate_id" class="form-control">
-                            <option value="">--Choose associate--</option>
+                            <option value="" disabled selected>--Choose associate--</option>
                             @foreach(App\Associate::all() as $associate)
                             <option value="{{ $associate->id }}">{{ $associate->associate_name }}</option>
                             @endforeach
@@ -597,7 +700,7 @@
                             <input type="hidden" name="opportunity_id" id="the_opportunity_id">
                             <input type="hidden" name="project_id" id="project_id">
                             <select class="form-control" id="the_user_id" name="user_id">
-                                <option value="">Choose consultant</option>
+                                <option value="" disabled selected>Choose consultant</option>
                                 @foreach(App\User::all() as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
@@ -647,13 +750,14 @@
                 <div class="col-md-6">
                     <label>Task Status</label>
                     <select class="form-control" name="task_status" id="task_status">
-                        <option value="Completed">Completed</option>
-                        <option value="Running">Running</option>
-                        <option value="Paused">Paused</option>
+                        <option value="Not Started">Not Started</option>
+                        <option value="Working on it">Working on it</option>
+                        <option value="Done">Done</option>
+                        <option value="Canceled">Canceled</option>
                     </select>
                 </div>
             </div>
-            <div class="row" id="taskUsers">
+            <div class="row">
                 <div class="col-md-6">
                     <label>Assigned Consultants</label>
                     <select id="taskStaff" name="user_id[]" class="form-control" multiple>
@@ -719,7 +823,7 @@
                 <div class="col-md-8">
                     <label>Beneficiary:</label>
                     <select type="text" name="service_beneficiary" id="service_beneficiary" class="form-control">
-                        <option value=""> - Choose - </option>
+                        <option value="" disabled selected> - Choose - </option>
                         <option value="Business Development"> Business Development </option>
                         <option value="Opportunities">Opportunities</option>
                         <option value="Administration">Administration</option>
@@ -764,7 +868,7 @@
                             <label>Leave Type</label>
                             <select class="form-control" name="leavesetting_id" id="the_leavesetting">
                                 @foreach(App\Leavesetting::all() as  $leavesetting)
-                                <option value="{{$leavesetting->id}}">{{$leavesetting->leave_type}}</option>
+                                <option value="{{$leavesetting->id}}">{{$leavesetting->leave_type}} Leave</option>
                                 @endforeach
                             </select>
                             <input type="hidden" name="leave_id" id="leave_id">
@@ -843,38 +947,52 @@
 </div>
 
 {{-- Deliverables --}}
-<div class="modal fade" id="newDeliverable" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="add_deliverables" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title">Create Deliverable</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+                <h5 class="modal-title" id="deliverable_title">Create Deliverable</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body">
-                <form class="form-group" method="POST" id="deliverablesForm" autocomplete="off">
-                        @csrf
-                    <div class="row">
+            <form class="form-group" id="deliverablesForm" autocomplete="off">
+                <div class="modal-body">
+                    @csrf
+                    <input type="hidden" name="deliverable_id" id="deliverable_id">
+                    <input type="hidden" name="project_id" id="the_project_id">
+                    <div class="row" id="project_deliverable">
                         <div class="col-md-12">
                             <label>Deliverable Name:</label>
-                            <input type="text" name="deliverable_name"  id="deliverable_name" class="form-control">
-                            <input type="hidden" name="project_id" id="projectDeliverable">
-                            <input type="hidden" name="deliverable_id" id="deliverable_id">
+                            <input type="text" name="deliverable_name"  id="deliverable_name_project" class="form-control">
                         </div>
                     </div>
+                    <div class="row" id="opportunity_deliverable">
+                            <div class="col-md-12">
+                                <label>Deliverable Name:</label>
+                                <select type="text" name="deliverable_name"  id="deliverable_name_opportunity" class="form-control">
+                                    <option value="" disabled selected>Choose Deliverable</option>
+                                    <option value="Qualified Opportunity">Qualified Opportunity</option>
+                                    <option value="Prepared Document">Prepared Document</option>
+                                    <option value="Reviewed Document">Reviewed Document</option>
+                                    <option value="Submitted Document">Submitted Document</option>
+                                </select>
+                            </div>
+                        </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label>Status:</label>
                             <select type="text" name="deliverable_status" id="deliverable_status" class="form-control">
-                                <option value="Complete">Complete</option>
-                                <option value="Running">Running</option>
-                                <option value="Paused">Paused</option>
+                                <option value="" disabled selected>Choose Status</option>
+                                <option value="Not Started">Not Started</option>
+                                <option value="Working on it">Working on it</option>
+                                <option value="Done">Done</option>
+                                <option value="Canceled">Canceled</option>
                             </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <label>Completion date:</label>
-                            <input type="date"  name="deliverable_complition" id="deliverable_complition" class="form-control">
+                            <input type="date"  name="deliverable_completion" id="deliverable_completion" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -1043,7 +1161,7 @@
                         <div class="col-md-4"> 
                             <label for="document_type">Document Type: </label>
                             <select class="form-control {{ $errors->has('document_type') ? ' is-invalid' : '' }}" name="document_type"  id="document_type" required>
-                                <option value="">- Choose -</option>
+                                <option value="" disabled selected>- Choose -</option>
                                 <option value="Tenders">Tender</option>
                                 <option value="Proposals">Proposal</option>
                                 <option value="Reports">Report</option>
@@ -1263,19 +1381,10 @@
                 {{-- Modal body --}}
                 <div class="modal-body">
                     @csrf
+                    <p class="text-danger text-center">Please <strong>NOTE</strong> that assessments are availed only once for the current month</p>
                     <input type="hidden" name="user_id" id="consultant_id">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="assessment_period">Assessment Period</label>
-                            <input type="text" name="assessment_period" id="assessment_period" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-9">
-                            
-                            <p class="text-danger mt-5">Please <strong>NOTE</strong> that assessments are availed only once for the current month</p>
-                        </div>
-                    </div>
-                    <div class="row" id="assessment-page">
-
+                    <input type="hidden" name="assessment_period" id="assessment_period">
+                    <div class="row" id="assessment_page">
                     </div>
                 </div>
                 {{-- Modal footer --}}
@@ -1304,7 +1413,7 @@
                         <div class="col-md-9">
                             <label for="target_category">Category</label>
                             <select type="text" name="target_category" id="target_category" class="form-control">
-                                <option value=""> -Select Category- </option>
+                                <option value="" disabled selected> -Select Category- </option>
                                 <option value="Technical performance- Quantitative">Technical performance- Quantitative</option>
                                 <option value="Technical Performance-Qualitative">Technical Performance-Qualitative</option>
                                 <option value="Business Development">Business Development</option>

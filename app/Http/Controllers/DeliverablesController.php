@@ -44,16 +44,17 @@ class DeliverablesController extends Controller
             'project_id'=>'required',
             'deliverable_name'=>'required',
             'deliverable_status'=>'required',
-            'deliverable_complition'=>'required|date',
+            'deliverable_completion'=>'required|date',
         ]);
+        
         Deliverable::create([
             'project_id' => $data['project_id'],
             'deliverable_name' => $data['deliverable_name'],
             'deliverable_status' => $data['deliverable_status'],
-            'deliverable_complition' => $data['deliverable_complition'],
+            'deliverable_completion' => $data['deliverable_completion'],
             'created_by'=>Auth::user()->id
         ]);
-        return ['Deliverable created successfully'];
+        return ['Success'=>'Deliverable created successfully'];
     }
 
     /**
@@ -64,7 +65,7 @@ class DeliverablesController extends Controller
      */
     public function show($id)
     {
-        $deliverable = Deliverable::find($id);
+        $deliverable = Deliverable::findOrFail($id);
         return $deliverable;
     }
 
@@ -91,12 +92,12 @@ class DeliverablesController extends Controller
         $data = $request->validate([
             'deliverable_name'=>'required',
             'deliverable_status'=>'required',
-            'deliverable_complition'=>'required|date',
+            'deliverable_completion'=>'required|date',
         ]);
         $deliverable->update([
             'deliverable_name' => $data['deliverable_name'],
             'deliverable_status' => $data['deliverable_status'],
-            'deliverable_complition' => $data['deliverable_complition'],
+            'deliverable_completion' => $data['deliverable_completion'],
             'updated_by'=>Auth::user()->id
         ]);
         return ['Deliverable updated successfully'];

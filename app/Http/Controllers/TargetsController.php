@@ -104,7 +104,7 @@ class TargetsController extends Controller
      */
     public function edit($id)
     {
-        return Target::find($id);
+        return Target::findOrFail($id);
     }
 
     /**

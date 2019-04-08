@@ -27,30 +27,27 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarcollapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a href="/contacts" class="nav-link"><i class="far fa-address-book"></i> Contacts</a></li>
-                    <li class="nav-item"><a href="/associates" class="nav-link"><i class="fas fa-user-graduate"></i> Associates</a></li>
-                    <li class="nav-item"><a href="/opportunities" class="nav-link"><i class="fa fa-th-list"></i> Opportunities</a></li>
-                    <li class="nav-item"><a href="/projects" class="nav-link"><i class="fa fa-database"></i> Projects</a></li>
-                    <li class="nav-item"><a href="/partners" class="nav-link"><i class="fas fa-users"></i> Partner Firms</a></li>
-                    <li class="nav-item"><a href="/reports" class="nav-link"><i class="fa fa-clipboard-check"></i> Reports</a></li>
+                    <li class="nav-item"><a href="/contacts" class="nav-link"><i class="far fa-address-card fa-lg"></i> Contacts</a></li>
+                    <li class="nav-item"><a href="/associates" class="nav-link"><i class="fas fa-user-graduate fa-lg"></i> Associates</a></li>
+                    <li class="nav-item"><a href="/opportunities" class="nav-link"><i class="fa fa-cart-plus fa-lg"></i> Opportunities</a></li>
+                    <li class="nav-item"><a href="/projects" class="nav-link"><i class="fa fa-file-contract fa-lg"></i> Projects</a></li>
+                    <li class="nav-item"><a href="/partners" class="nav-link"><i class="fas fa-city fa-lg"></i> Partners</a></li>
+                    <li class="nav-item"><a href="/reports" class="nav-link"><i class="fa fa-file-invoice fa-lg"></i> Reports</a></li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown mr-3">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-circle-o"></i> {{ Auth::user()->name }}</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="/support"><i class="far fa-life-ring"></i> Support</a>
-                            <a class="dropdown-item" href="/users/{{Auth::user()->id}}"><i class="fas fa-user-cog"></i> Profile</a>
+                            <a class="dropdown-item" href="/users"><i class="fa fa-users fa-lg"></i>  Staff</a>
+                            <a class="dropdown-item" href="/support"><i class="far fa-life-ring fa-lg"></i> Support</a>
+                            <a class="dropdown-item" href="/users/{{Auth::user()->id}}"><i class="fas fa-user-cog fa-lg"></i> Profile</a>
                             @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                            <a class="dropdown-item" href="/teams/{{Auth::user()->team_id}}"><i class="fas fa-sitemap"></i> My Team</a>
+                            <a class="dropdown-item" href="/teams/{{Auth::user()->team_id}}"><i class="fas fa-sitemap fa-lg"></i> My Team</a>
+
+                            <a class="dropdown-item" href="/admin"><i class="fas fa-cogs fa-lg"></i> Admin</a>
                             @endif
-                            <a class="dropdown-item" href="/users"><i class="fa fa-users"></i>  Staff</a>
-                                <a class="dropdown-item" href="/admin"><i class="fas fa-cogs"></i> Admin</a>
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fa fa-power"></i>
+                                <i class="fas fa-power-off fa-lg"></i>
                                 {{ __('Logout') }}
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

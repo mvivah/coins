@@ -13,7 +13,7 @@ class CreateTaskUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_users', function (Blueprint $table) {
+        Schema::create('task_user', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('task_id');
             $table->string('user_id');

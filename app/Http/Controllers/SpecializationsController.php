@@ -74,7 +74,7 @@ class SpecializationsController extends Controller
      */
     public function edit($id)
     {
-        return Specialization::find($id); 
+        return Specialization::findOrFail($id); 
     }
 
     /**

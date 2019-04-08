@@ -216,8 +216,8 @@ class HomeController extends Controller
     }
 
     public function admin(){
-        if(Gate::allows('isConsultant')){
-            abort(404,"Sorry, You cannot access this page");
+        if(!Gate::check('isAdmin') || !Gate::check('isDirector')){
+            abort(404);
         }else{
             $leaveforwards = Leaveforward::all();
             $roles = Role::all();
@@ -239,15 +239,9 @@ class HomeController extends Controller
         }
     }
   
-    //List of all staff and their contacts
-    public function generatePDF($content){
-        $pdf = PDF::loadview('pages.pdf',$content);
-        return $pdf->download('Document.pdf');
-    }
-
     public function makeSummary($type){
         $teams = Team::all();
-        $sales_stages = ['Lost','Won','Preparation','Review','Submitted','Not submitted','Dropped'];      
+        $sales_stages = ['Closed Lost','Closed Won','Under Preparation','Under Review','Submitted','Not submitted','Dropped'];      
         $total = [];
         $index = 0;
         foreach($teams as $team ):

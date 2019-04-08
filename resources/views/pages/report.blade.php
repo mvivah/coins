@@ -28,13 +28,13 @@
                             @foreach($proposals as $proposal)       
                             <tr>
                                 <th scope="row">{{$proposal['team']}}</th>
-                                <td>{{$proposal['preparation']}}</td>
-                                <td>{{$proposal['review']}}</td>
+                                <td>{{$proposal['underpreparation']}}</td>
+                                <td>{{$proposal['underreview']}}</td>
                                 <td>{{$proposal['submitted']}}</td>
                                 <td>{{$proposal['notsubmitted']}}</td>
                                 <td>{{$proposal['dropped']}}</td>
-                                <td>{{$proposal['lost']}}</td>
-                                <td>{{$proposal['won']}}</td>
+                                <td>{{$proposal['closedlost']}}</td>
+                                <td>{{$proposal['closedwon']}}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -59,13 +59,13 @@
                             @foreach($eois as $eoi)       
                             <tr>
                                 <th scope="row">{{$eoi['team']}}</th>
-                                <td>{{$eoi['preparation']}}</td>
-                                <td>{{$eoi['review']}}</td>
+                                <td>{{$eoi['underpreparation']}}</td>
+                                <td>{{$eoi['underreview']}}</td>
                                 <td>{{$eoi['submitted']}}</td>
                                 <td>{{$eoi['notsubmitted']}}</td>
                                 <td>{{$eoi['dropped']}}</td>
-                                <td>{{$eoi['lost']}}</td>
-                                <td>{{$eoi['won']}}</td>
+                                <td>{{$eoi['closedlost']}}</td>
+                                <td>{{$eoi['closedwon']}}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -89,8 +89,8 @@
                             @foreach($prequalifications as $prequalification)       
                             <tr>
                                 <th scope="row">{{$prequalification['team']}}</th>
-                                <td>{{$prequalification['preparation']}}</td>
-                                <td>{{$prequalification['review']}}</td>
+                                <td>{{$prequalification['underpreparation']}}</td>
+                                <td>{{$prequalification['underreview']}}</td>
                                 <td>{{$prequalification['submitted']}}</td>
                                 <td>{{$prequalification['notsubmitted']}}</td>
                                 <td>{{$prequalification['dropped']}}</td>

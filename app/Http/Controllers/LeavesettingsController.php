@@ -26,7 +26,7 @@ class LeavesettingsController extends Controller
      */
     public function create()
     {
-        //
+        return Leavesetting::all();
     }
 
     /**
@@ -53,7 +53,7 @@ class LeavesettingsController extends Controller
      */
     public function show($id)
     {
-        $leavesetting = Leavesetting::find($id);
+        $leavesetting = Leavesetting::findOrFail($id);
         return $leavesetting;
     }
 

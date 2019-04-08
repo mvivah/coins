@@ -20,16 +20,16 @@
                         <tr><td>Team: </td><td>{{$user->team->team_code}}</td></tr>
                         <tr><td>Role: </td><td>{{$user->role->role_name}}</td></tr>
                         <tr><td>Reports To: </td><td>{{$user->reportsTo}}</td></tr>
-                        @can('isAdmin')
+                        @if(Gate::check('isAdmin') || Gate::check('isDirector'))
                         <tr>
                             <td>
                                 <a href="#" id="editUser" data-id="{{$user->id}}" class="btn btn-outline-danger btn-block" title="Edit Profile"><i class="fa fa-edit"></i> Edit</a>
                             </td>
                             <td>
-                            <a href="#" data-id="{{$user->id}}" data-team="{{$user->team->id}}" id="assess-user" class="btn btn-outline-secondary btn-block" title="Assess User"><i class="fa fa-edit"></i> Assessment</a>
+                                <a href="#" data-id="{{$user->id}}" data-team="{{$user->team->id}}" id="assess-user" class="btn btn-outline-secondary" title="Assess User"><i class="fa fa-edit"></i> Assessment</a>
                             </td>
                         </tr>
-                        @endcan
+                        @endif
                     </table>
                     <ul class="list-group mt-2">
                         <li class="list-group-item active"><h5>My Opportunities <span class="badge badge-light text-danger">{{Auth::user()->opportunities->count()}}</span></h5></li>
@@ -65,38 +65,30 @@
                </div>
                 <div class="col-md-9">
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header text-danger bg-white">
-                                    <strong>Leave Summary</strong>
-                                    <button class="btn btn-outline-danger btn-sm" id="requestLeave" data-user="{{Auth::user()->id}}" style="float:right;">Request <i class="far fa-calendar-plus"></i></button>  
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-sm">
-                                        <tr><td class="text-center"><b>{{date('M - Y')}}</b></td><td></td></tr>
-                                        @foreach($leaves as $leave)
+                        <div class="col-md-6">
+                            <div class="card-body shadow-sm">
+                                <i class="fas fa-plus-circle text-primary mb-2" id="requestLeave" data-user="{{$user->id}}" style="float:right;" title="Book Leave"></i>
+                                <strong>Leave Summaries</strong>
+                                    <table class="table table-striped table-sm">
+                                        <tr><td colspan="2" class="text-center"><strong>Period:</strong> {{date('M - Y')}}</td></tr>
+                                        @foreach($user->leaves as $leave)
                                         <tr><td>{{$leave->leavesetting->leave_type}}</td><td><b>{{$leave->duration}}</b></td></tr>
                                         @endforeach
                                         <tr><td><b>Time Away</b></td><td><b>{{$absent}} days</b></td></tr>
                                     </table>  
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header text-primary">
-                                    <strong>Timesheet</strong>
-                                    <button class="btn btn-outline-primary btn-sm" id="workTime" style="float:right;">Record <i class="far fa-calendar-plus"></i></button> 
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-sm">
-                                        <tr><td class="text-center"><b>{{date('M - Y')}}</b></td><td></td></tr>
-                                        @foreach($timesheets as $timesheet)
+                        <div class="col-md-6">
+                            <div class="card-body shadow-sm">
+                                <i class="fas fa-plus-circle text-primary mb-2" id="workTime" data-user="{{$user->id}}" style="float:right;" title="Add Timesheet"></i>
+                                <strong>Timesheets</strong>
+                                <table class="table table-striped table-sm">
+                                        <tr><td colspan="2" class="text-center"><strong>Period:</strong> {{date('M - Y')}}</td></tr>
+                                    @foreach($user->timesheets as $timesheet)
                                         <tr><td>{{$timesheet->beneficiary}}</td><td><b>{{$timesheet->duration}}</b></td></tr>
-                                        @endforeach
-                                        <tr><td><b>Total Worked</b></td><td><b>{{$worked}} Hours</b></td></tr>
-                                    </table>
-                                </div>
+                                    @endforeach
+                                    <tr><td><b>Total Worked</b></td><td><b>{{$worked}} Hours</b></td></tr>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -164,7 +156,7 @@
                                                 </tr>
                                             </thead>
                                         <tbody>
-                                            @foreach($timesheets as $timesheet)
+                                            @foreach($user->timesheets as $timesheet)
                                             <tr>
                                                 <td><a href="#" class="btn btn-sm btn-danger reviewTimesheet" id="{{$timesheet->id}}">{{$timesheet->activity_date}}</a></td>
                                                 <td>{{$timesheet->duration}} Hours</td>

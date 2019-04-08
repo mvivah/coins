@@ -13,7 +13,7 @@
   </nav>
   <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 p-3 mb-3 border border-info shadow-sm rounded">
+            <div class="col-md-12 p-3 mb-3 border border-primary shadow-sm rounded">
                 <form id="projectsFilterForm">
                     @csrf
                     <div class="form-row">

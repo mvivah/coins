@@ -13,7 +13,7 @@ class CreateAssociateProjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('associate_projects', function (Blueprint $table) {
+        Schema::create('associate_project', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('project_id');
             $table->string('associate_id')->unique();

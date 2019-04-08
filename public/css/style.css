@@ -9,37 +9,30 @@ nav{
 }
 .navbar-nav>li>a{
   color:#84110a !important;
-  padding-top:0.5rem !important;
-  padding-bottom: 0.5rem !important;
-  text-decoration: none !important;
+  padding-top:1rem !important;
+  padding-bottom: 1rem !important;
+
   }
 .navbar-nav>li>a.dropdown-item{
   color:#84110a !important;
-  text-decoration: none;
+  padding-top:1rem !important;
+  padding-bottom: 1rem !important;
 }
-.navbar-nav>li>a:hover{
-  text-decoration: none;
-  border-bottom: 1px solid #660505;
-}
-.icon-sm{
-  width: 1rem;
-  height: 1rem;
-}
-.icon-md{
-  width: 2rem;
-  height: 2rem;
-}
-  
-.icon-lg{
-  width: 3rem;
-  height: 3rem;
-}
-  
-.icon-xl{
-  width: 4rem;
-  height: 4rem;
+.navbar-nav>li>a.dropdown-toggle:hover{
+  padding-top:0.1rem !important;
+  border-bottom: 1px solid #84110a;
 }
 
+.dropdown-menu>a.dropdown-item:hover{
+  border-bottom: 1px solid #84110a;
+}
+.navbar-nav>li>a:hover{
+  padding-bottom:0.1rem !important;
+  border-bottom: 1px solid #660505;
+}
+.fa-plus-circle{
+  font-size: 2em;
+}
 .fa-clickable{
   cursor:pointer;
   outline:none;
@@ -76,4 +69,17 @@ legend{
 
 #warn{
   z-index: 99999 !important;
+}
+
+.rotate{
+  -moz-transition: all 2s linear;
+  -webkit-transition: all 2s linear;
+  transition: all 2s linear;
+}
+
+.rotate.down{
+  -ms-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
 }

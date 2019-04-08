@@ -46,6 +46,7 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
+        //return $request;
         //validate the received data
         $data = $request->validate([
             'deliverable_id'=>'required',
@@ -74,7 +75,7 @@ class TasksController extends Controller
         }
         Notification::send($task->users, new taskAssigned($task));
 
-        return ['Task added successfully'];
+        return ['success'=>'Task added successfully'];
     }
     /**
      * Display the specified resource.
@@ -85,7 +86,7 @@ class TasksController extends Controller
 
     public function show(Task $task)
     {
-        $task = Task::find($task->id);   
+        $task = Task::findOrFail($task->id);   
         return view('tasks.show',compact('task'));
     }
 
@@ -127,7 +128,7 @@ class TasksController extends Controller
 
     public function completeTask(Request $request)
     {
-        $task = Task::find($request->id);
+        $task = Task::findOrFail($request->id);
         $task->update(request()->validate(
             [
                 'completed'=>'required',

@@ -27,6 +27,7 @@ Route::post('/listContacts', 'ContactsController@listContacts')->name('listConta
 
 //Routing everything about opportunities
 Route::resource('opportunities', 'OpportunitiesController');
+Route::post('/opportunities/{opportunity}', 'OpportunitiesController@update');
 Route::get('/getOpportunity/{opportunity}', 'OpportunitiesController@getOpportunity')->name('getOpportunity');
 Route::post('/opportunityUser', 'OpportunitiesController@addConsultants')->name('opportunityUser');
 Route::delete('/removeConsultant/{id}','OpportunitiesController@removeConsultant')->name('removeConsultant');
@@ -45,14 +46,18 @@ Route::post('/filterProjects','ProjectsController@filterProjects')->name('filter
 //Routing everything about tasks
 Route::resource('tasks', 'TasksController');
 Route::get('/tasks/{task}/users','TasksController@tastUsers')->name('tastUsers');
+
 //Routing everything about partner firms
 Route::resource('/partners', 'PartnersController');
+
 //Routing everything about leaves
 Route::resource('/leaves', 'LeavesController');
 Route::get('/delLeave/{leave}','LeavesController@destroy')->name('delLeave');
-//Routing everything about leaves settings
 Route::resource('/leavesettings', 'LeavesettingsController');
+Route::get('/leavesettings', 'LeavesettingsController@create');
 Route::post('/leavesettings/{leavesetting}', 'LeavesettingsController@update')->name('targets');
+Route::resource('/leaveforwards','LeaveforwardsController');
+
 //Routing everything about scores
 Route::resource('/scores', 'ScoresController');
 
@@ -66,14 +71,16 @@ Route::resource('/timesheets', 'TimesheetsController');
 Route::post('/timesheets/{timesheet}', 'TimesheetsController@update');
 Route::resource('/evaluations','EvaluationsController');
 Route::post('/saveResponses','TimesheetsController@saveResponses')->name('saveResponses');
-// //Routing everything about timesheet Categories
-// Route::resource('timesheetCategory', 'timesheetcategories');
+
 //Routing everything about roles
 Route::resource('/roles', 'RolesController');
 Route::post('/roles/{role}', 'RolesController@update');
+
 //Routing everything about holidays
 Route::resource('/holidays', 'HolidaysController');
+Route::get('/holidays', 'HolidaysController@create');
 Route::post('/holidays/{holiday}', 'HolidaysController@update');
+
 //Routing everything about servicelines
 Route::resource('/servicelines', 'ServicelinesController');
 Route::post('/servicelines/{serviceline}', 'ServicelinesController@update');
@@ -102,7 +109,9 @@ Route::get('/updateProfile','UsersController@updateProfile')->name('updateProfil
 //User Live Search
 Route::get('/search', 'UsersController@search');
 Route::resource('/associates', 'AssociatesController');
+Route::get('getassociates','AssociatesController@getassociates')->name('getassociates');
 Route::get('/getAssociate/{associate}', 'AssociatesController@getAssociate')->name('getAssociate');
+
 //Routing everything about comments
 Route::resource('/comments', 'CommentsController');
 Route::post('/comments/{comment}', 'CommentsController@update');
@@ -118,8 +127,6 @@ Route::get('/generatepdf','PDFController@index');
 //Routing everything about targets
 Route::resource('/targets', 'TargetsController');
 Route::post('/targets/{target}', 'TargetsController@update');
-
-Route::resource('/leaveforwards','LeaveforwardsController');
 
 //Routing everything about assessments
 Route::resource('/assessments', 'AssessmentsController');

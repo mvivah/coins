@@ -74,7 +74,7 @@ class LeavesController extends Controller
     public function show($id)
     {
         //
-        $leave = Leave::find($id);
+        $leave = Leave::findOrFail($id);
         return($leave);
     }
 

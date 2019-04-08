@@ -57,11 +57,9 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Role $role)
     {
-    //Displaying details for a single role
-    $role = Role::find($id);
-    return response()->json($role);
+        return response()->json($role);
     }
     /**
      * Show the form for editing the specified resource.

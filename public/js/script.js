@@ -15,7 +15,7 @@ const GET_MONTH_NAME = (dt)=>{
 
 let FIELD_IDS = [];
 let ERROR_COUNT = 0
-
+let station;
 try{
     //Save contacts
     document.getElementById('contactsForm').addEventListener('submit', function(e) {
@@ -78,105 +78,132 @@ try{
 catch(e){
 
 }
+
 try{
-    //Opportunities
+    //Save Opportunity
     document.getElementById('opportunityForm').addEventListener('submit', function(e){
         e.preventDefault();
+        const OPPORTUNITY_INDEX = document.getElementById('opportunity_id');
+        const OPPORTUNITY_ID = (OPPORTUNITY_INDEX == null)? null:OPPORTUNITY_INDEX.value;
         FIELD_IDS = ['opportunity_name','the_contact_id','country','funder','type','revenue','lead_source','sales_stage','external_deadline','internal_deadline','probability'];
         
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
 
             let formData = new FormData(this);
-
-            http.post('/opportunities',formData)
-            .then( data =>{
-                showAlert(data.message,'success');
-                //location.reload();
-            })
-            .catch(err=>{
-                console.error(err);
-            })
-        }
-    })
- 
-    //Search for contacts
-    document.getElementById('thisContact').addEventListener('keyup', e =>{
-        let account_name = document.getElementById('thisContact').value;
-        e.preventDefault();
-        if(account_name ==''||account_name == undefined){
-            document.getElementById('selectedContact').style.display = 'none';
-            return false;
-        }
-        else{
-            let formData = new FormData();
-            let options = [];
-            formData.append('account_name', account_name)
-            http.post('/listContacts',formData)
-            .then( data =>{
-                if(data.length == 0){
-                    options.push(`<option value="0">No Contacts found...</option>`);
-                    document.getElementById("selectedContact").innerHTML = options;
-                }else{
-                    data.forEach( contact =>{
-                        options.push( `<option data-name="${contact.account_name}" value="${contact.id}">${contact.account_name}</option>` );
-                    })
-                    document.getElementById("selectedContact").innerHTML = `<option value="">-Select Contact-</option>${options}`;
-                }
-                document.getElementById('selectedContact').style.display = 'block';
-            })
-            .catch(err=>{
-                console.error(err);
-            })
+            if( OPPORTUNITY_ID !=null ){
+                http.put(`/opportunities/${OPPORTUNITY_ID}`,formData)
+                .then( () => {
+                    $('#opportunityForm')[0].reset();
+                    $('#add_opportunity').modal('hide');
+                    location.reload();
+                } )
+                .catch( err => console.error(err) );
+            }
+            else{
+                http.post('/opportunities',formData)
+                .then( data =>{
+                    $('#opportunityForm')[0].reset();
+                    $('#add_opportunity').modal('hide');
+                    location.reload();
+                    showMessage('success',data.message);
+                })
+                .catch(err=>{
+                    console.error(err);
+                })
+            }
         }
     });
 
-    document.getElementById('selectedContact').addEventListener('change', (e) => {
-        let selectedContact = document.getElementById('selectedContact');
-        let options = e.target.children;
+    //Edit Opportunity
 
-        for( let i = 0; i < options.length; i++ ){
-            if (options[i].value == selectedContact.value){
-                document.getElementById('thisContact').value = options[i].dataset.name;
-            }
-        }
+    document.getElementById('editOpportunity').addEventListener('click', e =>{
+        let id = e.target.dataset.id;
+        http.get(`/opportunities/${id}/edit`)
+        .then(data =>{
+            document.getElementById('opportunity_name').value = data.opportunity_name;
+            document.getElementById('the_contact_id').value = data.contact_id;
+            document.getElementById('thisContact').value = data[0];
+            document.getElementById('country').value = data.country;
+            document.getElementById('funder').value = data.funder;
+            document.getElementById('type').value = data.type;
+            document.getElementById('assignedTeam').value = data.team_id;
+            document.getElementById('revenue').value = data.revenue;
+            document.getElementById('lead_source').value = data.lead_source;
+            document.getElementById('sales_stage').value = data.sales_stage;
+            document.getElementById('external_deadline').value = data.external_deadline;
+            document.getElementById('internal_deadline').value = data.internal_deadline;
+            document.getElementById('probability').value = data.probability;
+            document.getElementById('opportunity_id').value = data.id;
+            $('#add_opportunity').modal('show');
+        } )
+        .catch( err => console.error(err) )
+    });
 
-        document.getElementById('the_contact_id').value = selectedContact.value;
-        document.getElementById('selectedContact').style.display = 'none';
-    })
-}
-catch(e){
-
-}
-try{
-    document.getElementById('create_opportunity').addEventListener('click', e =>{
-        http.get('/getcontacts')
-        .then( data =>{
-            if(data.length != 0){
-
-            }else{
-                showErrorModal(`You need contscts before creating an opportunity`);
-            }
-        })
-        .catch( e =>{
-            console.error(e)
+    //Add Task
+    document.querySelectorAll('.opportunity_task').forEach(element => {
+        element.addEventListener('click', e =>{
+            e.preventDefault();
+            assignTask(e.target.id);
         })
     });
 
-    document.getElementById('opportunityFilter').addEventListener('click', e =>{
+    //Save tasks 
+    document.getElementById('taskForm').addEventListener('submit', function(e){
         e.preventDefault();
-        document.getElementById('summaries').innerText = ``;
-        elementRemove(`sorted_opportunities`);
-        FIELD_IDS = ['opportunityTeam','opportunityType','opportunityStage','opportunityCountry','opportunityStart','opportunityEnd'];
-        let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
-        if( validateForm === 0 ){
-            let opportunitiesFilterForm = document.getElementById('opportunitiesFilterForm');
-            document.getElementById('records-list').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-            setTimeout(calculateResults('filterOpportunities',opportunitiesFilterForm),1000);
-        }
-    })
+        saveTask();
+    });
 
+    //View Opportunity Tasks
+    document.querySelectorAll('.opportunity_taskview').forEach(element => {
+        element.addEventListener('click', e =>{
+            e.preventDefault();
+            revealTask(e.target.id);
+        })
+    });
+
+   // Print Opportunity
+    document.getElementById('printOpportunity').addEventListener('click', e =>{
+        e.preventDefault();
+        previewContent('opportunity_preview');
+    });
+
+    //Add document to opportunity
+    station = (document.getElementById('project_document'))? document.getElementById('project_document') : document.getElementById('opportunity_document');
+    station.addEventListener('click', e =>{
+        getDocument(e);
+    });
+
+    //Assign consultant to Opportunities
+    document.getElementById('opportunity_user').addEventListener('click', e => {
+        let id = e.target.dataset.id;
+        openConsultation('the_opportunity_id',id);
+    });
+
+    //Assign Consultant
+    document.getElementById('saveConsultant').addEventListener('click', e =>{
+        e.preventDefault();
+        let consultantForm = document.getElementById('consultantForm');
+        assignUser(consultantForm,'/opportunityUser');
+        $('#addConsultant').modal('hide');
+
+    });
+
+    //Remove Consultant
+    document.querySelectorAll('.delConsultant').forEach(element => {
+        element.addEventListener('click', e =>{
+            let id =  e.target.id;
+            let item =  e.target.dataset.item;
+            confirmDelete(id,item);
+        });
+    });
+
+    document.getElementById('deleteBtn').addEventListener('click', () =>{
+        let item = document.getElementById('item-delete').dataset.record;
+        let id = document.getElementById('item-delete').value;
+        let source = (item == 'Opportunity')? `/removeConsultant/${id}` : `/unassignConsultant/${id}`;
+        deleteItem(source);
+    });
     // Save score
     document.getElementById('saveScore').addEventListener('click', e => {
         e.preventDefault();
@@ -211,59 +238,95 @@ try{
         }
     });
 
-    //Add document to opportunity
-    station = (document.getElementById('project-document'))? document.getElementById('project-document') : document.getElementById('opportunity-document');
-    station.addEventListener('click', e =>{
-        getDocument(e);
+
+}
+catch(e){
+
+}
+try{
+    document.getElementById('create_opportunity').addEventListener('click', e =>{
+        http.get('/getcontacts')
+        .then( data =>{
+            if(data.length != 0){
+                $('#add_opportunity').modal('show');
+            }else{
+                showMessage('error',`You need contacts before creating an opportunity`);
+            }
+        })
+        .catch( e =>{
+            console.error(e)
+        })
     });
 
+    //Search for contacts
+    document.getElementById('thisContact').addEventListener('keyup', e =>{
+        let account_name = document.getElementById('thisContact').value;
+        e.preventDefault();
+        if(account_name ==''||account_name == undefined){
+            document.getElementById('selectedContact').style.display = 'none';
+            return false;
+        }
+        else{
+            let formData = new FormData();
+            let options = [];
+            formData.append('account_name', account_name)
+            http.post('/listContacts',formData)
+            .then( data =>{
+                if(data.length == 0){
+                    options.push(`<option value="0" disabled selected>No Contacts found...</option>`);
+                    document.getElementById("selectedContact").innerHTML = options;
+                }else{
+                    data.forEach( contact =>{
+                        options.push( `<option data-name="${contact.account_name}" value="${contact.id}">${contact.account_name}</option>` );
+                    })
+                    document.getElementById("selectedContact").innerHTML = `<option value="">-Select Contact-</option>${options}`;
+                }
+                document.getElementById('selectedContact').style.display = 'block';
+            })
+            .catch(err=>{
+                console.error(err);
+            })
+        }
+    });
+
+    document.getElementById('selectedContact').addEventListener('change', (e) => {
+        let selectedContact = document.getElementById('selectedContact');
+        let options = e.target.children;
+
+        for( let i = 0; i < options.length; i++ ){
+            if (options[i].value == selectedContact.value){
+                document.getElementById('thisContact').value = options[i].dataset.name;
+            }
+        }
+
+        document.getElementById('the_contact_id').value = selectedContact.value;
+        document.getElementById('selectedContact').style.display = 'none';
+    })
+    
+    document.getElementById('opportunityFilter').addEventListener('click', e =>{
+        e.preventDefault();
+        document.getElementById('summaries').innerText = ``;
+        elementRemove(`sorted_opportunities`);
+        FIELD_IDS = ['opportunityTeam','opportunityType','opportunityStage','opportunityCountry','opportunityStart','opportunityEnd'];
+        let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
+        if( validateForm === 0 ){
+            let opportunitiesFilterForm = document.getElementById('opportunitiesFilterForm');
+            document.getElementById('records-list').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            setTimeout(calculateResults('filterOpportunities',opportunitiesFilterForm),1000);
+        }
+    })
+
     let opportunityExport = document.getElementById('export_opportunities');
-    console.log(opportunityExport);
     opportunityExport.addEventListener('click', e =>{
-        alert('hi...')
-        console.log(e)
+        exportExcel('sorted_opportunities','sorted_opportunities');
+        e.preventDefault();
     })
 }
 catch(e){
-    console.log(e)
-}
-
-try{
-    //Assign consultant to Opportunities
-    document.getElementById('user-opportunity').addEventListener('click', e => {
-        let id = e.target.dataset.id;
-        openConsultation('the_opportunity_id',id);
-    });
-
-    //Assign Consultant
-    document.getElementById('saveConsultant').addEventListener('click', e =>{
-        e.preventDefault();
-        let consultantForm = document.getElementById('consultantForm');
-        assignUser(consultantForm,'/opportunityUser');
-        $('#addConsultant').modal('hide');
-
-    });
-    
-    //Remove Consultant
-    document.querySelectorAll('.delConsultant').forEach(element => {
-        element.addEventListener('click', e =>{
-            console.log(e.target)
-            let id =  e.target.id;
-            let item =  e.target.dataset.item;
-            confirmDelete(id,item);
-        });
-    });
-    
-    document.getElementById('deleteBtn').addEventListener('click', () =>{
-        let item = document.getElementById('item-delete').dataset.record;
-        let id = document.getElementById('item-delete').value;
-        let source = (item == 'Opportunity')? `/removeConsultant/${id}` : `/unassignConsultant/${id}`;
-        deleteItem(source);
-    });
-}
-catch(e){
 
 }
+
 
 try{
     //Edit project
@@ -319,16 +382,25 @@ try{
     });
 
     //Add document project
-    let station = (document.getElementById('project-document'))? document.getElementById('project-document') : document.getElementById('opportunity-document');
+    station = (document.getElementById('project_document'))? document.getElementById('project_document') : document.getElementById('opportunity_document');
     station.addEventListener('click', e =>{
         getDocument(e);
     });
 
     //Assign Associates to project
     document.getElementById('assignAssociate').addEventListener('click', e =>{
-        let id = e.target.dataset.id;
-        document.getElementById('projectAssociate').value = id;
-        $('#pickAssociate').modal('show');
+        http.get('/getassociates')
+        .then( data =>{
+            if(data.length != 0){
+                document.getElementById('projectAssociate').value = e.target.dataset.id;
+                $('#pickAssociate').modal('show');
+            }else{
+                showMessage('error',`You have no associates to assign to this project`);
+            }
+        })
+        .catch( e =>{
+            console.error(e)
+        })
     });
 
     //Remove Associate
@@ -339,13 +411,19 @@ try{
     document.getElementById('deleteBtn').addEventListener('click', () =>{
         console.log('Deleting....')
     });
-    // Add Deliverable
+
+    //Add Deliverable
+    document.getElementById('addDeliverable').addEventListener('click', e => {
+        document.getElementById('the_project_id').value = e.target.dataset.id;
+        document.getElementById('opportunity_deliverable').style.display = 'none';
+        $('#add_deliverables').modal('show');
+    });
     document.getElementById('deliverablesForm').addEventListener('submit', function(e){
         e.preventDefault();
         const DELIVERABLE_INDEX = document.getElementById('deliverable_id');
         const DELIVERABLE_ID = (DELIVERABLE_INDEX == null)? null:DELIVERABLE_INDEX.value;
-        FIELD_IDS = ['deliverable_name','deliverable_status','deliverable_complition'];
-
+        FIELD_IDS = ['deliverable_name','deliverable_status','deliverable_completion'];
+    
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
@@ -353,7 +431,7 @@ try{
                 http.put(`/deliverables/${DELIVERABLE_ID}`,formData)
                 .then( () => {
                     $('#deliverablesForm')[0].reset();
-                    $('#newDeliverable').modal('hide');
+                    $('#add_deliverables').modal('hide');
                     location.reload();
                 } )
                 .catch( err => console.error(err) );
@@ -362,38 +440,33 @@ try{
                 http.post('/deliverables',formData)
                 .then( () => {
                     $('#deliverablesForm')[0].reset();
-                    $('#newDeliverable').modal('hide');
-                    location.reload();
+                    $('#add_deliverables').modal('hide');
+                    //location.reload();
                 })
                 .catch( err => console.error(err) );
             }
         }
     });
-    
+
     //Edit Deliverable
     document.querySelectorAll('.editDeliverable').forEach( editDeliverable => {
         editDeliverable.addEventListener('click', e =>{ 
             let id = e.target.id;
             http.get(`/deliverables/${id}/edit`)
             .then(data =>{
-                document.getElementById('deliverable_name').value = data.deliverable_name;
+                document.getElementById('deliverable_name_project').value = data.deliverable_name;
                 document.getElementById('deliverable_status').value = data.deliverable_status;
-                document.getElementById('deliverable_complition').value = data.deliverable_complition;
-                document.getElementById('projectDeliverable').value = data.project_id;
+                document.getElementById('deliverable_completion').value = data.deliverable_completion;
+                document.getElementById('the_project_id').value = data.project_id;
                 document.getElementById('deliverable_id').value = data.id;
-                $('#newDeliverable').modal('show');
+                document.getElementById('opportunity_deliverable').style.display = 'none';
+                document.getElementById('deliverable_title').innerText = 'Update Deliverable';
+                $('#add_deliverables').modal('show');
             })
             .catch( err => console.error(err) );
         });
     });
         
-    //Add Deliverable
-    document.getElementById('addDeliverable').addEventListener('click', e => {
-        let id = e.target.dataset.id;
-        document.getElementById('projectDeliverable').value = id;
-        $('#newDeliverable').modal('show');
-    });
-
     //Project Evaluation
     document.getElementById('projecEtvaluation').addEventListener('click', e =>{
         let id = e.target.dataset.id;
@@ -401,26 +474,18 @@ try{
         doEvaluation(id,theModel);
     })
 
+    //Add Project tasks
+    document.querySelectorAll('.project_task').forEach(element =>{
+        element.addEventListener('click', e =>{
+            e.preventDefault();
+            assignTask(e.target.id);
+        })
+    });
+
     //Save tasks 
     document.getElementById('taskForm').addEventListener('submit', function(e){
         e.preventDefault();
-        FIELD_IDS = ['task_name','task_deadline','task_status','taskStaff'];
-        let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
-        if( validateForm === 0 ){
-            let formData = new FormData(this);
-            http.post('/tasks',formData)
-            .then( data => {
-
-                $('#taskForm')[0].reset();
-                $('#addTask').modal('hide');
-                location.reload();
-            })
-            .catch( err => console.error(err) );
-    
-        }else{
-            console.log(validateForm)
-        }
-
+        saveTask();
     });
     
     //Edit Task
@@ -436,7 +501,6 @@ try{
                 document.getElementById('task_deadline').value = data.task_deadline;
                 document.getElementById('task_status').value = data.task_status;
                 document.getElementById('task_id').value = data.id;
-                document.getElementById("taskUsers").style.display = 'none';
                 document.getElementById('task_id').innerText = 'Update Task';
                 $('#addTask').modal('show');
             })
@@ -444,13 +508,19 @@ try{
         });
     });
 
-  document.querySelectorAll('.taskDetail').forEach(task=>{
-    task.addEventListener('click', e =>{
-        e.preventDefault()
-        showTaskDetails(e)
-    })
-  })
+    //Show Project tasks
+    document.querySelectorAll('.project_taskview').forEach(element => {
+        element.addEventListener('click', e =>{
+            e.preventDefault();
+            revealTask(e.target.id);
+        })
+    });
    
+  document.getElementById('printProject').addEventListener('click', e =>{
+    e.preventDefault()
+    previewContent('project_preview');
+  });
+  
 }
 catch(e){
 
@@ -514,8 +584,8 @@ try{
         http.post('/getSpecilization',formData)
         .then( result => {
             if(result.length == 0){
-                options.push(`<option value="0">No Specializations found...</option>`);
-                showErrorModal(`The are no records for the selected expertise`);
+                options.push(`<option value="0" disabled selected>No Specializations found...</option>`);
+                showMessage('error',`No specializations for the selected expertise...`);
                 document.getElementById('associate_btn').setAttribute('disabled','disabled');
             }else{
                 result.forEach( data =>{
@@ -570,7 +640,7 @@ try{
                     </div>`
                 );
             })
-            document.getElementById('assessment-page').innerHTML = inputs;
+            document.getElementById('assessment_page').innerHTML = inputs;
         })
         .catch( err => console.error(err) );
 
@@ -623,7 +693,7 @@ try{
             http.post('/getServicelines',formData)
             .then( data => {
                 if(data == null){
-                    options.push(`<option value="0">No Records...</option>`);
+                    options.push(`<option value="0" disabled selected>No Records...</option>`);
                 }else{
                     data.forEach( serviceline =>{
                         options.push( `<option value="${serviceline.id}">${serviceline.service_name}</option>` );
@@ -636,38 +706,6 @@ try{
         });
     });
 
-    //Add other worktime
-    document.getElementById('workTime').addEventListener('click', e =>{
-        let selectList = document.getElementById('beneficiary').options;
-        for (let option of selectList) {
-            if(option.value == 'Opportunities'){
-               option.remove()
-            }
-        }
-        $('#addTimesheet').modal('show');
-    })
-
-    //Timesheet beneficiary
-    document.getElementById('beneficiary').addEventListener('change', e =>{
-        let beneficiary = e.target.value;
-        let formData = new FormData();
-        let options = [];
-        formData.append('beneficiary',beneficiary)
-        http.post('/getServicelines',formData)
-        .then( data => { 
-            if(data == null){
-                options.push(`<option value="0">No Records...</option>`);
-            }else{
-                data.forEach( serviceline =>{
-
-                    options.push( `<option value="${serviceline.id}">${serviceline.service_name}</option>` );
-
-                })
-            }
-            document.getElementById("the_serviceline").innerHTML = options;
-        })    
-        .catch( err => console.error(err) );
-    });
 }
 catch(e){
     
@@ -675,10 +713,10 @@ catch(e){
 
 try{
     //Request Leave
+    const PUBLIC_HOLIDAYS = [];
+    let LEAVE_OPTIONS,FORWARDED_LEAVE,booked_days;
     document.getElementById('requestLeave').addEventListener('click', (e) =>{
-        const PUBLIC_HOLIDAYS = [];
         const THIS_USER = e.target.dataset.user;
-        //holidays object
         http.get('/holidays')
         .then( data => {
             data.forEach((object) =>{
@@ -690,18 +728,20 @@ try{
             });
         })
         .catch( err => console.error(err) );
+
         //leave options object
         http.get('/leavesettings')
-        .then( LEAVE_OPTIONS => {
-            console.log(LEAVE_OPTIONS)
+        .then( data => {
+            LEAVE_OPTIONS = data;
         })
         .catch( err => console.error(err) );
         //forwarded leave object
         http.get(`/leaveforwards/${THIS_USER}`)
-        .then( FORWARDED_LEAVE => {
-            console.log(FORWARDED_LEAVE)
+        .then( data => {
+            FORWARDED_LEAVE = data;
         })
         .catch( err => console.error(err) );
+
         $('#addleave').modal('show');
     });
 
@@ -753,9 +793,8 @@ try{
                 let noSunday = getOccurrence(lists, 'Sunday');
                 let noSaturday = getOccurrence(lists, 'Saturday');
                 let except  = noSunday + noSaturday;
-                let booked = max - except;
-                // Save the duration in session storage
-                sessionStorage.setItem('booked',booked);
+                booked_days = max - except;
+
             }
 
             if(PUBLIC_HOLIDAYS.length == data.length){
@@ -805,43 +844,43 @@ try{
         }
     });
 
-    //Delete Leave
-    document.getElementById('delLeve').addEventListener('click', e =>{
-        confirmDelete(e.target.dataset.id);
+   //Add worktime
+    document.getElementById('workTime').addEventListener('click', e =>{
+        let selectList = document.getElementById('beneficiary').options;
+        for (let option of selectList) {
+            if(option.value == 'Opportunities'){
+               option.remove()
+            }
+        }
+        $('#addTimesheet').modal('show');
+    })
+
+    //Timesheet beneficiary
+    document.getElementById('beneficiary').addEventListener('change', e =>{
+        let beneficiary = e.target.value;
+        let formData = new FormData();
+        let options = [];
+        formData.append('beneficiary',beneficiary)
+        http.post('/getServicelines',formData)
+        .then( data => { 
+            if(data == null){
+                options.push(`<option value="0" disabled selected>No Records...</option>`);
+            }else{
+                data.forEach( serviceline =>{
+
+                    options.push( `<option value="${serviceline.id}">${serviceline.service_name}</option>` );
+
+                })
+            }
+            document.getElementById("the_serviceline").innerHTML = options;
+        })    
+        .catch( err => console.error(err) );
     });
-    document.getElementById('deleteBtn').addEventListener('click', ()=>{
-        let item = document.getElementById('item-delete');
-        deleteItem(`leaves/${id}`);
-    });
+
 }
 catch(e){
 
 }
-    //Assign Tasks
-    document.querySelectorAll('.addTasks').forEach( addTask=>{
-        addTask.addEventListener('click', e => {
-            let id = e.target.id;
-            let patch ='';
-            //Get Consultants
-            let consultantsList = document.querySelectorAll('.consultants');
-            consultantsList = Array.from(consultantsList)
-            consultantsList.forEach(consultant => {
-                patch += `<option value="${consultant.id}">${consultant.textContent}</option>`;     
-            });
-
-            //Get Associates
-            let associatesList = document.querySelectorAll('.associates');
-            associatesList = Array.from(associatesList)
-            associatesList.forEach(associate => {
-                patch += `<option value="${associate.id}">${associate.textContent}</option>`;     
-            });
-            
-            document.getElementById('taskStaff').innerHTML = patch;
-            
-            document.getElementById('the_deliverable').value = id;
-            $('#addTask').modal('show');
-        });
-    })
 
 try{
     let editButtons = '';
@@ -1283,6 +1322,16 @@ try{
         .then( data => console.log(data) )
         .catch( err => console.error(err) );
     });
+
+    //Delete Leave
+    document.getElementById('delLeve').addEventListener('click', e =>{
+        confirmDelete(e.target.dataset.id);
+    });
+    
+    document.getElementById('deleteBtn').addEventListener('click', ()=>{
+        let item = document.getElementById('item-delete');
+        deleteItem(`leaves/${id}`);
+    });
 }
 catch(e){
 
@@ -1340,7 +1389,7 @@ try{
                 http.get(`/servicelines/${data.serviceline_id}/edit`)
                 .then( data => { 
                     if(data == null){
-                        // options.push(`<option value="0">No Records...</option>`);
+                        options.push(`<option value="0" disabled selected>No Records found...</option>`);
                     }else{
                         options.push( `<option value="${data.id}">${data.service_name}</option>` );
                     }
@@ -1581,7 +1630,7 @@ let exportExcel = (tableId, filename=NULL)=>{
     let dataType = 'application/vnd.ms-excel';
     let tableSelect = document.getElementById(tableId);
     let tableHTML = tableSelect.outerHTML.replace(/ /g, '%20')
-    filename = filename?filename+'.xls':'coins_data.xls';
+    filename = filename?filename+'.xls':'AH_Consulting.xls';
     downloadLink = document.createElement("a");
     document.body.appendChild(downloadLink);
     if(navigator.msSaveOrOpenBlob){
@@ -1658,19 +1707,20 @@ let calculateResults = (url,formId) =>{
         recordsHTML = '';
         if( data.length > 0 ) {
             recordsHTML += `<table id="sorted_opportunities" class="table table-bordered table-sm">
-            <thead class="bg-success text-white"><tr><td>OM Number</td><td>Name</td><td>Type</td><td>Stage</td><td>Revenue</td></tr></thead><tbody>`
+            <thead class="bg-success text-white"><tr><td>OM Number</td><td>Name</td><td>Type</td><td>Stage</td><td>Country</td><td>Revenue</td></tr></thead><tbody>`
             for(let i=0; i<data.length; i++){
                 recordsHTML += `<tr><td>
-                <a href="/opportunities/${data[i].id}" class="text-primary" title="View Opportunity">${data[i].om_number}</a></td><td>${data[i].name}</td><td>${data[i].type}</td><td>${data[i].sales_stage}</td><td>${data[i].revenue}</td></tr>`
+                <a href="/opportunities/${data[i].id}" class="text-primary" title="View Opportunity">${data[i].om_number}</a></td><td>${data[i].name}</td><td>${data[i].type}</td><td>${data[i].sales_stage}</td><td>${data[i].country}</td><td>${data[i].revenue}</td></tr>`
             }
             recordsHTML += `<tbody></table>`;
             document.getElementById('summaries').innerHTML = `Total records - ${data.length}`;
-            elementAdd( 'records-list', 'beforeend', recordsHTML )
+            elementAdd( 'records-list', 'beforeend', recordsHTML );
+            document.getElementById('export_opportunities').style.display = 'block';
         }
         else {
             document.getElementById('summaries').innerText = `No records found`;
+            document.getElementById('export_opportunities').style.display = 'none';
         }
-        document.getElementById('export_opportunities').style.display = 'block';
         document.getElementById('records-list').style.display = 'block';
         document.getElementById('loading').style.display = 'none';
 
@@ -1770,19 +1820,6 @@ let showTaskDetails = (e) =>{
     console.log(e.target.parentNode.parentNode.siblings)
     }
 }
-let showAlert = (className,message) =>{
-    console.log(message)
-    const div = document.createElement('div');
-    div.className = `alert ${className}`;
-    div.appendChild(document.createTextNode(message));
-    const notice  = document.getElementById('notices');
-    //const form  = document.querySelector('#book-form');
-    notice.innerHTML = div;
-    //notice.insertBefore(div,form);
-    setTimeout(function(){
-        document.querySelector('.alert').remove();
-    },2000)
-}
 
 let doEvaluation = (id,theModel) =>{
     document.getElementById('evaluationable_id').value = id;
@@ -1795,18 +1832,74 @@ let removeRow = (id) =>{
     document.getElementById(`row${id}`).remove();
 }
 
-let showErrorModal = (message) =>{
-    document.getElementById('warningMessage').innerText = message;
-    document.getElementById('error_title').innerText = `Error`;
-    document.getElementById("warn").style.zIndex = "9999";
+let showMessage = (theState, message) =>{
+    if(theState == 'error'){
+        document.getElementById('message_header').className += " bg-danger text-white";
+        document.getElementById('message_body').innerText = message;
+        document.getElementById('message_title').innerText = `Error`;
+        document.getElementById("messageModal").style.zIndex = "9999";
+    }else{
+        document.getElementById('message_header').className += " bg-success text-white";
+        document.getElementById('message_title').innerText = `Success`;
+        document.getElementById('message_body').innerText = message;
+        document.getElementById("messageModal").style.zIndex = "9999";
+    }
     $('#messageModal').modal('show');
 }
 
-let showSuccessModal = (message) =>{
-    document.getElementById('message_header').innerText = message;
-    document.getElementById('message_title').innerText = message;
-    document.getElementById('message_body').innerText = message;
-    document.getElementById('error_title').innerText = `Error`;
-    document.getElementById("messageModal").style.zIndex = "9999";
-    $('#messageModal').modal('show');
+let previewContent = (el) =>{
+    let restorePage = document.body.innerHTML;
+    let printContent = document.getElementById(el).innerHTML;
+    document.body.innerHTML = printContent;
+    window.print()
+    document.body.innerHTML = restorePage;
+}
+
+let assignTask = id =>{
+    let patch ='';
+    //Get Consultants
+    let consultantsList = document.querySelectorAll('.responsible_users');
+    consultantsList = Array.from(consultantsList)
+    if(consultantsList.length == 0){
+        showMessage('error','There are no consultants for this task');
+        return false;
+    }else{
+        consultantsList.forEach(consultant => {
+            patch += `<option value="${consultant.id}">${consultant.textContent}</option>`;     
+        });
+    }
+    
+    //Get Associates
+    let associatesList = document.querySelectorAll('.associates');
+    associatesList = Array.from(associatesList)
+    associatesList.forEach(associate => {
+        patch += `<option value="${associate.id}">${associate.textContent}</option>`;     
+    });
+    
+    document.getElementById('taskStaff').innerHTML = patch;
+    document.getElementById('the_deliverable').value = id;
+    $('#addTask').modal('show');
+}
+
+let saveTask = () =>{
+    FIELD_IDS = ['task_name','task_deadline','task_status','taskStaff'];
+    let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
+    if( validateForm === 0 ){
+        let formData = new FormData(document.getElementById('taskForm'));
+        http.post('/tasks',formData)
+        .then( data => {
+            $('#taskForm')[0].reset();
+            $('#addTask').modal('hide');
+            location.reload();
+            showMessage('success',data.success)
+        })
+        .catch( err => console.error(err) );
+
+    }else{
+        console.log(validateForm)
+    }
+}
+
+let revealTask = id =>{
+    console.log(id)
 }

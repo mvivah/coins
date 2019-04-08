@@ -9,7 +9,7 @@
                       <div class="card-body">
                           <div class="text-center">
                             <div class="text-center">
-                              <i class="fa fa-users" class="icon-xl"></i>
+                              <i class="fa fa-users fa-4x"></i>
                             </div>
                           </div>
                           <div class="text-center">
@@ -29,7 +29,7 @@
                       <div class="card-body">
                           <div class="text-center">
                             <div class="text-center">
-                              <i class="fa fa-sliders" class="icon-xl"></i>
+                              <i class="far fa-address-card fa-4x"></i>
                             </div>
                           </div>
                           <div class="text-center">
@@ -55,7 +55,7 @@
                       <div class="card-body">
                           <div class="text-center">
                             <div class="text-center">
-                              <i class="fa fa-layers" class="icon-xl"></i>
+                              <i class="fas fa-cart-plus fa-4x"></i>
                             </div>
                           </div>
                           <div class="text-center">
@@ -75,7 +75,7 @@
                       <div class="card-body">
                           <div class="text-center">
                             <div class="text-center">
-                              <i class="fa fa-activity" class="icon-xl"></i>
+                              <i class="fas fa-file-contract fa-4x"></i>
                             </div>
                           </div>
                           <div class="text-center">
@@ -176,7 +176,4 @@
       </div>
     </div>
   </div>
-<!-- End of page content -->
-    @endsection
-
-<!-- Add Custom Page content -->
+@endsection

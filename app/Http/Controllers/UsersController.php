@@ -96,7 +96,7 @@ class UsersController extends Controller
    
         //Initualize  dates and months
         $year = $month = today();
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $leaves = DB::table('leaves')
                     ->select('leavesetting_id','leave_status', DB::raw("SUM(duration) as duration"))
                     ->orderBy('created_at','desc')
@@ -156,8 +156,8 @@ class UsersController extends Controller
     //public function edit(User $user)
     public function edit($id)
     {
-        // $user = User::find($id);
-        return User::find($id);
+        // $user = User::findOrFail($id);
+        return User::findOrFail($id);
     }
 
     /**

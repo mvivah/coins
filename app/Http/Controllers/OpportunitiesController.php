@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Opportunity;
 use App\Project;
 use App\Team;
+use App\Contact;
 use App\User;
+use App\Deliverable;
 use App\OpportunityUser;
 use Carbon\Carbon;
 use App\Notifications\OpportunityCreated;
@@ -124,16 +126,26 @@ class OpportunitiesController extends Controller
             'om_number'=>$latest + 1,
             'created_by'=>Auth::user()->id
         ]);
+        
+        foreach(['Qualified Opportunity','Prepared Document','Reviewed Document','Submitted Document'] as $deliverable_name){
+            $data = [
+                'opportunity_id'=>$opportunity->id,
+                'deliverable_name'=>$deliverable_name,
+                'deliverable_status'=>'Working on it',
+                'deliverable_completion'=>$request->internal_deadline,
+                'created_by'=>Auth::user()->id,
+            ];
+            $save_deliverable = Deliverable::insert($data);
+        }
 
         $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
-        $receiver = User::find($team_leader);
-        if( !$receiver){
+        if( !User::findOrFail($team_leader)){
         }else{
-            User::find($team_leader)->notify(new OpportunityCreated($opportunity));
+            User::findOrFail($team_leader)->notify(new OpportunityCreated($opportunity));
         }
 
         //Notification::send($users, new OpportunityCreated($opportunity)); // Used to send to many recepients
-        return ['An opportunity has been successfully created'];
+        return ['success'=>'An opportunity has been successfully created'];
     }
 
     /**
@@ -144,17 +156,15 @@ class OpportunitiesController extends Controller
      */
     public function getOpportunity(Opportunity $opportunity)
     {
-        $opportunity = Opportunity::find($opportunity->id);
-
-        return $opportunity;
+        return Opportunity::findOrFail($opportunity->id);
     }
 
 
     public function show($id)
     {
-        $opportunity = Opportunity::find($id);
+        $opportunity = Opportunity::findOrFail($id);
         
-        return view('opportunities.show',['opportunity'=>$opportunity]);
+        return view('opportunities.show',compact('opportunity'));
     }
 
     /**
@@ -163,10 +173,12 @@ class OpportunitiesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Opportunity $opportunity)
+    public function edit($id)
     {
-        $opportunity = Opportunity::find($opportunity->id);
-        return view('opportunities.edit', compact('opportunity'));
+        $opps = Opportunity::findOrFail($id);
+        $contact = json_decode(Contact::where(['id'=>$opps->contact_id])->pluck('account_name'), true);
+        $opportunity = json_decode(Opportunity::findOrFail($id), true);
+        return $opportunity+$contact;
     }
 
     /**
@@ -209,7 +221,7 @@ class OpportunitiesController extends Controller
             'updated_by'=>Auth::user()->id
         ]);
 
-        if( $request->type == 'Proposal' && $request->sales_stage == 'Won' ){
+        if( $request->type == 'Proposal' && $request->sales_stage == 'Closed Won' ){
 
             $data = Project::create([
                 'opportunity_id'=>$opportunity->id,
@@ -217,13 +229,13 @@ class OpportunitiesController extends Controller
                 'project_stage'=>'Initiation',
                 'created_by'=>Auth::user()->id
             ]);
-            $project = Project::find($data->id);
+            $project = Project::findOrFail($data->id);
             $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
 
-            $receiver = User::find($team_leader);
+            $receiver = User::findOrFail($team_leader);
             if( !$receiver){
             }else{
-                User::find($team_leader)->notify(new OpportunityCreated($opportunity));
+                User::findOrFail($team_leader)->notify(new OpportunityCreated($opportunity));
             }
         }
         if(!$run){
@@ -251,8 +263,8 @@ class OpportunitiesController extends Controller
             'created_by'=>Auth::user()->id
         ]);
 
-        $user = User::find($request->user_id);
-        $opportunity = Opportunity::find($request->opportunity_id)->first();
+        $user = User::findOrFail($request->user_id);
+        $opportunity = Opportunity::findOrFail($request->opportunity_id)->first();
         if( $user != NULL) $user->notify(new OpportunityAssigned($opportunity));
         return ['Cosulntant added successfully'];
     }
@@ -276,7 +288,7 @@ class OpportunitiesController extends Controller
      */
     public function destroy($id)
     {
-        $opportunity= Opportunity::find($id);
+        $opportunity = Opportunity::findOrFail($id);
         $opportunity->delete();
         return redirect()->url('opportunities');
     }

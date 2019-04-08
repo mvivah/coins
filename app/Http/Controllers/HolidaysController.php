@@ -31,7 +31,7 @@ class HolidaysController extends Controller
      */
     public function create()
     {
-        //
+        return Holiday::all();
     }
 
     /**
@@ -60,7 +60,7 @@ class HolidaysController extends Controller
      */
     public function show($id)
     {
-        $holiday = Holiday::find($id);
+        $holiday = Holiday::findOrFail($id);
         return response()->json($holiday);
     }
 

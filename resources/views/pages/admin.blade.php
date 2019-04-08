@@ -1,16 +1,11 @@
-<!-- Extend Main layout -->
-
 @extends('layouts.app')
-
-<!-- Add Custom content Section-->
-
     @section('content')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Admin</li>
-        </ol>
-    </nav>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Admin</li>
+            </ol>
+        </nav>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -35,35 +30,35 @@
                         <div class="tab-pane fade show active" id="teams" role="tabpanel" aria-labelledby="teams-tab">
                         <div class="row">
                             <div class="col-md-6">
-                                    <div class="card-body">
-                                        <a href="#"><i class="fas fa-plus-circle text-primary icon-lg" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTeams" title="Add Teams"></i></a>
-                                        Teams
-                                        @if($teams->count()<1)
-                                            <p>No teams found...</p>
-                                        @else
-                                            <div class="row">
-                                                @foreach(App\Team::all() as $team)
-                                                    <div class="col-md-4">
-                                                        <div class="card-body">
-                                                            <p class="card-text"><a href="teams/{{$team->id}}"><strong>{{$team->team_code}}</strong></a></p>
-                                                            <strong class="text-muted">Members: {{$team->users->count()}}</strong>
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <div class="btn-group">
-                                                                <a href="teams/{{$team->id}}" class="btn btn-sm btn-outline-secondary" title="View Team">View</a>
-                                                                <button type="button" id="{{$team->id}}" class="btn btn-sm btn-outline-secondary editTeam">Edit</button>
-                                                                </div>
+                                <div class="card-body">
+                                    <a href="#"><i class="fas fa-plus-circle text-primary icon-lg" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTeams" title="Add Teams"></i></a>
+                                    <h5>Teams</h5>
+                                    @if($teams->count()<1)
+                                        <p>No teams found...</p>
+                                    @else
+                                        <div class="row">
+                                            @foreach(App\Team::all() as $team)
+                                                <div class="col-md-4">
+                                                    <div class="card-body">
+                                                        <p class="card-text"><a href="teams/{{$team->id}}"><strong>{{$team->team_code}}</strong></a></p>
+                                                        <strong class="text-muted">Members: {{$team->users->count()}}</strong>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div class="btn-group">
+                                                            <a href="teams/{{$team->id}}" class="btn btn-sm btn-outline-secondary" title="View Team">View</a>
+                                                            <button type="button" id="{{$team->id}}" class="btn btn-sm btn-outline-secondary editTeam">Edit</button>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                @endforeach
-                                            </div>
-                                        @endif
-                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
                             </div> 
                             <div class="col-md-6">
                                     <div class="card-body">
-                                        <a href="#"><i class="fas fa-plus-circle text-primary" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTargets" title="Add Targets"></i></a>
-                                        Team Targets
+                                        <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTargets" title="Add Targets"></i></a>
+                                        <h5>Team Targets</h5>
                                         @if(count($targets)>0)
                                         <div class="table-responsive">
                                             <table class="table table-sm table-striped">
@@ -195,10 +190,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="card-body">
-                                        <h5>
-                                            Leave Carried Forward
-                                            <a href="#"><i class="fas fa-plus-circle text-primary" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addLeaveforward" title="Leave Crried Forward"></i></a>
-                                        </h5>
+                                        <h5>Leave Carried Forward</h5>
+                                            <span>
+                                                <a href="#"><i class="fas fa-plus-circle text-primary" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addLeaveforward" title="Leave Crried Forward"></i></a>
+                                            </span>
                                         <div class="table-responsive mt-2" id="leaveforwardsBody">
                                             @if($leaveforwards->count()<1)
                                             <p>No records found...</p>
@@ -223,10 +218,10 @@
                                 <br />
                                 <div class="col-md-6">
                                     <div class="card-body">
-                                        <h5>
-                                            Public Holidays
-                                            <a href="#"><i class="fas fa-plus-circle text-primary" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#publicDays" title="Add Holidays"></i></a>
-                                        </h5>
+                                        <h5>Public Holidays</h5>
+                                            <span>
+                                                <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#publicDays" title="Add Holidays"></i></a>
+                                            </span>
                                         <div class="table-responsive mt-2" id="holidaysBody">
                                                 @if($holidays->count()<1)
                                                 <p>No holidays found...</p>
@@ -251,10 +246,10 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="card-body">
-                                        <h5>
-                                            Leave Types
-                                            <a href="#"><i class="fas fa-plus-circle text-primary" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#leaveSetting" title="Add Leave Options"></i></a>
-                                        </h5>
+                                        <h5>Leave Types</h5>
+                                            <span>
+                                                <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#leaveSetting" title="Add Leave Options"></i></a>
+                                            </span>
                                         <div class="table-responsive" id="leaveSettingsBody">
                                             @if($leavesettings->count()<1)
                                             <p>No records found...</p>

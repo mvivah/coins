@@ -85,43 +85,27 @@ class AssociatesController extends Controller
     
     public function show($id)
     {
-        $associate = Associate::find($id);
+        $associate = Associate::findOrFail($id);
         return view('associates.show',['associate'=>$associate]);
     }
 
     //Upload documents**/
-    public function uploadFile($request)
+    public function getassociates()
     {
-        $data = $request->validate([
-        'cv'=>'required|file|mimes:pdf,doc,docx|max:10000',
-        'transcript'=>'required|file|mimes:pdf,doc,docx|max:10000',
-        ]);
-        $cv = $request->file('cv');
-        //Get file Extension
-        $extension = $request->cv->extension();
-        //Rename the file and retain the extension
-        $filename = $request->input('associate_name').'.'.$extension;
-        //Upload file and get its destination path
-        $cv_url = $request->cv->storeAs('cvs', $filename);
-
-        $transcript = $request->file('transcript');
-        $extension = $request->transcript->extension();
-        $filename = $request->input('associate_name').'.'.$extension;
-        $transcript_url = $request->transcript->storeAs('transcripts', $filename);
-
+        return Associate::all();
     }
 
     /*****Download associates cv**/
     public function downloadCV($id)
     {
-        $associate = Associate::find($id);
+        $associate = Associate::findOrFail($id);
         return Storage::download($associate->cv_url, $associate->name);
     }
      /*****Download associates transcript**/
 
   public function downloadTranscript($id)
   {
-        $associate = Associate::find($id);
+        $associate = Associate::findOrFail($id);
         return Storage::download($associate->transcript_url, $associate->name);
   }
     /**

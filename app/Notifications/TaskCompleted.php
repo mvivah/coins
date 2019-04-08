@@ -6,19 +6,19 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use App\Task;
 class TaskCompleted extends Notification
 {
     use Queueable;
-
+    public $task;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Task $task)
     {
-        //
+       $this->Task = $task;
     }
 
     /**
@@ -41,9 +41,10 @@ class TaskCompleted extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                        ->subject('Task Completed')
+                        ->greeting('Congrats!')
+                        ->line('Your Task has been. Click below for details')
+                        ->action('View Task',url('/tasks/'.$this->task->id));
     }
 
     /**

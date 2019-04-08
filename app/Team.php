@@ -16,7 +16,7 @@ class Team extends Model
 
     public function targets(){
 
-        return $this->hasMany('App\Target');
+        return $this->belongsToMany('App\Target');
 
     }
 

@@ -8,5 +8,6 @@ class AssociateProject extends Model
 {
     
     protected $guarded=[];
+    protected $table = 'associate_project';
 
 }

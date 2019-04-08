@@ -8,5 +8,6 @@ class OpportunityUser extends Model
 {
 
     protected $guarded = [];
+    protected $table = 'opportunity_user';
     
 }

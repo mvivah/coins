@@ -6,19 +6,19 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use App\Project;
 class ProjectCompleted extends Notification
 {
     use Queueable;
-
+    public $project;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Project $project)
     {
-        //
+       $this->project = $project;
     }
 
     /**
@@ -41,9 +41,10 @@ class ProjectCompleted extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                        ->subject('Project Completed')
+                        ->greeting('Congrats!')
+                        ->line('Your project has been. Click below for details')
+                        ->action('View Project',url('/projects/'.$this->project->id));
     }
 
     /**

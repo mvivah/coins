@@ -28,7 +28,7 @@
                         <ol class="list-group">
                             <li class="list-group-item list-group-item-action active">
                                 Documents <span class="badge badge-danger">{{ $associate->documents->count() }}</span>
-                                <a  class="btn btn-sm btn-outline-light {{($disabled? 'disabled':'')}}" data-name="{{ $associate->opportunity_name}}" data-owner="opportunity_id" data-id="{{ $associate->id}}" id="opportunity-document" style="float:right;" title="Add Document">
+                                <a  class="btn btn-sm btn-outline-light {{($disabled? 'disabled':'')}}" data-name="{{ $associate->opportunity_name}}" data-owner="opportunity_id" data-id="{{ $associate->id}}" id="associate_document" style="float:right;" title="Add Document">
                                 Add
                                 </a>
                             </li>

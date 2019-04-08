@@ -13,7 +13,7 @@ class CreateOpportunityUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('opportunity_users', function (Blueprint $table) {
+        Schema::create('opportunity_user', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('opportunity_id');
             $table->string('user_id');

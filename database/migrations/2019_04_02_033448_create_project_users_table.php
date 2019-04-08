@@ -13,7 +13,7 @@ class CreateProjectUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_users', function (Blueprint $table) {
+        Schema::create('project_user', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('project_id');
             $table->string('user_id')->unique();

@@ -2,11 +2,10 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-10">
         <div class="col-md-5">
-            <div class="card mx-auto mt-4 shadow-sm border-info">
-                <div class="card-header bg-info text-white text-center">{{ __('AH Consulting') }}</div>
-
+            <div class="card mx-auto mt-5 shadow-sm border-primary">
+                <div class="card-header bg-primary text-white text-center">{{ __('AH Consulting') }}</div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf

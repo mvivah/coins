@@ -18,7 +18,6 @@ class ServicelinesTableSeeder extends Seeder
             ['id' => 2,'beneficiary'=>'Business Development','service_code'=>202, 'service_name' => 'Lead qualification', 'created_by' => $user],
             ['id' => 3,'beneficiary'=>'Business Development','service_code'=>203, 'service_name' => 'Information Search', 'created_by' => $user],
             ['id' => 4,'beneficiary'=>'Business Development','service_code'=>204, 'service_name' => 'Submissions', 'created_by' => $user],
-            ['id' => 5,'beneficiary'=>'Business Development','service_code'=>205, 'service_name' => 'OM Maintenance and follow up', 'created_by' => $user],
             ['id' => 6,'beneficiary'=>'Opportunities','service_code'=>101, 'service_name' => 'Monitoring & Evaluation Services', 'created_by' => $user],
             ['id' => 7,'beneficiary'=>'Opportunities','service_code'=>102, 'service_name' => 'Surveys and Research', 'created_by' => $user],
             ['id' => 8,'beneficiary'=>'Opportunities','service_code'=>103, 'service_name' => 'Policy Analysis and Design', 'created_by' => $user],

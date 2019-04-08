@@ -9,13 +9,9 @@
     </ol>
     </nav>
     <div class="container-fluid">
-        @can('isAdmin')
-            <p>
-                <a class="btn btn-danger btn-sm text-white" data-toggle="modal" data-target="#addpartner">
-                    <i class="fa fa-plus"></i>Add Partners
-                </a>
-            </p>
-        @endcan
+        @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+        <a href="#" class="btn btn-outline-danger mb-2" data-toggle="modal" data-target="#addpartner"><i class="fa fa-city"></i> Add Partner</a>
+        @endif
         <div class="table-responsive">
             <table class="table table-sm table-striped dat">
                 <thead>

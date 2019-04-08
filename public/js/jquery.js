@@ -66,3 +66,6 @@ $(document).ready(function(){    //Data Tables
    });
 })
 
+$(".opportunity_taskview").click(function(){
+    $(this).toggleClass("down"); 
+});

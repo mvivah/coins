@@ -6,19 +6,19 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use App\Opportunity;
 class OpportunityAssigned extends Notification
 {
     use Queueable;
-
+    public $opportunity;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Opportunity $opportunity)
     {
-        //
+       $this->opportunity = $opportunity;
     }
 
     /**
@@ -41,9 +41,10 @@ class OpportunityAssigned extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                        ->subject('Opportunity Assigned')
+                        ->greeting('Hello!')
+                        ->line('You have a new Opportunity assigned to you. Click below for details')
+                        ->action('View Opportunity',url('/opportunities/'.$this->opportunity->id));
     }
 
     /**

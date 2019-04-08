@@ -89,13 +89,13 @@ class ContactsController extends Controller
      */
     public function getcontact($id)
     {
-        $contact = contact::find($id);
+        $contact = contact::findOrFail($id);
         return $contact;
     }
 
     public function show($id)
     {
-        $contact = Contact::find($id);
+        $contact = Contact::findOrFail($id);
         return view('contacts.show',compact('contact'));
     }
     /**
@@ -106,7 +106,7 @@ class ContactsController extends Controller
      */
     public function edit($id)
     {
-        return Contact::find($id);
+        return Contact::findOrFail($id);
     }
 
     /**

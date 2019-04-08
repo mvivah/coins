@@ -50,7 +50,8 @@ class TimesheetsController extends Controller
         $data = $request->validate([
             'beneficiary'=>'required',
             'serviceline_id'=>'required',
-            'om_number'=>'nullable',
+            'opportunity_id'=>'nullable',
+            'project_id'=>'nullable',
             'activity_date'=>'required',
             'duration'=>'required',
             'activity_description'=>'required'
@@ -61,7 +62,8 @@ class TimesheetsController extends Controller
                 'user_id'=>Auth::user()->id,
                 'beneficiary' => $request->beneficiary,
                 'serviceline_id' => $request->serviceline_id,
-                'om_number' => $request->om_number,
+                'opportunity_id' => $request->opportunity_id,
+                'project_id' => $request->project_id,
                 'activity_date' =>  $request->activity_date[$key],
                 'duration' =>  $request->duration[$key],
                 'activity_description' => $request->activity_description,
@@ -128,7 +130,7 @@ class TimesheetsController extends Controller
      */
     public function show($id)
     {
-        $timesheet = Timesheet::find($id);
+        $timesheet = Timesheet::findOrFail($id);
         return response()->json($timesheet);
     }
 

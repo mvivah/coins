@@ -8,7 +8,7 @@
 </nav>
 <div class="container-fluid">
 	@if(Gate::check('isAdmin') || Gate::check('isDirector'))
-		<a href="#" class="btn btn-danger btn-sm mb-2" id="create_opportunity"><i class="fa fa-plus"></i> Create Opportunity</a>
+		<a href="#" class="btn btn-outline-danger mb-2" id="create_opportunity"><i class="fa fa-cart-plus"></i> Create Opportunity</a>
 	@endif
 	<div class="row">
 		<div class="col-md-12 p-3 mb-3 shadow-lg rounded">
@@ -39,14 +39,14 @@
 						<label>Stages:</label>
 						<select class="custom-select mr-sm-2" name="opportunityStage" id="opportunityStage">
 							<option value="">-Select Stage-</option>
-							<option value="Qualification">Qualification</option>
-							<option value="Preparation">Preparation</option>
-							<option value="Review">Review</option>
+							<option value="Under Qualification">Qualification</option>
+							<option value="Under Preparation">Preparation</option>
+							<option value="Under Review">Review</option>
 							<option value="Submitted">Submitted</option>
 							<option value="Not Submitted">Not Submitted</option>
 							<option value="Dropped">Dropped</option>
-							<option value="Lost">Lost</option>
-							<option value="Won">Won</option>
+							<option value="Closed Lost">Lost</option>
+							<option value="Closed Won">Won</option>
 							<option value="NULL">All Stages</option>
 						</select>
 					</div>

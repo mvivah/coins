@@ -95,7 +95,7 @@ class TeamsController extends Controller
 
     public function show($id)
     {
-        $team = Team::find($id);
+        $team = Team::findOrFail($id);
         $users = User::where('team_id',$id)->get();
         $user_data = [];
         // foreach($team->users as $user){

@@ -42,7 +42,7 @@ class ProjectsController extends Controller
 
     public function show(Project $project)
     {
-        $project = Project::find($project->id);   
+        $project = Project::findOrFail($project->id);   
         return view('projects.show',compact('project'));
     }
     
@@ -54,7 +54,7 @@ class ProjectsController extends Controller
      */
     public function edit($id)
     {
-        $project = Project::find($id);
+        $project = Project::findOrFail($id);
         return $project;
     }
     /**
@@ -82,13 +82,13 @@ class ProjectsController extends Controller
             'updated_by'=>Auth::user()->id
         ]);
 
-        $project = Project::find($request->id);
+        $project = Project::findOrFail($request->id);
         $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
 
-        $receiver = User::find($team_leader);
+        $receiver = User::findOrFail($team_leader);
         if( !$receiver){
         }else{
-            User::find($team_leader)->notify(new OpportunityCreated($opportunity));
+            User::findOrFail($team_leader)->notify(new OpportunityCreated($opportunity));
         }
 
         if(!$run){
@@ -109,8 +109,8 @@ class ProjectsController extends Controller
             'completion_date' =>'required',
             'created_by'=>Auth::user()->id]));
 
-        $associate = Associate::find($request->associate_id);
-        $project = Project::find($request->project_id);
+        $associate = Associate::findOrFail($request->associate_id);
+        $project = Project::findOrFail($request->project_id);
         $associate->notify(new ProjectAssigned($project));
         return ['Associate added successfully'];
         
@@ -141,8 +141,8 @@ class ProjectsController extends Controller
             'created_by'=>Auth::user()->id
         ]);
 
-        $user = User::find($request->user_id);
-        $project = Project::find($request->project_id);
+        $user = User::findOrFail($request->user_id);
+        $project = Project::findOrFail($request->project_id);
         if( $user != NULL) $user->notify(new ProjectAssigned($project));
         return ['Cosulntant added successfully'];
 

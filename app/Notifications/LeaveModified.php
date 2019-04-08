@@ -6,19 +6,19 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use App\Leave;
 class LeaveModified extends Notification
 {
     use Queueable;
-
+    public $leave;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Leave $leave)
     {
-        //
+       $this->leave = $leave;
     }
 
     /**
@@ -41,9 +41,10 @@ class LeaveModified extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                        ->subject('Leave Request Modified')
+                        ->greeting('Hello!')
+                        ->line('Your leave request has been modified. Click below for details')
+                        ->action('View Request',url('/leaves/'.$this->leave->id));
     }
 
     /**

@@ -95,4 +95,10 @@ class Opportunity extends Model
         return $this->morphMany('App\Evaluation', 'evaluationable');
 
     }
+
+    public function deliverables(){
+
+        return $this->hasMany('App\Deliverable');
+
+    }
 }

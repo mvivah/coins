@@ -8,9 +8,7 @@ class Target extends Model
 {
     protected $guarded=[];
     
-    public function team(){
-        return $this->belongsTo('App\Team')->withDefault([
-            'id' =>1
-        ]);
+    public function teams(){
+        return $this->belongsToMany('App\Team');
     }
 }

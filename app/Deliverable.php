@@ -23,9 +23,9 @@ class Deliverable extends Model
         });
     }
 
-    public function project(){
+    public function projects(){
 
-        return $this->belongsTo('App\Project');
+        return $this->belongsToMany('App\Project');
 
     }
 
@@ -38,6 +38,12 @@ class Deliverable extends Model
     public function comments(){
 
         return $this->morphMany('App\Comment', 'commentable');
+        
+    }
+
+    public function opportunities(){
+
+        return $this->belongsToMany('App\Opportunity');
         
     }
 }

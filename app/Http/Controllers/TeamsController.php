@@ -6,7 +6,7 @@ use App\Team;
 use App\User;
 use App\Target;
 use App\Assessment;
-use App\Timesheet;
+use App\TaskUser;
 use DB;
 use Session;
 use Gate;
@@ -48,7 +48,7 @@ class TeamsController extends Controller
         // $index = 0;
         //     $timesheets[$index]['user'] = $id;
         //     foreach(['Proposal','EOI','Pre-Qualification'] as $type):
-        //         $timesheets = Timesheet::where(['user_id' => $id])->get();
+        //         $timesheets = TaskUser::where(['user_id' => $id])->get();
         //     endforeach;
         return $personal_targets;
     }
@@ -80,7 +80,7 @@ class TeamsController extends Controller
         $data = $request->validate([
             'team_name'=>'required',
             'team_code'=>'required',
-            'team_leader'=>'required'
+            'team_leader'=>'nullable'
         ]);
 
         $team = Team::create([
@@ -136,6 +136,15 @@ class TeamsController extends Controller
             'updated_by'=>Auth::user()->id
         ]);
         return ['Team updated successfully'];
+    }
+
+    public function getteamleader(Team $team){
+        if($team->team_leader != null){
+            return [$team->team_leader];
+        }else{
+            return [];
+        }
+
     }
 
     public function destroy(Team $team)

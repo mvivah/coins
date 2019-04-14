@@ -1,4 +1,3 @@
-const http = new DataSource();
 const THISDAY = new Date();
 const THISMONTH = THISDAY.getMonth();
 const THISYEAR = THISDAY.getFullYear();
@@ -26,25 +25,26 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( CONTACT_ID != null ){
-                http.put(`/contacts/${CONTACT_ID}`,formData)
-                .then( data => {
-                    console.log(data)
+            if( CONTACT_ID !== null && CONTACT_ID !== '' ){
+                axios.put(`/contacts/${CONTACT_ID}`,formData)
+                .then( response => {
+                    console.log(response.data)
                     $('#contactsForm')[0].reset();
                     $('#addContact').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
+                
             }
             else{
-                http.post('/contacts',formData)
-                .then( data =>{
-                    console.log(data)
+                axios.post('/contacts',formData)
+                .then( response =>{
+                    console.log(response.data)
                     $('#contactsForm')[0].reset();
                     $('#addContact').modal('hide');
                     location.reload();
                 })
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -58,8 +58,9 @@ try{
     //Edit contact
     document.querySelector('.editContact').addEventListener('click', e =>{
         let id = e.target.id;
-        http.get(`/contacts/${id}/edit`)
-        .then( data =>{
+        axios.get(`/contacts/${id}/edit`)
+        .then( response =>{
+            data = response.data;
             document.getElementById('account_name').value = data.account_name;
             document.getElementById('full_address').value = data.full_address;
             document.getElementById('alternate_address').value = data.alternate_address;
@@ -72,7 +73,7 @@ try{
             document.getElementById('contact_id').value = data.id;
             $('#addContact').modal('show');
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
     });
 }
 catch(e){
@@ -92,17 +93,18 @@ try{
 
             let formData = new FormData(this);
             if( OPPORTUNITY_ID !=null ){
-                http.put(`/opportunities/${OPPORTUNITY_ID}`,formData)
+                axios.put(`/opportunities/${OPPORTUNITY_ID}`,formData)
                 .then( () => {
                     $('#opportunityForm')[0].reset();
                     $('#add_opportunity').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{
-                http.post('/opportunities',formData)
-                .then( data =>{
+                axios.post('/opportunities',formData)
+                .then( response =>{
+                    data = response.data;
                     $('#opportunityForm')[0].reset();
                     $('#add_opportunity').modal('hide');
                     location.reload();
@@ -119,8 +121,9 @@ try{
 
     document.getElementById('editOpportunity').addEventListener('click', e =>{
         let id = e.target.dataset.id;
-        http.get(`/opportunities/${id}/edit`)
-        .then(data =>{
+        axios.get(`/opportunities/${id}/edit`)
+        .then( response =>{
+            data = response.data;
             document.getElementById('opportunity_name').value = data.opportunity_name;
             document.getElementById('the_contact_id').value = data.contact_id;
             document.getElementById('thisContact').value = data[0];
@@ -137,23 +140,56 @@ try{
             document.getElementById('opportunity_id').value = data.id;
             $('#add_opportunity').modal('show');
         } )
-        .catch( err => console.error(err) )
+        .catch( error => console.error(err) )
     });
 
-    //Add Task
-    document.querySelectorAll('.opportunity_task').forEach(element => {
+    //Add Opportunity Task
+    document.querySelectorAll('.opportunity_task').forEach(element =>{
         element.addEventListener('click', e =>{
             e.preventDefault();
             assignTask(e.target.id);
         })
     });
 
-    //Save tasks 
+    //Save Opportunity tasks 
     document.getElementById('taskForm').addEventListener('submit', function(e){
         e.preventDefault();
         saveTask();
     });
 
+    //Add Deliverable
+    document.getElementById('add_opportunity_deliverable').addEventListener('click', e =>{
+        e.preventDefault();
+        loadDeliverables(e.target.dataset.id,'Opportunity');
+
+    });
+
+    //Edit Opportunity Deliverable
+    document.querySelectorAll('.edit_opportunity_deliverable').forEach(element => {
+        element.addEventListener('click', e =>{
+            e.preventDefault();
+            pickDeliverable(e.target.id,e.target.parentNode.parentNode.innerText,'Opportunity','Edit');
+        })
+    });
+
+    //Save Opportunity Deliverable
+    document.getElementById('deliverablesForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        FIELD_IDS = ['the_opportunity','deliverable_ids','deliverable_status','deliverable_completion'];
+        let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
+        if( validateForm === 0 ){
+            storeDeliverable(FIELD_IDS);
+        }
+    });
+
+    //Deleted Deliverable
+    document.querySelectorAll('.delete_opportunity_deliverable').forEach(element => {
+        element.addEventListener('click', e =>{
+            e.preventDefault();
+            deliverableDelete(e.target.id);
+        })
+    });
+    
     //View Opportunity Tasks
     document.querySelectorAll('.opportunity_taskview').forEach(element => {
         element.addEventListener('click', e =>{
@@ -204,19 +240,20 @@ try{
         let source = (item == 'Opportunity')? `/removeConsultant/${id}` : `/unassignConsultant/${id}`;
         deleteItem(source);
     });
+
     // Save score
     document.getElementById('saveScore').addEventListener('click', e => {
         e.preventDefault();
         let saveScore = document.getElementById('saveScore');
         let formData = new FormData(saveScore);
 
-        http.post('/scores',formData)
-        .then( () => {
+        axios.post('/scores',formData)
+        .then( response => {
             $('#scoresForm')[0].reset();
             $('#addScore').modal('hide');
             location.reload();
         })
-        .catch( err => console.error(err));
+        .catch( error => console.error(err));
     });
 
     //Details for sales stages
@@ -245,8 +282,9 @@ catch(e){
 }
 try{
     document.getElementById('create_opportunity').addEventListener('click', e =>{
-        http.get('/getcontacts')
-        .then( data =>{
+        axios.get('/getcontacts')
+        .then( response =>{
+            data = response.data;
             if(data.length != 0){
                 $('#add_opportunity').modal('show');
             }else{
@@ -270,8 +308,9 @@ try{
             let formData = new FormData();
             let options = [];
             formData.append('account_name', account_name)
-            http.post('/listContacts',formData)
-            .then( data =>{
+            axios.post('/listContacts',formData)
+            .then(response =>{
+                data = response.data;
                 if(data.length == 0){
                     options.push(`<option value="0" disabled selected>No Contacts found...</option>`);
                     document.getElementById("selectedContact").innerHTML = options;
@@ -322,6 +361,24 @@ try{
         exportExcel('sorted_opportunities','sorted_opportunities');
         e.preventDefault();
     })
+
+    //Comfirm teamleaders
+    document.getElementById('assignedTeam').addEventListener('change', e =>{
+        axios.get(`/getteamleader/${e.target.value}`)
+        .then( response =>{
+            data = response.data;
+            if( data.length == 0){
+                showMessage('error',`There are no Team leaders`);
+                $('#add_opportunity').modal('hide');
+                return false;
+            }else{
+
+            }
+        })
+        .catch( e =>{
+            console.error(e)
+        })
+    });
 }
 catch(e){
 
@@ -332,8 +389,9 @@ try{
     //Edit project
     document.getElementById('editProject').addEventListener('click', e =>{
         let id = e.target.dataset.id;
-        http.get(`/projects/${id}/edit`)
-        .then(data =>{
+        axios.get(`/projects/${id}/edit`)
+        .then( response =>{
+            data = response.data;
             document.getElementById('project_stage').value = data.project_stage;
             document.getElementById('project_status').value = data.project_status;
             document.getElementById('initiation_date').value = data.initiation_date;
@@ -341,7 +399,7 @@ try{
             document.getElementById('projectid').value = data.id;
             $('#edit_Project').modal('show');
         } )
-        .catch( err => console.error(err) )
+        .catch( error => console.error(err) )
     });
 
     //Update project
@@ -354,14 +412,15 @@ try{
         if( validateForm === 0 ){
             let id = document.getElementById('projectid').value;
             let formData = new FormData(this);
-            http.post(`/projects/${id}`,formData)
-            .then( data => {
+            axios.post(`/projects/${id}`,formData)
+            .then( response => {
+                data = response.data;
                 console.log(data.message)
                 $('#edit_Project').modal('hide');
                 $('#editProjectForm')[0].reset();
                 location.reload();
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         }else{
             console.log(validateForm)
         }
@@ -389,8 +448,8 @@ try{
 
     //Assign Associates to project
     document.getElementById('assignAssociate').addEventListener('click', e =>{
-        http.get('/getassociates')
-        .then( data =>{
+        axios.get('/getassociates')
+        .then( response =>{
             if(data.length != 0){
                 document.getElementById('projectAssociate').value = e.target.dataset.id;
                 $('#pickAssociate').modal('show');
@@ -412,58 +471,27 @@ try{
         console.log('Deleting....')
     });
 
-    //Add Deliverable
-    document.getElementById('addDeliverable').addEventListener('click', e => {
-        document.getElementById('the_project_id').value = e.target.dataset.id;
-        document.getElementById('opportunity_deliverable').style.display = 'none';
-        $('#add_deliverables').modal('show');
+    //Add Project Deliverable
+    document.getElementById('add_project_deliverable').addEventListener('click', e => {
+        e.preventDefault();
+        loadDeliverables(e.target.dataset.id,'Project');
     });
+
+    //Save Project Deliverable
     document.getElementById('deliverablesForm').addEventListener('submit', function(e){
         e.preventDefault();
-        const DELIVERABLE_INDEX = document.getElementById('deliverable_id');
-        const DELIVERABLE_ID = (DELIVERABLE_INDEX == null)? null:DELIVERABLE_INDEX.value;
-        FIELD_IDS = ['deliverable_name','deliverable_status','deliverable_completion'];
-    
+        FIELD_IDS = ['the_project_id','deliverable_ids','deliverable_status','deliverable_completion'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
-            let formData = new FormData(this);
-            if( DELIVERABLE_ID !=null ){
-                http.put(`/deliverables/${DELIVERABLE_ID}`,formData)
-                .then( () => {
-                    $('#deliverablesForm')[0].reset();
-                    $('#add_deliverables').modal('hide');
-                    location.reload();
-                } )
-                .catch( err => console.error(err) );
-            }
-            else{ 
-                http.post('/deliverables',formData)
-                .then( () => {
-                    $('#deliverablesForm')[0].reset();
-                    $('#add_deliverables').modal('hide');
-                    //location.reload();
-                })
-                .catch( err => console.error(err) );
-            }
+            storeDeliverable(FIELD_IDS);
         }
     });
 
-    //Edit Deliverable
-    document.querySelectorAll('.editDeliverable').forEach( editDeliverable => {
+    //Edit Project Deliverable
+    document.querySelectorAll('.edit_project_deliverable').forEach( editDeliverable => {
         editDeliverable.addEventListener('click', e =>{ 
-            let id = e.target.id;
-            http.get(`/deliverables/${id}/edit`)
-            .then(data =>{
-                document.getElementById('deliverable_name_project').value = data.deliverable_name;
-                document.getElementById('deliverable_status').value = data.deliverable_status;
-                document.getElementById('deliverable_completion').value = data.deliverable_completion;
-                document.getElementById('the_project_id').value = data.project_id;
-                document.getElementById('deliverable_id').value = data.id;
-                document.getElementById('opportunity_deliverable').style.display = 'none';
-                document.getElementById('deliverable_title').innerText = 'Update Deliverable';
-                $('#add_deliverables').modal('show');
-            })
-            .catch( err => console.error(err) );
+            e.preventDefault();
+            pickDeliverable(e.target.id,e.target.parentNode.parentNode.innerText,'Project','Edit');
         });
     });
         
@@ -493,8 +521,8 @@ try{
         editDeliverable.addEventListener('click', e =>{ 
             let id = e.target.id;
             let options = [];
-            http.get(`/tasks/${id}/edit`)
-            .then( data => {
+            axios.get(`/tasks/${id}/edit`)
+            .then( response => {
 
                 document.getElementById("the_serviceline").innerHTML = options;
                 document.getElementById('task_name').value = data.task_name;
@@ -504,7 +532,7 @@ try{
                 document.getElementById('task_id').innerText = 'Update Task';
                 $('#addTask').modal('show');
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         });
     });
 
@@ -556,20 +584,20 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( ASSOCIATE_ID !=null ){
-                http.put(`/associates/${ASSOCIATE_ID}`,formData)
+                axios.put(`/associates/${ASSOCIATE_ID}`,formData)
                 .then( () => {
                     $('#associateForm')[0].reset();
                     $('#addAssociate').modal('hide');
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{ 
-                http.post('/associates',formData)
+                axios.post('/associates',formData)
                 .then( () => {
                     $('#associateForm')[0].reset();
                     $('#addAssociate').modal('hide');
                 })
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
                 
             }
         }
@@ -581,27 +609,28 @@ try{
         let formData = new FormData();
         let options = [];
         formData.append('expertise',expertise);
-        http.post('/getSpecilization',formData)
-        .then( result => {
-            if(result.length == 0){
+        axios.post('/getSpecilization',formData)
+        .then(response =>{
+            data = response.data;
+            if(data.length == 0){
                 options.push(`<option value="0" disabled selected>No Specializations found...</option>`);
                 showMessage('error',`No specializations for the selected expertise...`);
                 document.getElementById('associate_btn').setAttribute('disabled','disabled');
             }else{
-                result.forEach( data =>{
-                options.push( `<option value="${data.id}">${data.specialization}</option>` );
+                data.forEach( result =>{
+                options.push( `<option value="${result.id}">${result.specialization}</option>` );
                 document.getElementById('associate_btn').removeAttribute('disabled','disabled');
                 })
             }
             document.getElementById("associate_specialization").innerHTML = options;
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
     });
 
     document.querySelector('.editAssociate').addEventListener('click', e =>{
         let id = e.target.id;
-        http.get(`/associates/${id}/edit`)
-        .then( data =>{
+        axios.get(`/associates/${id}/edit`)
+        .then( response =>{
             document.getElementById('associate_name').value = data.associate_name;
             document.getElementById('associate_gender').value = data.associate_gender;
             document.getElementById('associate_email').value = data.associate_email;
@@ -615,7 +644,7 @@ try{
             document.getElementById('associate_id').value = data.id;
             $('#addAssociate').modal('show');
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
     });
 }
 catch(e){
@@ -624,13 +653,14 @@ catch(e){
 
 try{
     //Staff Assessment
-    document.getElementById('assess-user').addEventListener('click', e => {
+    document.getElementById('assess_user').addEventListener('click', e => {
         const {dataset : URL_PARAMS } = e.target
         const id = URL_PARAMS.id;
         const teamId = URL_PARAMS.team;
         let inputs = [];
-        http.get(`/targets/${teamId}`)
-        .then( data => {
+        axios.get(`/targets/${teamId}`)
+        .then(response =>{
+            data = response.data;
             data.forEach( record => {
                 const TARGET_NAME = record.name.split(' ').join('_').toLowerCase();
                 const TARGET_ID = record.id;
@@ -642,7 +672,7 @@ try{
             })
             document.getElementById('assessment_page').innerHTML = inputs;
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
 
         document.getElementById('consultant_id').value = id;
         document.getElementById('assessment_period').value = `${GET_MONTH_NAME(THISDAY)}-${THISYEAR}`;
@@ -663,46 +693,70 @@ try{
         let validateForm = validateDynamic(FIELDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            http.post('/assessments',formData)
+            axios.post('/assessments',formData)
             .then( (data) => {
                 console.log(data)
                 $('#staffAssessment').modal('hide');
                 $('#assessmentForm')[0].reset();
                 //location.reload();
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         }
     })
 
-    //Add timesheet informantion
-    document.querySelectorAll('.addToTimesheet').forEach(element => {
+    //Edit user task
+    document.querySelectorAll('.edit_user_task').forEach(element => {
+        element.addEventListener('click', e =>{
+            axios.get(`/tasks/${e.target.id}/edit`)
+            .then( response => {
+                data = response.data
+                document.getElementById('task_name').value = data.task_name;
+                document.getElementById('task_name').setAttribute('readonly','readonly');
+                document.getElementById('task_status').value = data.task_status;
+                document.getElementById('task_deadline').value = data.task_deadline;
+                document.getElementById('task_id').value = data.id
+                document.getElementById('staff_assignment').style.display = 'none';
+                document.getElementById('task_title').innerText = 'Update Task';
+                $('#addTask').modal('show');
+            })
+            .catch( error => console.log(error.message) );
+        });
+    });
+
+    //Save user task
+    document.getElementById('taskForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        saveTask()
+    });
+
+    //Add user timesheet
+    document.querySelectorAll('.add_task_timesheet').forEach(element => {
         element.addEventListener('click', e =>{
             let options = [];
-            let omNumber =  e.target.id;
-            let theBenefactor =  e.target.dataset.owner;
-            document.querySelector('input[name=om_number]').value = omNumber;
+            document.querySelector('#the_task_id').value = e.target.id;
             let selectList = document.getElementById('beneficiary').options;
             for (let option of selectList) {
                 if(option.value == 'Business Development'||option.value == 'Administration'){
                     option.remove()
                 }
             }
-            document.getElementById('beneficiary').value = theBenefactor;
+            document.getElementById('beneficiary').value = 'Opportunities';
             let formData = new FormData();
             formData.append('beneficiary','Opportunities')
-            http.post('/getServicelines',formData)
-            .then( data => {
+            axios.post('/getServicelines',formData)
+            .then(response =>{
+                data = response.data;
                 if(data == null){
                     options.push(`<option value="0" disabled selected>No Records...</option>`);
                 }else{
                     data.forEach( serviceline =>{
-                        options.push( `<option value="${serviceline.id}">${serviceline.service_name}</option>` );
+                        options.push( `<option value="${serviceline.id}" selected>${serviceline.service_name}</option>` );
                     })
                 }
                 document.getElementById("the_serviceline").innerHTML = options;
                 $('#addTimesheet').modal('show');
             })    
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         });
     });
 
@@ -717,8 +771,9 @@ try{
     let LEAVE_OPTIONS,FORWARDED_LEAVE,booked_days;
     document.getElementById('requestLeave').addEventListener('click', (e) =>{
         const THIS_USER = e.target.dataset.user;
-        http.get('/holidays')
-        .then( data => {
+        axios.get('/holidays')
+        .then(response =>{
+            data = response.data;
             data.forEach((object) =>{
                 let savedHolidays = new Date(object.holiday_date);
                 let savedMonth = GET_MONTH_NAME(new Date(object.holiday_date));
@@ -727,20 +782,20 @@ try{
                 PUBLIC_HOLIDAYS.push(actualHoliday);
             });
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
 
         //leave options object
-        http.get('/leavesettings')
-        .then( data => {
-            LEAVE_OPTIONS = data;
+        axios.get('/leavesettings')
+        .then( response => {
+            LEAVE_OPTIONS = response.data;
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
         //forwarded leave object
-        http.get(`/leaveforwards/${THIS_USER}`)
-        .then( data => {
-            FORWARDED_LEAVE = data;
+        axios.get(`/leaveforwards/${THIS_USER}`)
+        .then( response => {
+            FORWARDED_LEAVE = response.data;
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
 
         $('#addleave').modal('show');
     });
@@ -811,8 +866,8 @@ try{
                 sessionStorage.setItem('actual',actualLeave);
             }
 
-            http.get('/leavesettings')
-            .then( data => {
+            axios.get('/leavesettings')
+            .then( response => {
                 let leave_types = [];
                 leave_types.push(data.id)
                 let leave_type = document.getElementById('leavesetting_id').value;
@@ -824,11 +879,11 @@ try{
                     }
                 });
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
 
-            http.get('/leaveforwards')
-            .then( data => console.log(data) )
-            .catch( err => console.error(err) );
+            axios.get('/leaveforwards')
+            .then( response => console.log(data) )
+            .catch( error => backendValidation(error.response.data.errors) );
 
             let formData = new FormData();
             formData.append('leavesetting_id',document.getElementById('leavesetting_id').value)
@@ -837,9 +892,9 @@ try{
             formData.append('leave_detail', document.getElementById('leave_detail').value)
             formData.append('duration', sessionStorage.getItem('actual'))
             formData.append('leave_status', document.querySelector('input[name=leave_status]').value)
-            http.post('/leaves',formData)
-            .then( data => console.log(data) )
-            .catch( err => console.error(err) );
+            axios.post('/leaves',formData)
+            .then( response => console.log(data) )
+            .catch( error => backendValidation(error.response.data.errors) );
             
         }
     });
@@ -861,8 +916,9 @@ try{
         let formData = new FormData();
         let options = [];
         formData.append('beneficiary',beneficiary)
-        http.post('/getServicelines',formData)
-        .then( data => { 
+        axios.post('/getServicelines',formData)
+        .then(response =>{
+            data = response.data;
             if(data == null){
                 options.push(`<option value="0" disabled selected>No Records...</option>`);
             }else{
@@ -874,7 +930,7 @@ try{
             }
             document.getElementById("the_serviceline").innerHTML = options;
         })    
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
     });
 
 }
@@ -895,22 +951,22 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( LEAVESETTING_ID !=null ){
-                http.put(`/leavesettings/${LEAVESETTING_ID}`,formData)
+                axios.put(`/leavesettings/${LEAVESETTING_ID}`,formData)
                 .then( () => {
                     $('#leaveSettingForm')[0].reset();
                     $('#leaveSetting').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{  
-                http.post('/leavesettings',formData)
-                .then( data => {
+                axios.post('/leavesettings',formData)
+                .then( response => {
                     $('#leaveSettingForm')[0].reset();
                     $('#leaveSetting').modal('hide');
                     location.reload();
                 })
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -920,15 +976,15 @@ try{
     editButtons.forEach( editButton => {
         editButton.addEventListener('click', e =>{
             let id =  e.target.id;
-            http.get(`/leavesettings/${id}/edit`)
-            .then(data =>{
+            axios.get(`/leavesettings/${id}/edit`)
+            .then( response =>{
                 document.getElementById('leave_type').value = data.leave_type;
                 document.getElementById('annual_lot').value = data.annual_lot;
                 document.getElementById('bookable_days').value = data.bookable_days;
                 document.getElementById('leavesetting_id').value = data.id;
                 $('#leaveSetting').modal('show');
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         });
     });
 
@@ -949,22 +1005,22 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( SERVICELINE_ID !=null ){
-                http.put(`/servicelines/${SERVICELINE_ID}`,formData)
+                axios.put(`/servicelines/${SERVICELINE_ID}`,formData)
                 .then( () => {
                     $('#servicelinesForm')[0].reset();
                     $('#serviceLine').modal('hide');
                     location.reload()
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{ 
-                http.post('/servicelines',formData)
+                axios.post('/servicelines',formData)
                 .then( () => {
                     $('#servicelinesForm')[0].reset();
                     $('#serviceLine').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -974,8 +1030,8 @@ try{
     editButtons.forEach( editButton => {
         editButton.addEventListener('click', e =>{
             let id = e.target.id;
-            http.get(`/servicelines/${id}/edit`)
-            .then( data =>{
+            axios.get(`/servicelines/${id}/edit`)
+            .then( response =>{
                 document.getElementById('service_beneficiary').value = data.beneficiary;
                 document.getElementById('service_code').value = data.service_code;
                 document.getElementById('service_name').value = data.service_name;
@@ -983,7 +1039,7 @@ try{
                 document.getElementById('servicelines_form_heading').innerText = 'Update Serviceline';
                 $('#addServiceLine').modal('show');
             })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
         });
     });
 
@@ -1010,21 +1066,21 @@ try{
             let formData = new FormData(this);
             
             if( HOLIDAY_ID !=null ){
-                http.put(`/holidays/${HOLIDAY_ID}`,formData)
+                axios.put(`/holidays/${HOLIDAY_ID}`,formData)
                 .then( () => {
                     $('#holidaysForm')[0].reset();
                     $('#publicDays').modal('hide');
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{
-                http.post('/holidays',formData)
+                axios.post('/holidays',formData)
                 .then( () => {
                     $('#holidaysForm')[0].reset();
                     $('#publicDays').modal('hide');
                     document.getElementById('holidaysBody').load(location.href + ' #holidaysBody');
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             } 
         }
     });
@@ -1034,14 +1090,14 @@ try{
     editButtons.forEach( editButton => {
         editButton.addEventListener('click', e =>{
             let id = e.target.id;
-            http.get(`/holidays/${id}/edit`)
-            .then( data => {
+            axios.get(`/holidays/${id}/edit`)
+            .then( response => {
                 document.getElementById('holiday').value = data.holiday;
                 document.getElementById('holiday_date').value = data.holiday_date;
                 document.getElementById('holiday_id').value = data.id;
                 $('#publicDays').modal('show');
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         })
     });
 
@@ -1056,22 +1112,22 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( ROLE_ID !=null ){
-                http.put(`/roles/${ROLE_ID}`,formData)
+                axios.put(`/roles/${ROLE_ID}`,formData)
                 .then( () => {
                     $('#rolesForm')[0].reset();
                     $('#addRole').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{
-                http.post('/roles',formData)
+                axios.post('/roles',formData)
                 .then( () => {
                     $('#rolesForm')[0].reset();
                     $('#addRole').modal('hide');
                     location.reload();
                 })
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -1081,15 +1137,15 @@ try{
    editButtons.forEach( editButton => {
         editButton.addEventListener('click', e =>{
             let id = e.target.id;
-            http.get(`/roles/${id}/edit`)
-                .then( data => {
+            axios.get(`/roles/${id}/edit`)
+                .then( response => {
                 document.getElementById('role_name').value = data.role_name;
                 document.getElementById('role_description').value = data.role_description;
                 document.getElementById('role_id').value = data.id;
                 document.getElementById('roles_form_heading').innerText = 'Update Role';
                 $('#addRole').modal('show');
             } )
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         });
     });
 
@@ -1105,22 +1161,22 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( TEAM_ID !=null ){
-                http.put(`/teams/${TEAM_ID}`,formData)
+                axios.put(`/teams/${TEAM_ID}`,formData)
                 .then( () => {
                     $('#teamsForm')[0].reset();
                     $('#addTeams').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{   
-                http.post('/teams',formData)
+                axios.post('/teams',formData)
                 .then( () => {
                     $('#teamsForm')[0].reset();
                     $('#addTeams').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -1131,8 +1187,8 @@ try{
         editButton.addEventListener('click', e =>{
             e.preventDefault();
             let id = e.target.id;
-            http.get(`/teams/${id}/edit`)
-            .then( data =>{
+            axios.get(`/teams/${id}/edit`)
+            .then( response =>{
                 document.getElementById('team_name').value = data.team_name;
                 document.getElementById('team_code').value = data.team_code;
                 document.getElementById('team_leader').value = data.team_leader;
@@ -1140,7 +1196,7 @@ try{
                 document.getElementById('team_form_heading').innerText = 'Update team';     
                 $('#addTeams').modal('show');
             } )
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         });
     })
 
@@ -1155,21 +1211,21 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( EXPERTISE_ID !=null ){
-                http.put(`/expertise/${EXPERTISE_ID}`,formData)
+                axios.put(`/expertise/${EXPERTISE_ID}`,formData)
                 .then( () => {
                     $('#expertiseForm')[0].reset();
                     $('#addExpertise').modal('hide');
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{
-                http.post('/expertise',formData)
-                .then( data => {            
+                axios.post('/expertise',formData)
+                .then( response => {            
                     $('#expertiseForm')[0].reset();
                     $('#addExpertise').modal('hide');
                     location.reload();
                 })
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -1179,15 +1235,15 @@ try{
     editButtons.forEach( editButton => {
         editButton.addEventListener('click', e =>{
             let id = e.target.id;
-            http.get(`/expertise/${id}/edit`)
-            .then( data =>{
+            axios.get(`/expertise/${id}/edit`)
+            .then( response =>{
                 document.getElementById('field_name').value = data.field_name;
                 document.getElementById('field_description').value = data.field_description;
                 document.getElementById('expertise_id').value = data.id;
                 document.getElementById('expertise_form_heading').innerText = 'Update Expertise';     
                 $('#addExpertise').modal('show');
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         });
     })
 
@@ -1218,24 +1274,24 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( SPECIALIZATION_ID !=null ){
-                http.put(`/specialization/${SPECIALIZATION_ID}`,formData)
+                axios.put(`/specialization/${SPECIALIZATION_ID}`,formData)
                 .then( () => {
                     $('#specializationForm')[0].reset();
                     $('#addSpecialization').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{ 
-                http.post('/specialization',formData)
-                .then( data => {
+                axios.post('/specialization',formData)
+                .then( response => {
                     console.log(data);
 
                     $('#specializationForm')[0].reset()
                     $('#addSpecialization').modal('hide')
                 location.reload();
                 })
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -1243,15 +1299,15 @@ try{
     //Update specialization
     document.querySelectorAll('.editSpecialization').forEach( editSpecialization =>{
         editSpecialization.addEventListener('click', e =>{
-            http.get(`/specialization/${e.target.id}/edit`)
-            .then( data =>{
+            axios.get(`/specialization/${e.target.id}/edit`)
+            .then( response =>{
                 document.getElementById('the_expertise').value = data.expertise_id;
                 document.getElementById('specialization').value = data.specialization;
                 document.getElementById('specialization_id').value = data.id;
                 document.getElementById('specialization_title').innerText = 'Update Specialization';     
                 $('#addSpecialization').modal('show');
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         })
     })
     document.getElementById('targetsForm').addEventListener('submit', function(e){
@@ -1263,24 +1319,24 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( TARGET_ID !=null ){
-                http.put(`/targets/${TARGET_ID}`,formData)
+                axios.put(`/targets/${TARGET_ID}`,formData)
                 .then( (data) => {
                     console.log(data)
                     $('#targetsForm')[0].reset();
                     $('#addTargets').modal('hide');
                     location.reload()
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{ 
-                http.post('/targets',formData)
+                axios.post('/targets',formData)
                 .then( (data) => {
                     console.log(data)
                     $('#targetsForm')[0].reset();
                     $('#addTargets').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     })
@@ -1290,8 +1346,8 @@ try{
     editButtons.forEach( editButton => {
         editButton.addEventListener('click', e =>{
             let id = e.target.id;
-            http.get(`/targets/${id}/edit`)
-            .then( data =>{
+            axios.get(`/targets/${id}/edit`)
+            .then( response =>{
                 document.getElementById('target_category').value = data.target_category;
                 document.getElementById('target_name').value = data.target_name;
                 document.getElementById('target_value').value = data.target_value;
@@ -1299,7 +1355,7 @@ try{
                 document.getElementById('targets_heading').innerText = 'Update Target';
                 $('#addTargets').modal('show');
             })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
         });
     });
   
@@ -1308,9 +1364,9 @@ try{
         let id =  e.target.dataset.id;
         let formData = new FormData()
         formData.append('status','Confirmed')
-        http.put(`/leaves/${id}`,formData)
-        .then( data => console.log(data) )
-        .catch( err => console.error(err) );
+        axios.put(`/leaves/${id}`,formData)
+        .then( response => console.log(data) )
+        .catch( error => backendValidation(error.response.data.errors) );
     });
 
     //Reject Leave Request
@@ -1318,9 +1374,9 @@ try{
         let id =  e.target.dataset.id;
         let formData = new FormData()
         formData.append('status','Denied')
-        http.put(`/leaves/${id}`,formData)
-        .then( data => console.log(data) )
-        .catch( err => console.error(err) );
+        axios.put(`/leaves/${id}`,formData)
+        .then( response => console.log(data) )
+        .catch( error => backendValidation(error.response.data.errors) );
     });
 
     //Delete Leave
@@ -1341,31 +1397,32 @@ try{
     //Add Timesheet
     document.getElementById('timesheetForm').addEventListener('submit', function(e){
         e.preventDefault();
-        const TIMESHEET_INDEX = document.getElementById('timesheet_id');
-        const TIMESHEET_ID = (TIMESHEET_INDEX == null)? null:TIMESHEET_INDEX.value;
+        const TIMESHEET_INDEX = document.getElementById('task_user_id');
+        const TASKUSER_ID = (TIMESHEET_INDEX == null)? null:TIMESHEET_INDEX.value;
         FIELD_IDS = ['beneficiary','the_serviceline','activity_date','duration','activity_description'];
 
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
+            if( TASKUSER_ID !==null || TASKUSER_ID !=='' ){
+                console.log(TASKUSER_ID)
 
-            if( TIMESHEET_ID !=null ){
-                http.put(`/timesheets/${TIMESHEET_ID}`,formData)
-                .then( () => {
+                axios.put(`/taskusers/${TASKUSER_ID}`,formData)
+                .then( response => {
                     $('#timesheetForm')[0].reset();
                     $('#addTimesheet').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{ 
-                http.post('/timesheets',formData)
+                axios.post('/taskusers',formData)
                 .then( () => {
                     $('#timesheetForm')[0].reset();
                     $('#addTimesheet').modal('hide');
                     location.reload();
                 })
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     });
@@ -1375,8 +1432,8 @@ try{
     reviewTimesheets.forEach( reviewTimesheet =>{
         reviewTimesheet.addEventListener('click', e =>{
             let id =  e.target.id;
-            http.get(`/timesheets/${id}/edit`)
-            .then(data =>{
+            axios.get(`/taskusers/${id}/edit`)
+            .then( response =>{
                 if(data.om_number != null || data.om_number != undefined){
                     document.getElementById('OMField').value = data.om_number;
                     document.getElementById('OMField').setAttribute('required','required');
@@ -1386,8 +1443,8 @@ try{
                     document.querySelector('input[name=om_number]').value=='None';
                 }
                 let options = [];
-                http.get(`/servicelines/${data.serviceline_id}/edit`)
-                .then( data => { 
+                axios.get(`/servicelines/${data.serviceline_id}/edit`)
+                .then( response => { 
                     if(data == null){
                         options.push(`<option value="0" disabled selected>No Records found...</option>`);
                     }else{
@@ -1400,10 +1457,10 @@ try{
                 document.getElementById('duration').value = data.duration;
                 document.getElementById('OMField').value = data.om_number;
                 document.getElementById('activity_description').value = data.activity_description;
-                document.getElementById('timesheet_id').value = data.id;
+                document.getElementById('task_user_id').value = data.id;
                 $('#addTimesheet').modal('show');
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         });
 
     })
@@ -1418,18 +1475,18 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( USER_ID !=null ){
-                http.put(`/users/${USER_ID}`,formData)
+                axios.put(`/users/${USER_ID}`,formData)
                 .then( () => {
                     $('#teamsForm')[0].reset();
                     $('#addTeams').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{  
-                http.post('/users',formData)
+                axios.post('/users',formData)
                 .then( () => document.getElementById('usersBody').load(location.href + ' #usersBody'))
-                .catch( err => console.error(err) );;
+                .catch( error => backendValidation(error.response.data.errors) );;
             }
         }
     });
@@ -1437,8 +1494,8 @@ try{
     //Edit User
     document.getElementById('editUser').addEventListener('click', e => {
         let id = e.target.dataset.id;
-        http.get(`/users/${id}/edit`)
-        .then(data =>{
+        axios.get(`/users/${id}/edit`)
+        .then( response =>{
             document.getElementById('staffId').value = data.staffId;
             document.getElementById('name').value = data.name;
             document.getElementById('gender').value = data.gender;
@@ -1468,7 +1525,7 @@ try{
 
 	        let id = document.getElementById('userId').value;
             let formData = new FormData(this);
-            http.post(`/users/${id}`,formData)
+            axios.post(`/users/${id}`,formData)
             .then(() => {
                 showAlert('User Updated','success');
                 $('#userEdit').modal('hide');
@@ -1503,23 +1560,23 @@ try{
     //     if( validateForm === 0 ){
     //         let formData = new FormData(this);
     //         if( COMMENT_ID != null ){
-    //             http.put(`/comments/${COMMENT_ID}`,formData)
+    //             axios.put(`/comments/${COMMENT_ID}`,formData)
     //             .then( (data) => {
     //                 console.log(data)
     //                 $('#commentsForm')[0].reset();
     //                 $('#addComments').modal('hide');
     //             } )
-    //             .catch( err => console.error(err) );
+    //             .catch( error => backendValidation(error.response.data.errors) );
     //         }
     //         else{   
-    //             http.post('/comments',formData)
-    //             .then( data =>{
+    //             axios.post('/comments',formData)
+    //             .then( response =>{
     //                 console.log(data)
     //                 $('#commentsForm')[0].reset()
     //                 $('#addComments').modal('hide')
     //                 location.reload();
     //             })
-    //             .catch( err => console.error(err) );
+    //             .catch( error => backendValidation(error.response.data.errors) );
     //         }
     //     }
     // });
@@ -1530,13 +1587,13 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            http.post('/evaluations',formData)
-            .then( data =>{
+            axios.post('/evaluations',formData)
+            .then( response =>{
                 $('#evaluationForm')[0].reset();
                 $('#addEvaluations').modal('hide');
                 location.reload();
             })
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         }
     })
 
@@ -1555,24 +1612,24 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( LEAVEFORWAD_ID !=null ){
-                http.put(`/leaveforwards/${LEAVEFORWAD_ID}`,formData)
+                axios.put(`/leaveforwards/${LEAVEFORWAD_ID}`,formData)
                 .then( (data) => {
                     console.log(data)
                     $('#forwardedLeaveForm')[0].reset();
                     $('#addLeaveforward').modal('hide');
                     location.reload()
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
             else{ 
-                http.post('/leaveforwards',formData)
+                axios.post('/leaveforwards',formData)
                 .then( (data) => {
                     console.log(data)
                     $('#forwardedLeaveForm')[0].reset();
                     $('#addLeaveforward').modal('hide');
                     location.reload();
                 } )
-                .catch( err => console.error(err) );
+                .catch( error => backendValidation(error.response.data.errors) );
             }
         }
     })
@@ -1609,12 +1666,12 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            http.post('/support',formData)
+            axios.post('/support',formData)
             .then( (data) => {
                 $('#feedBackForm')[0].reset();
                 console.log(data)
             } )
-            .catch( err => console.error(err) );
+            .catch( error => backendValidation(error.response.data.errors) );
         }
         else{
             console.log(validateForm)
@@ -1650,12 +1707,12 @@ let assignUser = (form,url) => {
     let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
     if( validateForm === 0 ){
         let formData = new FormData(form);
-        http.post(url,formData)
-        .then( data =>{
+        axios.post(url,formData)
+        .then( response =>{
             location.reload()
             console.log(data);
         })
-        .catch( err => console.error(err) );
+        .catch( error => backendValidation(error.response.data.errors) );
     }
     else{
         console.log('Validation error')
@@ -1669,12 +1726,12 @@ let confirmDelete = (id,item) =>{
 }
 
 let deleteItem = (url) =>{
-    http.delete(url)
+    axios.delete(url)
     .then(()=>{
         $('#warn').modal('hide');
         location.reload();
     })
-    .catch( err => console.error(err) );
+    .catch( error => backendValidation(error.response.data.errors) );
 }
 
 let elementAdd = (parentID, position, element ) => {
@@ -1702,8 +1759,8 @@ let calculateResults = (url,formId) =>{
     for(let i = 0; i < FIELD_IDS.length; i++ ) {
         formData.append(document.getElementById( FIELD_IDS[i] ).name, document.getElementById( FIELD_IDS[i] ).value);
     }
-    http.post(`/${url}`,formData)
-    .then(data =>{
+    axios.post(`/${url}`,formData)
+    .then( response =>{
         recordsHTML = '';
         if( data.length > 0 ) {
             recordsHTML += `<table id="sorted_opportunities" class="table table-bordered table-sm">
@@ -1725,7 +1782,7 @@ let calculateResults = (url,formId) =>{
         document.getElementById('loading').style.display = 'none';
 
     })
-    .catch( err => console.error(err) );
+    .catch( error => backendValidation(error.response.data.errors) );
 }
 
 let openConsultation = (workstation,id) => {
@@ -1744,24 +1801,19 @@ let getDocument = (e) => {
     $('#addDocument').modal('show');
 }
 
-let backendValidation = data =>{
-    json = JSON.parse(data.responseText);
-    const errors = json.errors;
-    const firstItem = Object.keys(errors)[0];
-    const firstItemDom = document.getElementById(firstItem);
-    const firstErrorMessage = errors[firstItem][0];
+let backendValidation = response =>{
 
-    // Remove all error messages
-    const errorMessages = document.querySelectorAll('.text-danger');
-    errorMessages.forEach((Element)=>Element.textContent = '');
-
-    firstItemDom.insertAdjacentHTML('afterend',`<div class="text-danger">${firstErrorMessage}</div>`);
-
-    //Clear form controls without errors
-    const formControls = document.querySelectorAll('.form-control');
-    formControls.forEach((Element) =>Element.classList.remove('border', 'border-danger'));
-    //Highlight the form control with the error
-    firstItemDom.classList.add('border', 'border-danger');
+    Object.keys(response).forEach(item =>{
+        const itemDom = document.getElementById(item);
+        const errorMessage = response[item];
+        const errorMessages = document.querySelectorAll('.text-danger');
+        errorMessages.forEach((Element)=>Element.textContent = '');
+        const formControls = document.querySelectorAll('.form-control');
+        formControls.forEach((Element) =>Element.classList.remove('border', 'border-danger'));
+        itemDom.classList.add('border', 'border-danger');
+        itemDom.insertAdjacentHTML('afterend',`<div class="text-danger">${errorMessage}</div>`);
+    });
+    
     return false;
 }
 
@@ -1881,25 +1933,150 @@ let assignTask = id =>{
     $('#addTask').modal('show');
 }
 
-let saveTask = () =>{
-    FIELD_IDS = ['task_name','task_deadline','task_status','taskStaff'];
-    let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
-    if( validateForm === 0 ){
-        let formData = new FormData(document.getElementById('taskForm'));
-        http.post('/tasks',formData)
-        .then( data => {
-            $('#taskForm')[0].reset();
-            $('#addTask').modal('hide');
-            location.reload();
-            showMessage('success',data.success)
-        })
-        .catch( err => console.error(err) );
+let saveTask = (source = 0) =>{
+    if(source!=0){
 
     }else{
-        console.log(validateForm)
+        FIELD_IDS = ['task_name','task_deadline','task_status','taskStaff'];
+        let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
+        if( validateForm === 0 ){
+            let formData = new FormData(document.getElementById('taskForm'));
+            axios.post('/tasks',formData)
+            .then( response => {
+                $('#taskForm')[0].reset();
+                $('#addTask').modal('hide');
+                location.reload();
+                showMessage('success',data.success)
+            })
+            .catch( error => backendValidation(error.response.data.errors) );
+
+        }else{
+            console.log(validateForm)
+        }
     }
 }
 
 let revealTask = id =>{
+    console.log(id)
+}
+
+let loadDeliverables = (id,searchtype) =>{
+    let options = [];
+    let deliverable_type = ( searchtype == 'Opportunity' )? 'Opportunity' : 'Project';
+    let formData = new FormData();
+    formData.append('deliverable_type', deliverable_type);
+    axios.post('/pickdeliverables',formData)
+    .then(response =>{
+        data = response.data;
+        if(data.length == 0){
+            options.push(`<option value="0" disabled selected>No Contacts found...</option>`);
+            document.getElementById("deliverable_ids").innerHTML = options;
+        }else{
+            data.forEach( deliverable =>{
+                options.push( `<option data-name="${deliverable.deliverable_name}" value="${deliverable.id}">${deliverable.deliverable_name}</option>` );
+            })
+            document.getElementById("deliverable_ids").innerHTML = options;
+        }
+
+        if(deliverable_type == 'Opportunity'){
+            document.getElementById("the_opportunity").value = id;
+        }else{
+            document.getElementById("the_project_id").value = id;
+        }
+
+        document.getElementById("create_deliverables").style.display = 'none';
+
+        $('#add_deliverables').modal('show');
+    })
+}
+
+let pickDeliverable = (id,deliverableName,searchtype) =>{
+    let options = [];
+    let deliverable_type = ( searchtype == 'Opportunity' )? 'Opportunity' : 'Project';
+    let formData = new FormData();
+    formData.append('deliverable_type', deliverable_type);
+    formData.append('id', id);
+    axios.post('/pickdeliverables',formData)
+    .then( response =>{
+        if(data.length == 0){
+
+        }else{
+            data.forEach( deliverable =>{
+                
+                if(deliverable_type == 'Opportunity'){
+                    document.getElementById("the_opportunity").value = deliverable.deliverable_id;
+                }else{
+                    document.getElementById("the_project_id").value = deliverable.deliverable_id;
+                }
+                document.getElementById("deliverable_id").value = deliverable.id;
+                options.push(`<option value="${deliverable.deliverable_id}">${deliverableName}</option>`);
+                document.getElementById("deliverable_ids").innerHTML = options;
+                document.getElementById("deliverable_status").value = deliverable.deliverable_status;
+                document.getElementById("deliverable_completion").value = deliverable.deliverable_completion;
+                document.getElementById("deliverable_title").innerText = 'Update Deliverable';
+                document.getElementById("create_deliverables").style.display = 'none';
+                $('#add_deliverables').modal('show');
+            })
+        }
+    })
+}
+
+let storeDeliverable = (FIELD_IDS) =>{
+    let the_opportunity_id = document.getElementById('the_opportunity').value;
+    const DELIVERABLE_INDEX = document.getElementById('deliverable_id');
+    const DELIVERABLE_ID = (DELIVERABLE_INDEX == null)? null:DELIVERABLE_INDEX.value;
+    let formData = new FormData();
+    
+    FIELD_IDS.forEach( FIELD_ID => {
+        formData.append( document.getElementById(FIELD_ID).name,document.getElementById(FIELD_ID).value)
+    })
+
+    if( DELIVERABLE_ID == null || DELIVERABLE_ID == ''){
+
+        if( the_opportunity_id != null ){
+            axios.post('/deliverableopportunities',formData)
+            .then( response => {
+                $('#deliverablesForm')[0].reset();
+                $('#add_deliverables').modal('hide');
+                location.reload();
+                showMessage('success',response.data);
+            })
+            .catch( error =>backendValidation(error.response.data.errors));
+        }else{
+            axios.post(`/deliverableprojects`,formData)
+            .then( response => {
+                $('#deliverablesForm')[0].reset();
+                $('#add_deliverables').modal('hide');
+                location.reload();
+                showMessage('success',data.success);
+            })
+            .catch( error => backendValidation(error.response.data.errors));
+        }
+    }
+    else{
+        if( the_opportunity_id!=null ){
+            axios.put(`/deliverableopportunities/${DELIVERABLE_ID}`,formData)
+            .then( (data) => {
+                console.log(data)
+                $('#deliverablesForm')[0].reset();
+                $('#add_deliverables').modal('hide');
+                //location.reload();
+            })
+            .catch( error => backendValidation(error.response.data.errors) );
+        }
+        else{
+            console.log('Edit for project')
+            axios.post(`/projectdeliverables/${DELIVERABLE_ID}`,formData)
+            .then( () => {
+                $('#deliverablesForm')[0].reset();
+                $('#add_deliverables').modal('hide');
+                //location.reload();
+            })
+            .catch( error => backendValidation(error.response.data.errors) );
+        }
+    }
+}
+
+let deliverableDelete = id =>{
     console.log(id)
 }

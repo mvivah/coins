@@ -6,7 +6,7 @@ use Auth;
 use App\Page;
 use App\Role;
 use App\Team;
-use App\Timesheet;
+use App\TaskUser;
 use App\Leave;
 use App\Leavesetting;
 use App\User;
@@ -19,6 +19,7 @@ use App\Serviceline;
 use App\Leaveforward;
 use App\Evaluation;
 use App\Expertise;
+use App\Deliverable;
 use App\Target;
 use Carbon\Carbon;
 use App\Charts\CoinChart;
@@ -34,6 +35,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
+
     public function index()
     {
         $streams = DB::SELECT("SELECT u.name,o.id, o.opportunity_name,o.revenue,o.created_at,c.account_name
@@ -216,14 +218,14 @@ class HomeController extends Controller
     }
 
     public function admin(){
-        if(!Gate::check('isAdmin') || !Gate::check('isDirector')){
-            abort(404);
-        }else{
+        if(Gate::check('isAdmin') || Gate::check('isDirector')){
+
             $leaveforwards = Leaveforward::all();
             $roles = Role::all();
             $teams = Team::all();
             $expertises = Expertise::all();
-            $timesheets = Timesheet::all();
+            $timesheets = TaskUser::all();
+            $deliverables = Deliverable::all();
             $leaves = Leave::where('leaves.leave_status', '!=', 'Confirmed')
                             ->where('leaves.leave_status', '!=', 'Denied')
                             ->join('users', 'leaves.user_id', '=', 'users.id')
@@ -235,10 +237,11 @@ class HomeController extends Controller
             $leavesettings = Leavesetting::all();
             $evaluations = Evaluation::all();
             $targets = Target::all();
-            return view('pages.admin',compact('targets','roles','teams','timesheets','leaves','associates','holidays','servicelines','leavesettings','expertises','evaluations','leaveforwards'));
+            return view('pages.admin',compact('targets','roles','teams','timesheets','leaves','associates','holidays','servicelines','leavesettings','expertises','evaluations','leaveforwards','deliverables'));
+        }else{
+            abort(404);
         }
     }
-  
     public function makeSummary($type){
         $teams = Team::all();
         $sales_stages = ['Closed Lost','Closed Won','Under Preparation','Under Review','Submitted','Not submitted','Dropped'];      

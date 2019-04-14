@@ -44,13 +44,13 @@ class Project extends Model
 
     public function timesheets(){
 
-        return $this->belongsToMany('App\Timesheet');
+        return $this->belongsToMany('App\TaskUser');
 
     }
 
     public function deliverables(){
 
-        return $this->hasMany('App\Deliverable');
+        return $this->belongsToMany('App\Deliverable');
 
     }
 

@@ -59,6 +59,29 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function supervisorComments(Request $request, Evaluation $evaluation){
+
+        TaskUser::update(request()->validate([
+            'supervisor_rating'=>'required',
+            'supervisor_comment'=>'required',
+            'supervisor_id'=>Auth::user()->id
+        ]));
+
+        return NULL;
+    }
+    
+    public function directorComments(Request $request, Evaluation $evaluation){
+
+        $status = 'Approved';
+        TaskUser::update(request()->validate([
+            'director_comment'=>'required',
+            'director_id'=>Auth::user()->id,
+            'status'=>$status
+        ]));
+
+        return NULL;
+    }
+    
     public function edit($id)
     {
         //

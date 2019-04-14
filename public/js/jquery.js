@@ -52,7 +52,7 @@ $(document).ready(function(){    //Data Tables
     // Add more days and hours to an task
     $('#addhours').on('click', ()=>{
         ++i;
-        $('#hours_row').append(`<div class="row id="row${i}"><div class="col-md-5 mt-2"><input type="date" name="activity_date[${i}]" id="activity_date${i}" class="form-control" required></div><div class="col-md-4"><input type="number" name="duration[${i}]" id="duration${i}" class="form-control" required></div><div class="col-md-3"><button type="button" id="${i}" class="btn btn-danger btn_remove">X</button></div></div>`);
+        $('#hours_row').append(`<div class="row id="row${i}"><div class="col-md-5 mt-2"><input type="date" name="activity_date[${i}]" id="activity_date${i}" class="form-control" required></div><div class="col-md-4 mt-2"><input type="number" name="duration[${i}]" id="duration${i}" class="form-control" required></div><div class="col-md-3 mt-2"><button type="button" id="${i}" class="btn btn-danger btn_remove">X</button></div></div>`);
     });
 
     $('#addSpecials').on('click', ()=>{

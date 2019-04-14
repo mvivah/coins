@@ -68,11 +68,11 @@
                 <div class="col-md-6">
                 <label>Team Leader:</label>
                 <select name="team_leader" id="team_leader" class="form-control">
-                        <option value="" disabled selected>-- Choose --</option>
-                        @foreach(App\User::all() as  $user)
-                        <option value="{{$user->id}}">{{$user->name}}</option>
-                        @endforeach                                   
-                    </select>
+                    <option value="0" selected disabled>-- Choose --</option>
+                    @foreach(App\User::all() as  $user)
+                    <option value="{{$user->id}}">{{$user->name}}</option>
+                    @endforeach                                   
+                </select>
                 </div>
                 </div>
             </div>
@@ -213,7 +213,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger"><i class="fa fa-save"></i> Save</button>
+                    <button type="submit" class="btn btn-outline-danger">Save</button>
                 </div>
             </form>   
         </div>
@@ -231,12 +231,13 @@
             </div>           
             <div class="modal-body">
                 @csrf
-                <input type="hidden" name="timesheet_id" id="timesheet_id">
+                <input type="hidden" id="task_user_id">
+                <input type="hidden" name="task_id" id="the_task_id">
                 <div class="row">
                     <div class="col-md-6">
                         <label>Beneficiary:</label>
                         <select name="beneficiary" id="beneficiary" class="form-control getBeneficiary">
-                            <option value="" disabled selected>- Select Beneficiary -</option>
+                            <option value="0" selected disabled>- Select Beneficiary -</option>
                             <option value="Business Development">Business Development</option>
                             <option value="Opportunities">Opportunities and Projects</option>
                             <option value="Administration">Administration</option>
@@ -250,7 +251,6 @@
                             <option>- Select Service Line -</option>
                         </select>
                     </div>
-                    <input type="hidden" name="om_number" id="OMField">
                 </div>
                 <div class="row">
                     <div class="col-md-5">
@@ -382,7 +382,7 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <label>Email</label>
-                                <input type="text" name="email" id="email" class="form-control" placeholder="username@ahcul.com">
+                                <input type="text" name="email" id="email" class="form-control" placeholder="email">
                             </div>
                             <div class="col-md-3">
                                 <label>Mobile Phone</label>
@@ -714,7 +714,7 @@
                 </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-outline-danger" id="saveConsultant"><i class="fa fa-save"></i>Submit</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger" id="saveConsultant">Submit</button>
                 </div>
             </form>
         </div>
@@ -727,7 +727,7 @@
 <div class="modal-content">
     <form id="taskForm" autocomplete="off">
         <div class="modal-header">
-            <h5 class="modal-title">Assign Task</h5>
+            <h5 class="modal-title" id="task_title">Assign Task</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -757,7 +757,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="staff_assignment">
                 <div class="col-md-6">
                     <label>Assigned Consultants</label>
                     <select id="taskStaff" name="user_id[]" class="form-control" multiple>
@@ -877,20 +877,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Start Date</label>
-                            <input type="date" name="leaveStart" id="leaveStart" class="form-control">
-                            <span class="leaveStart-feedback"></span>
+                            <input type="date" name="leave_start" id="leave_start" class="form-control">
                         </div>
                         <div class="col-md-6">
                             <label>End Date</label>
-                            <input type="date" name="leaveStop" id="leaveStop" class="form-control">
-                            <span class="leaveStop-feedback"></span> 
+                            <input type="date" name="leave_end" id="leave_end" class="form-control"> 
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <label>Request Details</label>
                             <textarea type="text" name="leave_detail" id="leave_detail" class="form-control"></textarea>
-                            <input type="hidden" name="leave_status" value="Pending Approval">
                         </div>
                     </div>
                 </div>
@@ -960,27 +957,25 @@
                 <div class="modal-body">
                     @csrf
                     <input type="hidden" name="deliverable_id" id="deliverable_id">
+                    <input type="hidden" name="opportunity_id" id="the_opportunity">
                     <input type="hidden" name="project_id" id="the_project_id">
-                    <div class="row" id="project_deliverable">
-                        <div class="col-md-12">
+                    <div class="row" id="create_deliverables">
+                        <div class="col-md-6">
+                            <label>Deliverable Type:</label>
+                            <br><input type="radio" name="deliverable_type" class="radio-label" value="Opportunity" checked> Opportunity &nbsp;<input type="radio" name="deliverable_type" class="radio-label" value="Project">Project
+                        </div>
+                        <div class="col-md-6">
                             <label>Deliverable Name:</label>
                             <input type="text" name="deliverable_name"  id="deliverable_name_project" class="form-control">
                         </div>
                     </div>
-                    <div class="row" id="opportunity_deliverable">
-                            <div class="col-md-12">
-                                <label>Deliverable Name:</label>
-                                <select type="text" name="deliverable_name"  id="deliverable_name_opportunity" class="form-control">
-                                    <option value="" disabled selected>Choose Deliverable</option>
-                                    <option value="Qualified Opportunity">Qualified Opportunity</option>
-                                    <option value="Prepared Document">Prepared Document</option>
-                                    <option value="Reviewed Document">Reviewed Document</option>
-                                    <option value="Submitted Document">Submitted Document</option>
-                                </select>
-                            </div>
+                    <div class="row" id="use_deliverables">
+                        <div class="col-md-5">
+                            <label>Select Deliverables:</label>
+                            <select name="deliverable_id"  id="deliverable_ids" class="form-control">
+                            </select>
                         </div>
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label>Status:</label>
                             <select type="text" name="deliverable_status" id="deliverable_status" class="form-control">
                                 <option value="" disabled selected>Choose Status</option>
@@ -990,8 +985,8 @@
                                 <option value="Canceled">Canceled</option>
                             </select>
                         </div>
-                        <div class="col-md-6">
-                            <label>Completion date:</label>
+                        <div class="col-md-4">
+                            <label>Completion:</label>
                             <input type="date"  name="deliverable_completion" id="deliverable_completion" class="form-control">
                         </div>
                     </div>
@@ -1043,7 +1038,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Email</label>
-                            <input type="email" name="contact_email" id="contact_email" class="form-control" placeholder="username@ahcul.com">
+                            <input type="email" name="contact_email" id="contact_email" class="form-control" placeholder="email">
                         </div>                                            
                         <div class="col-md-4">
                             <label>Mobile Phone</label>
@@ -1057,7 +1052,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Email</label>
-                            <input type="email" name="alternative_person_email" id="alternative_person_email" class="form-control" placeholder="username@ahcul.com">
+                            <input type="email" name="alternative_person_email" id="alternative_person_email" class="form-control" placeholder="email">
                         </div>                                            
                         <div class="col-md-4">
                             <label>Mobile Phone</label>
@@ -1126,7 +1121,7 @@
                     <input type="hidden" name="specialization_id" id="specialization_id">
                     <div class="row">
                         <div class="col-md-10" >
-                            <input type="text" name="specialization" id="specialization" class="form-control" placeholder="Specilaization">
+                            <input type="text" name="specialization[]" id="specialization" class="form-control" placeholder="Specilaization">
                         </div>
                         <div class="col-md-2">
                         <button type="button" class="btn btn-primary" id="addSpecials">Add</button>
@@ -1185,7 +1180,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger"><i class="fa fa-save"></i>Save</button>
+                    <button type="submit" class="btn btn-outline-danger">Save</button>
                 </div>
             </form>   
         </div>

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Leave;
-use App\Timesheet;
+use App\TaskUser;
 use Auth;
 use DB;
 use Gate;
@@ -36,11 +36,7 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    //Profile page for a user who is logged in
-    public function profile(){
-        
-        return view('pages.profile',compact('leaves','timesheets','worked','absent'));
-    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -108,8 +104,8 @@ class UsersController extends Controller
         $absent = $leaves->sum('duration');
 
         //Timesheet
-        $timesheets = Timesheet::where('user_id', $id)->get();
-        $timesheets = DB::table('timesheets')
+        $timesheets = TaskUser::where('user_id', $id)->get();
+        $timesheets = DB::table('task_user')
                     ->select(['beneficiary', DB::raw("SUM(duration) as duration")])
                     ->orderBy("created_at")
                     ->where('user_id', $id)

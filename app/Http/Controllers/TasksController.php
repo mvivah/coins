@@ -33,21 +33,37 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+
+    public function create(Request $request)
     {
-        //
+        //validate the received data
+        $data = $request->validate([
+            'beneficiary'=>'required',
+            'serviceline_id'=>'required',
+            'task_id'=>'required',
+            'activity_date'=>'required',
+            'duration'=>'required',
+            'activity_description'=>'required'
+        ]);
+            
+        foreach($request->activity_date as $key => $value) {
+            $data = array(
+                'user_id'=>Auth::user()->id,
+                'beneficiary' => $request->beneficiary,
+                'serviceline_id' => $request->serviceline_id,
+                'task_id' => $request->task_id,
+                'activity_date' =>  $request->activity_date[$key],
+                'duration' =>  $request->duration[$key],
+                'activity_description' => $request->activity_description,
+                'created_at'=>now()
+            );
+            TaskUser::insert($data); 
+        }
+        return ['Your record was added!'];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //return $request;
-        //validate the received data
         $data = $request->validate([
             'deliverable_id'=>'required',
             'task_name'=>'required',
@@ -77,25 +93,35 @@ class TasksController extends Controller
 
         return ['success'=>'Task added successfully'];
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
 
-    public function show(Task $task)
+    public function show(Request $request,TaskUser $taskuser)
     {
-        $task = Task::findOrFail($task->id);   
-        return view('tasks.show',compact('task'));
+     
+        $data = $request->validate([
+            'serviceline_id'=>'required',
+            'beneficiary'=>'required',
+            'activity_date'=>'required|date|before:tomorrow|after:lastmonth',
+            'duration'=>'required',
+            'task_id'=>'required',
+            'activity_description'=>'required'
+        ]);
+        
+        foreach($request->activity_date as $key => $value) {
+            $data = array(
+                'user_id'=>Auth::user()->id,
+                'serviceline_id' => $request->serviceline_id,
+                'beneficiary' => $request->beneficiary,
+                'task_id' => $request->task_id,
+                'activity_date' =>  $request->activity_date[$key],
+                'duration' =>  $request->duration[$key],
+                'activity_description' => $request->activity_description,
+                'updated_at'=>now()
+            );
+            $taskuser->update($data); 
+        }
+        return ['Timesheet updated successfully'];
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Task $task)
     {
         return $task;

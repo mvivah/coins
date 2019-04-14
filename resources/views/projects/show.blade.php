@@ -56,7 +56,7 @@
                 <ol class="list-group mb-2">
                     <li class="list-group-item list-group-item-action bg-primary text-white">
                         Deliverables <span class="badge badge-danger">{{ $project->deliverables->count() }}</span>
-                        <button  class="btn btn-sm btn-outline-light" id="addDeliverable" data-id="{{$project->id}}" title="Add Deliverables" style="float:right;">
+                        <button  class="btn btn-sm btn-outline-light" id="add_project_deliverable" data-id="{{$project->id}}" title="Add Deliverables" style="float:right;">
                         Add
                         </button>
                     </li>
@@ -67,8 +67,8 @@
                         @else
                         <div class="btn-group float-right">
                             <i class="fa fa-plus text-primary {{($disabled? 'disabled':'')}} project_task" id="{{ $deliverable->id}}" title="Add Task"></i>
-                            <i class="fa fa-edit text-success editDeliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
-                            <i class="fa fa-times text-danger deliverable_delete pl-2" id="{{ $deliverable->id}}" title="Delete Deliverable"></i>
+                            <i class="fa fa-edit text-success edit_project_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
+                            <i class="fa fa-times text-danger delete_project_deliverable pl-2" id="{{ $deliverable->id}}" title="Delete Deliverable"></i>
                             <i class="fa fa-chevron-right text-dark project_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i>
                         </div>
                         @endif

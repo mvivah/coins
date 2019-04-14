@@ -91,8 +91,8 @@
                                 <div class="card-body">
                                     <table class="table table-sm">
                                         <tr><td class="text-center"><b>{{date('M - Y')}}</b></td><td></td></tr>
-                                        @foreach($timesheets as $timesheet)
-                                        <tr><td>{{$timesheet->beneficiary}}</td><td><b>{{$timesheet->duration}}</b></td></tr>
+                                        @foreach($timesheets as $taskuser)
+                                        <tr><td>{{$taskuser->beneficiary}}</td><td><b>{{$taskuser->duration}}</b></td></tr>
                                         @endforeach
                                         <tr><td><b>Total Worked</b></td><td><b>{{$worked}} Hours</b></td></tr>
                                     </table>
@@ -164,13 +164,13 @@
                                                 </tr>
                                             </thead>
                                         <tbody>
-                                            @foreach($timesheets as $timesheet)
+                                            @foreach($timesheets as $taskuser)
                                             <tr>
-                                                <td><a href="#" class="btn btn-sm btn-danger reviewTimesheet" id="{{$timesheet->id}}">{{$timesheet->activity_date}}</a></td>
-                                                <td>{{$timesheet->duration}} Hours</td>
-                                                <td>{{$timesheet->beneficiary}}</td>
-                                                <td>{{$timesheet->serviceline->service_name}}</td>
-                                                <td>{{$timesheet->om_number}}</td>
+                                                <td><a href="#" class="btn btn-sm btn-danger reviewTimesheet" id="{{$taskuser->id}}">{{$taskuser->activity_date}}</a></td>
+                                                <td>{{$taskuser->duration}} Hours</td>
+                                                <td>{{$taskuser->beneficiary}}</td>
+                                                <td>{{$taskuser->serviceline->service_name}}</td>
+                                                <td>{{$taskuser->om_number}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

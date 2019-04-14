@@ -33,7 +33,6 @@ class ContactsController extends Controller
      */
     public function listContacts(Request $request)
     {
-        $output = '';
         $contacts = Contact::where("account_name","LIKE","%".$request->account_name."%")->limit(10)->get();
         
         if($contacts){
@@ -74,10 +73,10 @@ class ContactsController extends Controller
             'created_by'=>Auth::user()->id
         ]);
         if(!$contact){
-        return ['Failed to save new contact'];
+            throw('Failed to save contact');
         }
         else{
-            return ['New contact saved successfully'];
+            return ['success'=>'Contact saved successfully'];
         }
     }
 

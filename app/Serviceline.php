@@ -25,7 +25,7 @@ class Serviceline extends Model
 
     public function timesheet(){
 
-        return $this->hasMany('App\Timesheet');
+        return $this->hasMany('App\TaskUser');
         
     }
 }

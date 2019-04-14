@@ -33,6 +33,7 @@ Route::post('/opportunityUser', 'OpportunitiesController@addConsultants')->name(
 Route::delete('/removeConsultant/{id}','OpportunitiesController@removeConsultant')->name('removeConsultant');
 Route::post('/filterOpportunities','OpportunitiesController@filterOpportunities')->name('filterOpportunities');
 
+
 //Routing everything about projects
 Route::resource('/projects', 'ProjectsController');
 Route::post('/projects/{project}', 'ProjectsController@update');
@@ -46,10 +47,16 @@ Route::post('/filterProjects','ProjectsController@filterProjects')->name('filter
 //Routing everything about tasks
 Route::resource('tasks', 'TasksController');
 Route::get('/tasks/{task}/users','TasksController@tastUsers')->name('tastUsers');
+//Routing everything about timesheets
+Route::resource('/taskusers', 'TasksController');
+Route::put('/taskusers/{timesheet}', 'TasksController@updateUserTimesheet');
+Route::post('/saveResponses','TasksController@saveResponses')->name('saveResponses');
 
 //Routing everything about partner firms
 Route::resource('/partners', 'PartnersController');
 
+//Routing evaluations 
+Route::resource('/evaluations','EvaluationsController');
 //Routing everything about leaves
 Route::resource('/leaves', 'LeavesController');
 Route::get('/delLeave/{leave}','LeavesController@destroy')->name('delLeave');
@@ -64,13 +71,10 @@ Route::resource('/scores', 'ScoresController');
 //Routing everything about teams
 Route::resource('/teams', 'TeamsController');
 Route::get('/myteam', 'TeamsController@myteam');
+Route::get('/getteamleader/{team}', 'TeamsController@getteamleader');
 Route::post('/teams/{team}', 'TeamsController@update')->name('targets');
 
-//Routing everything about timesheets
-Route::resource('/timesheets', 'TimesheetsController');
-Route::post('/timesheets/{timesheet}', 'TimesheetsController@update');
-Route::resource('/evaluations','EvaluationsController');
-Route::post('/saveResponses','TimesheetsController@saveResponses')->name('saveResponses');
+
 
 //Routing everything about roles
 Route::resource('/roles', 'RolesController');
@@ -92,6 +96,12 @@ Route::resource('/documents', 'DocumentsController');
 //Routing everything about deliverables
 Route::resource('/deliverables', 'DeliverablesController');
 Route::post('/deliverables/{deliverable}', 'DeliverablesController@update');
+Route::post('/pickdeliverables','DeliverablesController@pickdeliverables');
+Route::post('/deliverableopportunities','DeliverablesController@deriverableOpportunities');
+Route::post('/deliverableopportunities/{deliverableopportunity}','DeliverablesController@deriverablesUpdate');
+Route::post('/deliverableprojects','DeliverablesController@deriverableProjects');
+
+
 //Routing everything about expertise
 Route::resource('/expertise', 'ExpertiseController');
 Route::post('/expertise/{expertise}', 'ExpertiseController@update');

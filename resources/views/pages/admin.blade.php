@@ -28,34 +28,34 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">                 
                         <div class="tab-pane fade show active" id="teams" role="tabpanel" aria-labelledby="teams-tab">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <a href="#"><i class="fas fa-plus-circle text-primary icon-lg" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTeams" title="Add Teams"></i></a>
-                                    <h5>Teams</h5>
-                                    @if($teams->count()<1)
-                                        <p>No teams found...</p>
-                                    @else
-                                        <div class="row">
-                                            @foreach(App\Team::all() as $team)
-                                                <div class="col-md-4">
-                                                    <div class="card-body">
-                                                        <p class="card-text"><a href="teams/{{$team->id}}"><strong>{{$team->team_code}}</strong></a></p>
-                                                        <strong class="text-muted">Members: {{$team->users->count()}}</strong>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="btn-group">
-                                                            <a href="teams/{{$team->id}}" class="btn btn-sm btn-outline-secondary" title="View Team">View</a>
-                                                            <button type="button" id="{{$team->id}}" class="btn btn-sm btn-outline-secondary editTeam">Edit</button>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <a href="#"><i class="fas fa-plus-circle text-primary icon-lg" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTeams" title="Add Teams"></i></a>
+                                        <h5>Teams</h5>
+                                        @if($teams->count()<1)
+                                            <p>No teams found...</p>
+                                        @else
+                                            <div class="row">
+                                                @foreach(App\Team::all() as $team)
+                                                    <div class="col-md-4">
+                                                        <div class="card-body">
+                                                            <p class="card-text"><a href="teams/{{$team->id}}"><strong>{{$team->team_code}}</strong></a></p>
+                                                            <strong class="text-muted">Members: {{$team->users->count()}}</strong>
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div class="btn-group">
+                                                                <a href="teams/{{$team->id}}" class="btn btn-sm btn-outline-secondary" title="View Team">View</a>
+                                                                <button type="button" id="{{$team->id}}" class="btn btn-sm btn-outline-secondary editTeam">Edit</button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
-                            </div> 
-                            <div class="col-md-6">
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div> 
+                                <div class="col-md-6">
                                     <div class="card-body">
                                         <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTargets" title="Add Targets"></i></a>
                                         <h5>Team Targets</h5>
@@ -125,39 +125,71 @@
                         </div>
                         <div class="tab-pane fade" id="servicelines" role="tabpanel" aria-labelledby="servicelines-tab">
                             <div class="row">
-                                <div class="col-md-12">
-                                <div class="card-body">
-                                    <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addServiceLine" title="Add Service Lines"></i></a>
+                                <div class="col-md-6">
                                     <div class="card-body">
-                                        @if($servicelines->count()<1)
-                                        <p>No Servicelines found...</p>
-                                        @else
-                                        <div class="table-responsive" id="serviceLinesBody">
-                                            <table class="table table-sm table-striped">
-                                                <thead>
-                                                    <th>Beneficiary</th>
-                                                    <th>Service Code</th>
-                                                    <th>Service Line</th>
-                                                    <th></th>
-                                                </thead>                   
-                                                <tbody>
-                                                        @foreach($servicelines as $serviceline)
-                                                    <tr>
-                                                        <td>{{$serviceline->beneficiary}}</td>
-                                                        <td>{{$serviceline->service_code}}</td>
-                                                        <td>{{$serviceline->service_name}}</td>
-                                                        <td>
-                                                            <a href="#"><i class="fa fa-edit editService" id="{{$serviceline->id}}"></i></a>
-                                                            <a href="#"><i class="fa fa-trash-alt text-danger" id="delService" data-id="{{$serviceline->id}}"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>                                 
-                                            </table>
+                                        <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addServiceLine" title="Add Service Lines"></i></a>
+                                        <div class="card-body">
+                                            @if($servicelines->count()<1)
+                                            <p>No Servicelines found...</p>
+                                            @else
+                                            <div class="table-responsive" id="serviceLinesBody">
+                                                <table class="table table-sm table-striped">
+                                                    <thead>
+                                                        <th>Beneficiary</th>
+                                                        <th>Service Code</th>
+                                                        <th>Service Line</th>
+                                                        <th></th>
+                                                    </thead>                   
+                                                    <tbody>
+                                                            @foreach($servicelines as $serviceline)
+                                                        <tr>
+                                                            <td>{{$serviceline->beneficiary}}</td>
+                                                            <td>{{$serviceline->service_code}}</td>
+                                                            <td>{{$serviceline->service_name}}</td>
+                                                            <td>
+                                                                <a href="#"><i class="fa fa-edit editService" id="{{$serviceline->id}}"></i></a>
+                                                                <a href="#"><i class="fa fa-trash-alt text-danger" id="delService" data-id="{{$serviceline->id}}"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>                                 
+                                                </table>
+                                            </div>
+                                            @endif
                                         </div>
-                                        @endif
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#createdeliverable" title="Create Deliverables"></i></a>
+                                        <div class="card-body">
+                                            @if($deliverables->count()<1)
+                                            <p>No deliverables found...</p>
+                                            @else
+                                            <div class="table-responsive" id="deliverablesBody">
+                                                <table class="table table-sm table-striped">
+                                                    <thead>
+                                                        <th>Deliverable Type</th>
+                                                        <th>Name</th>
+                                                        <th></th>
+                                                    </thead>                   
+                                                    <tbody>
+                                                            @foreach($deliverables as $deliverable)
+                                                        <tr>
+                                                            <td>{{$deliverable->deliverable_type}}</td>
+                                                            <td>{{$deliverable->deliverable_name}}</td>
+                                                            <td>
+                                                                <a href="#"><i class="fa fa-edit editDeliverable" id="{{$deliverable->id}}"></i></a>
+                                                                <a href="#"><i class="fa fa-trash-alt text-danger" id="delDeliverable" data-id="{{$deliverable->id}}"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>                                 
+                                                </table>
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

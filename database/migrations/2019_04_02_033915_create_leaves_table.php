@@ -18,8 +18,8 @@ class CreateLeavesTable extends Migration
             $table->primary('id');
             $table->string('user_id');
             $table->string('leavesetting_id');
-            $table->string('start_date');
-            $table->string('end_date');
+            $table->string('leave_start');
+            $table->string('leave_end');
             $table->longText('leave_detail');
             $table->integer('duration');
             $table->string('leave_status');

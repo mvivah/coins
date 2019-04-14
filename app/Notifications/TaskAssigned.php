@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Task;
+use Auth;
 class TaskAssigned extends Notification
 {
     use Queueable;
@@ -43,8 +44,8 @@ class TaskAssigned extends Notification
         return (new MailMessage)
                         ->subject('Task assigned')
                         ->greeting('Hello!')
-                        ->line('You have a new task assigned to you. Click below for details')
-                        ->action('View Task',url('/tasks/'.$this->task->id));
+                        ->line('You have a new task assigned to you. Click below for details, or login and check under your profile')
+                        ->action('View Task',url('/users/'.Auth::user()->id));
     }
 
     /**

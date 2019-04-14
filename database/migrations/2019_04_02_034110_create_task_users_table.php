@@ -18,9 +18,14 @@ class CreateTaskUsersTable extends Migration
             $table->string('task_id');
             $table->string('user_id');
             $table->string('associate_id')->nullable();
+            $table->string('beneficiary')->nullable();
+            $table->string('serviceline_id')->nullable();
+            $table->string('activity_date')->nullable();
+            $table->string('duration')->nullable();
+            $table->longText('activity_description')->nullable();
             $table->string('created_by');
             $table->string('updated_by')->nullable();
-
+            $table->foreign('serviceline_id')->references('id')->on('servicelines');
             $table->foreign('task_id')->references('id')->on('tasks');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('associate_id')->references('id')->on('associates');

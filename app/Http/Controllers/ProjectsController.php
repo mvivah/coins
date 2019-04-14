@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Project;
 use App\Associate;
 use App\User;
@@ -52,10 +53,9 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        $project = Project::findOrFail($id);
-        return $project;
+        return (Project::findOrFail($project->id));
     }
     /**
      * Update the specified resource in storage.
@@ -66,14 +66,13 @@ class ProjectsController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //validate the received data
         $data = $request->validate([
             "project_status"    => "required",
             "project_stage"  => "required",
-            "initiation_date"  => "required|date",
-            "completion_date"  => "required|date",
+            "initiation_date"  => "required|date|after:tomorrow",
+            "completion_date"  => "required|date|after:initiation_date",
         ]);
-        //save the validated data
+
         $run = $project->update([
             'project_status' => $data['project_status'],
             'project_stage' => $data['project_stage'],
@@ -82,19 +81,19 @@ class ProjectsController extends Controller
             'updated_by'=>Auth::user()->id
         ]);
 
-        $project = Project::findOrFail($request->id);
-        $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
-
-        $receiver = User::findOrFail($team_leader);
-        if( !$receiver){
-        }else{
-            User::findOrFail($team_leader)->notify(new OpportunityCreated($opportunity));
-        }
-
         if(!$run){
-            return ['message' => 'Project has not been updated'];;
+            return ['error' => 'Project has not been updated'];;
         }else{
-            return ['message' => 'Project has been successfully updated'];
+            $project = Project::find($request->id);
+            $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
+    
+            $receiver = User::find($team_leader);
+            if( !$receiver){
+            }else{
+                User::find($team_leader)->notify(new OpportunityCreated($opportunity));
+            }
+
+            return ['success' => 'Project has been successfully updated'];
         }
     }
     /**
@@ -104,7 +103,9 @@ class ProjectsController extends Controller
     public function addAssociates(Request $request, Project $project){
         $associate = AssociateProject::create(request()->validate([
             'project_id' => 'required',
-            'associate_id' =>'required|unique:associate_project',
+            'associate_id' => Rule::unique('associate_project')->where(function($query){
+                return $query->where('project_status','!=','Completed');
+            }),
             'initiation_date' =>'required',
             'completion_date' =>'required',
             'created_by'=>Auth::user()->id]));
@@ -133,7 +134,9 @@ class ProjectsController extends Controller
     public function addConsultants(Request $request){
         $data = $request->validate([
             "project_id"    => "required",
-            "user_id"  => "required|unique:project_user",
+            "user_id"  => Rule::unique('project_user')->where(function($query){
+                return $query->where('projects.id', '=','project_user.projects_id')->where('project_status','!=','Completed');
+            }),
         ]);
         ProjectUser::create([
             'project_id' => $data['project_id'],

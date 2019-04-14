@@ -28,9 +28,9 @@
             <div class="collapse navbar-collapse" id="navbarcollapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item"><a href="/contacts" class="nav-link"><i class="far fa-address-card fa-lg"></i> Contacts</a></li>
-                    <li class="nav-item"><a href="/associates" class="nav-link"><i class="fas fa-user-graduate fa-lg"></i> Associates</a></li>
                     <li class="nav-item"><a href="/opportunities" class="nav-link"><i class="fa fa-cart-plus fa-lg"></i> Opportunities</a></li>
                     <li class="nav-item"><a href="/projects" class="nav-link"><i class="fa fa-file-contract fa-lg"></i> Projects</a></li>
+                    <li class="nav-item"><a href="/associates" class="nav-link"><i class="fas fa-user-graduate fa-lg"></i> Associates</a></li>
                     <li class="nav-item"><a href="/partners" class="nav-link"><i class="fas fa-city fa-lg"></i> Partners</a></li>
                     <li class="nav-item"><a href="/reports" class="nav-link"><i class="fa fa-file-invoice fa-lg"></i> Reports</a></li>
                 </ul>
@@ -78,7 +78,7 @@
     <script src="{{ asset("js/jquery.dataTables.js") }}"></script>
     <script src="{{ asset("js/dataTables.bootstrap4.js") }}"></script>
     <script src="{{ asset("js/jquery.js") }}"></script>
-    <script src="{{ asset("js/datasource.js") }}"></script>
+    <script src="{{ asset("js/axios.min.js") }}"></script>
     <script src="{{ asset("js/script.js") }}"></script>
 </body>
 </html>

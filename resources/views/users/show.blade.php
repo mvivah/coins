@@ -26,38 +26,44 @@
                                 <a href="#" id="editUser" data-id="{{$user->id}}" class="btn btn-outline-danger btn-block" title="Edit Profile"><i class="fa fa-edit"></i> Edit</a>
                             </td>
                             <td>
-                                <a href="#" data-id="{{$user->id}}" data-team="{{$user->team->id}}" id="assess-user" class="btn btn-outline-secondary" title="Assess User"><i class="fa fa-edit"></i> Assessment</a>
+                                <a href="#" data-id="{{$user->id}}" data-team="{{$user->team->id}}" id="assess_user" class="btn btn-outline-secondary" title="Assess User"><i class="fa fa-edit"></i> Assessment</a>
                             </td>
                         </tr>
                         @endif
                     </table>
                     <ul class="list-group mt-2">
-                        <li class="list-group-item active"><h5>My Opportunities <span class="badge badge-light text-danger">{{Auth::user()->opportunities->count()}}</span></h5></li>
+                        <li class="list-group-item active"><h5>Opportunities <span class="badge badge-light text-danger">{{Auth::user()->opportunities->count()}}</span></h5></li>
                         @foreach(Auth::user()->opportunities as $opportunity)
                         <li class="list-group-item">
                             <a href="/opportunities/{{$opportunity->id}}" style="text-decoration:none;">{{ str_limit($opportunity->opportunity_name, $limit = 30, $end = '...') }}</a>
-                            <a href="#"><span id="{{ $opportunity->om_number }}" data-owner="Opportunity" class="fas fa-business-time text-success addToTimesheet" style="float:right"></span></a>
                         </li>
                         @endforeach
                         <a href="/opportunities" class="list-group-item d-flex w-100 flex-row-reverse"><small class="text-muted">View All</small></a>
                     </ul>
 
                     <ul class="list-group mt-2">
-                        <li class="list-group-item"><h5>My Projects <span class="badge badge-light text-danger">{{Auth::user()->projects->count()}}</span></h5></li>
+                        <li class="list-group-item">
+                            <h5>Projects <span class="badge badge-light text-danger">{{Auth::user()->projects->count()}}</span></h5>
+                        </li>
                         @foreach(Auth::user()->projects as $project)
                         <li class="list-group-item">
                             <a href="/projects/{{$project->id}}" style="text-decoration:none;">{{ str_limit($project->opportunity->opportunity_name, $limit = 30, $end = '...') }}</a>
-                            <a href="#"><span id="{{ $project->opportunity->om_number }}" data-owner="Project" class="fas fa-business-time text-success addToTimesheet" style="float:right"></span></a>
                         </li>
                         @endforeach
                         <a href="/projects" class="list-group-item"><small class="text-muted" style="float:right;">View All</small></a>
                     </ul>
 
                     <ul class="list-group mt-2">
-                        <li class="list-group-item text-success"><h5>My Tasks <span class="badge badge-light text-danger">{{Auth::user()->tasks->count()}}</span></h5></li>
+                        <li class="list-group-item text-success">
+                            <h5>Tasks <span class="badge badge-light text-danger">{{Auth::user()->tasks->count()}}</span></h5>
+                        </li>
                         @foreach(Auth::user()->tasks as $task)
                         <li class="list-group-item">
                             <a href="/tasks/{{$task->id}}" style="text-decoration:none;">{{ str_limit($task->task_name, $limit = 30, $end = '...') }}</a>
+                            <div class="btn-group float-right">
+                                <i class="fa fa-edit text-success edit_user_task pl-2" id="{{ $task->id}}" title="Edit Task"></i> 
+                                <i class="far fa-calendar-check text-danger add_task_timesheet pl-2" id="{{$task->id}}" title="Add Timesheet"></i>
+                            </div>
                         </li>
                         @endforeach
                         <a href="/tasks" class="list-group-item"><small class="text-muted" style="float:right;">View All</small></a>
@@ -84,8 +90,8 @@
                                 <strong>Timesheets</strong>
                                 <table class="table table-striped table-sm">
                                         <tr><td colspan="2" class="text-center"><strong>Period:</strong> {{date('M - Y')}}</td></tr>
-                                    @foreach($user->timesheets as $timesheet)
-                                        <tr><td>{{$timesheet->beneficiary}}</td><td><b>{{$timesheet->duration}}</b></td></tr>
+                                    @foreach($user->tasks as $task)
+                                        <tr><td>{{$task->beneficiary}}</td><td><b>{{$task->duration}}</b></td></tr>
                                     @endforeach
                                     <tr><td><b>Total Worked</b></td><td><b>{{$worked}} Hours</b></td></tr>
                                 </table>
@@ -141,28 +147,28 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5>My Timesheets</h5>
+                                    <h5>Timesheets</h5>
                                 </div>
                                 <div class="card-body" id="timesheetBody">
-                                    @if(count($timesheets)>0)
+                                    @if($user->tasks->count()>0)
                                         <table class="table table-sm  table-hover dat2">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Date</th>
+                                                    <th scope="col">Task</th>
                                                     <th scope="col">Duration</th>
                                                     <th scope="col">Beneficiary</th>
                                                     <th scope="col">Service Line</th>
-                                                    <th scope="col">OM Number</th>
                                                 </tr>
                                             </thead>
                                         <tbody>
-                                            @foreach($user->timesheets as $timesheet)
+                                            @foreach($user->tasks as $task)
                                             <tr>
-                                                <td><a href="#" class="btn btn-sm btn-danger reviewTimesheet" id="{{$timesheet->id}}">{{$timesheet->activity_date}}</a></td>
-                                                <td>{{$timesheet->duration}} Hours</td>
-                                                <td>{{$timesheet->beneficiary}}</td>
-                                                <td>{{$timesheet->serviceline->service_name}}</td>
-                                                <td>{{$timesheet->om_number}}</td>
+                                                <td><a href="#" class="btn btn-sm btn-danger reviewTimesheet" id="{{$task->id}}">{{$task->activity_date}}</a></td>
+                                                <td>{{$task->task_name}}</td>
+                                                <td>{{$task->duration}} Hours</td>
+                                                <td>{{$task->beneficiary}}</td>
+                                                <td>{{$task->service_id}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

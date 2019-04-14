@@ -23,12 +23,6 @@ class Deliverable extends Model
         });
     }
 
-    public function projects(){
-
-        return $this->belongsToMany('App\Project');
-
-    }
-
     public function tasks(){
 
         return $this->hasMany('App\Task'); 
@@ -44,6 +38,12 @@ class Deliverable extends Model
     public function opportunities(){
 
         return $this->belongsToMany('App\Opportunity');
-        
+
+    }
+
+    public function projects(){
+
+        return $this->belongsToMany('App\Project');
+
     }
 }

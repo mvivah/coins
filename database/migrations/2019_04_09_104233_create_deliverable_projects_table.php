@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTasksTable extends Migration
+class CreateDeliverableProjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,18 @@ class CreateTasksTable extends Migration
      */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->primary('id');
+        Schema::create('deliverable_project', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('deliverable_id');
-            $table->string('task_name');
-            $table->string('task_status')->default('Running');
-            $table->date('task_deadline'); 
+            $table->string('project_id');
+            $table->string('deliverable_completion');
+            $table->string('deliverable_status');
             $table->string('created_by');
             $table->string('updated_by')->nullable();
-            
-            $table->foreign('deliverable_id')->references('id')->on('deliverables');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('deliverable_id')->references('id')->on('deliverables');
+            $table->foreign('project_id')->references('id')->on('projects');
             $table->timestamps();
         });
     }
@@ -37,6 +36,6 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('deliverable_projects');
     }
 }

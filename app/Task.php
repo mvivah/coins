@@ -35,12 +35,6 @@ class Task extends Model
 
     }
 
-    public function opportunity(){
-
-        return $this->belongsTo('App\Opportunity');
-
-    }
-
     public function comments(){
 
         return $this->morphMany('App\Comment', 'commentable');

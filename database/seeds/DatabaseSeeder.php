@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             HolidaysTableSeeder::class,
             ServicelinesTableSeeder::class,
             LeavesettingsTableSeeder::class,
-            ExpertisesTableSeeder::class
+            ExpertisesTableSeeder::class,
+            DeliverablesTableSeeder::class,
         ]);
     }
 }

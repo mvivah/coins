@@ -50,14 +50,17 @@
                         <ol class="list-group">
                             <li class="list-group-item list-group-item-action active">
                                 Derivelables
+                                <a href="#" class="btn btn-sm btn-outline-light {{($disabled? 'disabled':'')}}" data-id="{{ $opportunity->id}}" id="add_opportunity_deliverable" style="float:right;" title="Add Deliverable">
+                                    Add
+                                </a>
                             </li>
                             @foreach($opportunity->deliverables as $deliverable)
                                 <li class="list-group-item list-group-item-action">{{ $deliverable->deliverable_name }}
                                     @if($deliverable->deliverable_status !='Done' || $deliverable->deliverable_status !='Completed')
                                     <div class="btn-group float-right">
                                         <i class="fa fa-plus text-success {{($disabled? 'disabled':'')}} opportunity_task" id="{{ $deliverable->id}}" title="Add Task"></i> 
-                                        <i class="fa fa-edit text-primary editDeliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
-                                        <i class="fa fa-times text-danger opp_done pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
+                                        <i class="fa fa-edit text-primary edit_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
+                                        <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
                                         <i class="fa fa-chevron-right text-dark opportunity_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i> 
                                     </div>
                                     @else

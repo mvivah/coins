@@ -8,7 +8,6 @@ use App\Project;
 use App\Team;
 use App\Contact;
 use App\User;
-use App\Deliverable;
 use App\OpportunityUser;
 use Carbon\Carbon;
 use App\Notifications\OpportunityCreated;
@@ -109,8 +108,8 @@ class OpportunitiesController extends Controller
             'probability'=>'nullable',
             'funder'=>'required',
         ]);
-        //save the validated data
-        $opportunity = Opportunity::create([
+
+        $run = Opportunity::create([
             'opportunity_name' => $data['opportunity_name'],
             'contact_id' => $data['contact_id'],
             'country' => $data['country'],
@@ -127,25 +126,17 @@ class OpportunitiesController extends Controller
             'created_by'=>Auth::user()->id
         ]);
         
-        foreach(['Qualified Opportunity','Prepared Document','Reviewed Document','Submitted Document'] as $deliverable_name){
-            $data = [
-                'opportunity_id'=>$opportunity->id,
-                'deliverable_name'=>$deliverable_name,
-                'deliverable_status'=>'Working on it',
-                'deliverable_completion'=>$request->internal_deadline,
-                'created_by'=>Auth::user()->id,
-            ];
-            $save_deliverable = Deliverable::insert($data);
-        }
-
-        $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
-        if( !User::findOrFail($team_leader)){
+        if(!$run){
+            return ['error' => 'The opportunity not created'];;
         }else{
-            User::findOrFail($team_leader)->notify(new OpportunityCreated($opportunity));
-        }
 
-        //Notification::send($users, new OpportunityCreated($opportunity)); // Used to send to many recepients
-        return ['success'=>'An opportunity has been successfully created'];
+            $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
+            if( !User::find($team_leader)){
+            }else{
+                User::find($team_leader)->notify(new OpportunityCreated($opportunity));
+            }      
+            return ['success' => 'Opportunity successfully created'];
+        }
     }
 
     /**
@@ -223,21 +214,22 @@ class OpportunitiesController extends Controller
 
         if( $request->type == 'Proposal' && $request->sales_stage == 'Closed Won' ){
 
-            $data = Project::create([
+            $project = Project::create([
                 'opportunity_id'=>$opportunity->id,
                 'project_status'=>'Open',
                 'project_stage'=>'Initiation',
                 'created_by'=>Auth::user()->id
             ]);
-            $project = Project::findOrFail($data->id);
-            $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
 
-            $receiver = User::findOrFail($team_leader);
+            $team_leader = Team::where('id','=',$request->team_id)->first()->pluck('team_leader');
+
+            $receiver = User::find($team_leader);
             if( !$receiver){
             }else{
-                User::findOrFail($team_leader)->notify(new OpportunityCreated($opportunity));
+                User::find($team_leader)->notify(new OpportunityWon($project));
             }
         }
+
         if(!$run){
             return ['error' => 'This opportunity was not updated'];
         }else{

@@ -41,9 +41,10 @@ class OpportunityCreated extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->subject('New opportunity created')
+                    ->greeting('Hello!')
+                    ->line('You have a new opportunity for your team.')
+                    ->action('View Opportunity', url('/opportunities/'.$this->opportunity->id));
     }
 
     /**

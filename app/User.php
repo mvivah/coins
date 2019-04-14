@@ -99,12 +99,6 @@ class User extends Authenticatable
 
     }
 
-    public function timesheets(){
-
-        return $this->hasMany('App\Timesheet');
-
-    }
-
     public function opportunities(){
 
         return $this->belongsToMany('App\Opportunity');

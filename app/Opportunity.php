@@ -62,7 +62,7 @@ class Opportunity extends Model
 
     public function timesheets(){
 
-        return $this->belongsToMany('App\Timesheet');
+        return $this->belongsToMany('App\TaskUser');
 
     }
 
@@ -98,7 +98,7 @@ class Opportunity extends Model
 
     public function deliverables(){
 
-        return $this->hasMany('App\Deliverable');
+        return $this->belongsToMany('App\Deliverable');
 
     }
 }

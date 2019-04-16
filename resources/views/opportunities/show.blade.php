@@ -76,20 +76,25 @@
                 <div class="col-md-9">
                     <div class="btn-group mb-2">
                         <a href="#" id="editOpportunity"  data-id="{{$opportunity->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
-                        Edit</a>
-                        <a href="#" class="btn btn-outline-danger evaluation {{($disabled? 'disabled':'')}}" id="{{ $opportunity->id}}" data-model="Opportunity" style="float:right;" title="Opportunity Evaluation">
-                            <i class="fa fa-layout"></i> Evaluation
+                            <i class="fa fa-edit"></i> Edit
                         </a>
-                        <a href="#" class="btn btn-outline-danger" id="printOpportunity" title="Print">
+                        <a href="#" id="opportunity_evaluation" data-id="{{ $opportunity->id}}" class="btn btn-outline-primary" title="Add Comment">
+                            <i class="fa fa-comment"></i> Comment
+                        </a>
+                        <a href="#" id="opportunity_evaluation" data-id="{{$opportunity->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Opportunity Evaluation">
+                            <i class="fas fa-clock"></i> Evaluation
+                        </a>
+                        <a href="#" class="btn btn-outline-dark" id="printOpportunity" title="Print">
                             <i class="fas fa-print"></i> Print
                         </a>
                     </div>
+
                     <div id="opportunity_preview">
                         <div class="card">
                             <div class="card-header">
                                 <strong>{{$opportunity->opportunity_name}}</strong>
-                                {{$opportunity->external_deadline}}
-                                <span class="float-right"> <strong>{{$opportunity->type}}:</strong> {{$opportunity->sales_stage}}</span>
+
+                                <span class="float-right"> <strong>{{$opportunity->om_number}}</strong></span>
                             </div>
                             <div class="card-body">
                                 <div class="row mb-4">
@@ -99,18 +104,20 @@
                                         </div>
                                         <div>{{$opportunity->contact->full_address}}</div>
                                         <div>{{$opportunity->contact->contact_person}}</div>
+                                        <div>Country: {{$opportunity->country}}</div>
                                         <div>Email: {{$opportunity->contact->contact_email}}</div>
                                         <div>Phone: {{$opportunity->contact->contact_phone}}</div>
+                                        <div>Funder: {{$opportunity->funder}}</div>
+                                        <div>Opportunity Type: {{$opportunity->type}}</div>
                                     </div>
                                     <div class="col-sm-4">
-                                        <h6 class="mb-3">To:</h6>
+                                        <h6 class="mb-2"><strong>{{$opportunity->team->team_code}} - {{$opportunity->team->team_name}}</strong></h6>
                                         <div>
-                                        <strong>Bob Mart</strong>
+                                        
                                         </div>
-                                        <div>Attn: Daniel Marek</div>
-                                        <div>43-190 Mikolow, Poland</div>
-                                        <div>Email: marek@daniel.com</div>
-                                        <div>Phone: +48 123 456 789</div>
+                                        <div>Internal Deadline: {{$opportunity->internal_deadline}}</div>
+                                        <div>External Deadline: {{$opportunity->external_deadline}}</div>
+                                        <div class="mt-2">Sales Stage: <strong>{{$opportunity->sales_stage}}</strong></div>
                                     </div>
                                 </div>
                                   
@@ -119,10 +126,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Tasks</th>
+                                                <th class="right">Deliverable</th>
                                                 <th>Status</th>
-                                                <th class="right">Responsible</th>
+                                                <th class="right">Responsible Persons</th>
                                                 <th class="center">Users</th>
-                                                <th class="right">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -130,14 +137,15 @@
                                             @foreach($deliverable->tasks as $task)
                                             <tr>
                                                 <td class="left strong">{{$task->task_name}}</td>
+                                                <td class="right">{{$task->deliverable->deliverable_name}}</td>
                                                 <td class="left">{{$task->task_status}}</td>
                                                 <td class="right">
                                                         @foreach($task->users as $user)
-                                                        {{$user->name}}
+                                                        {{$user->name}},
                                                         @endforeach
                                                 </td>
                                                 <td class="center">{{$task->users->count()}}</td>
-                                                <td class="right">$999,00</td>
+
                                             </tr>
                                             @endforeach
                                             @endforeach
@@ -157,50 +165,31 @@
                                   <td class="left">
                                   <strong>Deliverables</strong>
                                   </td>
-                                  <td class="right">$8.497,00</td>
+                                  <td class="right">{{$opportunity->deliverables->count()}}</td>
                                   </tr>
                                   <tr>
                                   <td class="left">
-                                  <strong>Tasks</strong>
+                                  <strong>Probability</strong>
                                   </td>
-                                  <td class="right">$1,699,40</td>
+                                <td class="right">{{$opportunity->probability}}%</td>
                                   </tr>
                                   <tr>
                                   <td class="left">
-                                  <strong>Total</strong>
+                                  <strong>Total Revenue</strong>
                                   </td>
                                   <td class="right">
-                                  <strong>$7.477,36</strong>
+                                  <strong>${{$opportunity->revenue}}</strong>
                                   </td>
                                   </tr>
                                   </tbody>
-                                  </table>
-                                  
-                                  </div>
-                                  
-                                  </div>
-                                  
-                                  </div>
+                                </table>
                             </div>
                         </div>
-
-                        <p><strong>Client:</strong> </p>
-                        <p><strong>Country:</strong> {{$opportunity->country}}</p>
-                        <p><strong>Funder:</strong> {{$opportunity->funder}}</p>
-                        <p><strong>Internal Deadline:</strong> {{$opportunity->internal_deadline}}</p>
-                        <p><strong>Revenue:</strong>{{$opportunity->revenue}} <strong>USD</strong></p>
-                        <p><strong>Assigned Team:</strong> {{$opportunity->team->team_name}} - <strong>{{$opportunity->team->team_code}}</strong></p>
-                        <p><strong>Probability:</strong> {{$opportunity->probability}}</p>     
-                    <div class="card-body shadow-sm">
-                        <button  class="btn btn-sm btn-outline-success comment" id="{{ $opportunity->id}}" data-model="Opportunity" style="float:right;" title="Add Comments">
-                            <i class="fa fa-message-square"></i> Comments
-                        </button>
-                        <p>The comments go here...</p>
                     </div>
-                    
                 </div>
-           </div>
+            </div>   
         </div>
     </div>
-
-    @endsection
+</div>
+</div>
+@endsection

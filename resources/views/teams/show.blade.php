@@ -25,6 +25,9 @@
                                         @foreach($user->assessments as $assessment)
                                         <tr><td>{{$assessment->category}}</td><td>{{$assessment->score}}</td></tr>
                                         @endforeach
+                                        @foreach($user->timesheets as $timesheet)
+                                        <tr><td>{{$timesheet->category}}</td><td>{{$timesheet->score}}</td></tr>
+                                        @endforeach
                                     </table>
                                 </div>
                             </div>

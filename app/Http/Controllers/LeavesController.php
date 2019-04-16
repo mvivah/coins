@@ -33,16 +33,16 @@ class LeavesController extends Controller
     {
         $data = $request->validate([
             'leavesetting_id'=>'required',
-            'start_date'  => 'required|date|after:tommorrow',
-            'end_date'    => 'required|date|after:start_date',
+            'leave_start'  => 'required|date|after:tommorrow',
+            'leave_end'    => 'required|date|after:leave_start',
             'leave_detail'=>'required',
             'duration'=>'required',
             'leave_status'=>'required'
             ]);
         Leave::create([
             'leavesetting_id'=> $data['leavesetting_id'],
-            'start_date'=> $data['start_date'],
-            'end_date'=> $data['end_date'],
+            'leave_start'=> $data['leave_start'],
+            'leave_end'=> $data['leave_end'],
             'leave_detail'=>$data['leave_detail'],
             'duration'=>$data['duration'],
             'leave_status'=>$data['leave_status'],

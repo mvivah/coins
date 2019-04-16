@@ -135,7 +135,9 @@ class ProjectsController extends Controller
         $data = $request->validate([
             "project_id"    => "required",
             "user_id"  => Rule::unique('project_user')->where(function($query){
-                return $query->where('projects.id', '=','project_user.projects_id')->where('project_status','!=','Completed');
+
+                return $query->join('projects', 'projects.id', '=', 'project_user.project_id')->where('project_status','!=','Completed')->get();
+
             }),
         ]);
         ProjectUser::create([

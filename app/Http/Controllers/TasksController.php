@@ -12,11 +12,7 @@ use Auth;
 use Notification;
 class TasksController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -28,15 +24,9 @@ class TasksController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function create(Request $request)
+    public function create(Request $request,TaskUser $taskuser)
     {
-        //validate the received data
+
         $data = $request->validate([
             'beneficiary'=>'required',
             'serviceline_id'=>'required',
@@ -48,16 +38,15 @@ class TasksController extends Controller
             
         foreach($request->activity_date as $key => $value) {
             $data = array(
-                'user_id'=>Auth::user()->id,
                 'beneficiary' => $request->beneficiary,
                 'serviceline_id' => $request->serviceline_id,
-                'task_id' => $request->task_id,
                 'activity_date' =>  $request->activity_date[$key],
                 'duration' =>  $request->duration[$key],
                 'activity_description' => $request->activity_description,
-                'created_at'=>now()
+                'updated_by'=>Auth::user()->id,
+                'updated_at'=>now()
             );
-            TaskUser::insert($data); 
+            $taskuser->where(['task_id'=>$request->task_id,'user_id'=>Auth::user()->id])->update($data); 
         }
         return ['Your record was added!'];
     }
@@ -68,10 +57,9 @@ class TasksController extends Controller
             'deliverable_id'=>'required',
             'task_name'=>'required',
             'task_status'=>'required',
-            'task_deadline'=>'required',
-            'user_id'=>'required',
+            'task_deadline'=>'required|date:after',
         ]);
-        //save the validated data
+
         $task = Task::create([
             'deliverable_id' => $data['deliverable_id'],
             'task_name'=>$data['task_name'],
@@ -100,7 +88,7 @@ class TasksController extends Controller
         $data = $request->validate([
             'serviceline_id'=>'required',
             'beneficiary'=>'required',
-            'activity_date'=>'required|date|before:tomorrow|after:lastmonth',
+            'activity_date'=>'required|date|before:tomorrow',
             'duration'=>'required',
             'task_id'=>'required',
             'activity_description'=>'required'
@@ -127,20 +115,13 @@ class TasksController extends Controller
         return $task;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request,Task $task)
     {
         //validate the received data
         $data = $request->validate([
-            "newtask_name"    => "required",
-            "newDeadline"  => "required|date",
-            'newtask_status'=>'required',
+            "task_name"    => "required",
+            "task_deadline"  => "required|date",
+            'task_status'=>'required',
         ]);
         //save the validated data
         $task->update([

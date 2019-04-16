@@ -231,7 +231,7 @@
             </div>           
             <div class="modal-body">
                 @csrf
-                <input type="hidden" id="task_user_id">
+                <input type="hidden" name="timesheet_id" id="timesheet_id">
                 <input type="hidden" name="task_id" id="the_task_id">
                 <div class="row">
                     <div class="col-md-6">
@@ -1261,7 +1261,6 @@
                             <input type="hidden" name="commentable_id" id="commentable_id">
                             <label for="comment">Comment</label>
                             <textarea name="comment_body" id="comment_body" rows="2" class="form-control"></textarea>
-
                         </div>
                     </div>
                 </div>

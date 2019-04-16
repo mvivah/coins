@@ -93,10 +93,10 @@ class TeamsController extends Controller
         return ['Team Created successfully'];
     }
 
-    public function show($id)
+    public function show(Team $team)
     {
-        $team = Team::findOrFail($id);
-        $users = User::where('team_id',$id)->get();
+        $team = Team::findOrFail($team->id);
+        $users = User::where('team_id',$team->id)->get();
         $user_data = [];
         // foreach($team->users as $user){
         //     // $assessments = Target::selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")

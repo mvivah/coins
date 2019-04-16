@@ -91,16 +91,20 @@
                 </ol>  
             </div>
             <div class="col-md-9">
-                <div class="btn-group mb-2">
-                    <a href="#" id="editProject"  data-id="{{$project->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Project">
-                    Edit</a>
-                    <a href="#" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" id="projecEtvaluation" data-id="{{$project->id}}" data-model="Project" style="float:right;" title="Project Evaluation">
-                        <i class="fa fa-layout"></i> Evaluation
-                    </a>
-                    <a href="#" class="btn btn-outline-danger" id="printProject" title="Print">
-                        <i class="fas fa-print"></i> Print
-                    </a>
-                </div>
+                    <div class="btn-group mb-2">
+                        <a href="#" id="editProject"  data-id="{{$project->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <a href="#" id="project_co" data-id="{{ $project->id}}" class="btn btn-outline-primary" title="Add Comment">
+                            <i class="fa fa-comment"></i> Comment
+                        </a>
+                        <a href="#" id="project_evaluation" data-id="{{$project->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Opportunity Evaluation">
+                            <i class="fas fa-clock"></i> Evaluation
+                        </a>
+                        <a href="#" class="btn btn-outline-dark" id="printProject" title="Print">
+                            <i class="fas fa-print"></i> Print
+                        </a>
+                    </div>
                     <div id="project_preview">
                         <div class="card">
                             <div class="card-header">

@@ -48,6 +48,7 @@ class ContactsController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = $request->validate([
             'account_name'=>'required|string|max:200',
             'full_address'=>'required|string|max:200',
@@ -115,12 +116,13 @@ class ContactsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,contact $contact)
+    public function update(Request $request,Contact $contact)
     {
+        //return $request;
         //validate the received data
         $data = $request->validate([
-            'account_name'=>'required|string|max:200',
-            'full_address'=>'required|string|max:200',
+            'account_name'=>'nullable|string|max:200',
+            'full_address'=>'nullable|string|max:200',
             'alternate_address'=>'nullable|string|max:200',
             'contact_person'=>'nullable|string|max:30',
             'contact_email'=>'nullable|email|max:100',

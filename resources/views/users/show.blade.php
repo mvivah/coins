@@ -90,7 +90,7 @@
                                 <strong>Timesheets</strong>
                                 <table class="table table-striped table-sm">
                                         <tr><td colspan="2" class="text-center"><strong>Period:</strong> {{date('M - Y')}}</td></tr>
-                                    @foreach($user->tasks as $task)
+                                    @foreach($timesheets as $task)
                                         <tr><td>{{$task->beneficiary}}</td><td><b>{{$task->duration}}</b></td></tr>
                                     @endforeach
                                     <tr><td><b>Total Worked</b></td><td><b>{{$worked}} Hours</b></td></tr>
@@ -150,7 +150,7 @@
                                     <h5>Timesheets</h5>
                                 </div>
                                 <div class="card-body" id="timesheetBody">
-                                    @if($user->tasks->count()>0)
+                                    @if($timesheets->count()>0)
                                         <table class="table table-sm  table-hover dat2">
                                             <thead>
                                                 <tr>
@@ -162,13 +162,13 @@
                                                 </tr>
                                             </thead>
                                         <tbody>
-                                            @foreach($user->tasks as $task)
+                                            @foreach($timesheets as $timesheet)
                                             <tr>
-                                                <td><a href="#" class="btn btn-sm btn-danger reviewTimesheet" id="{{$task->id}}">{{$task->activity_date}}</a></td>
-                                                <td>{{$task->task_name}}</td>
-                                                <td>{{$task->duration}} Hours</td>
-                                                <td>{{$task->beneficiary}}</td>
-                                                <td>{{$task->service_id}}</td>
+                                                <td><a href="#" class="btn btn-sm btn-danger reviewTimesheet" id="{{$timesheet->id}}">{{$timesheet->activity_date}}</a></td>
+                                                <td>{{$timesheet->task_name}}</td>
+                                                <td>{{$timesheet->duration}} Hours</td>
+                                                <td>{{$timesheet->beneficiary}}</td>
+                                                <td>{{$timesheet->service_name}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

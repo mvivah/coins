@@ -63,8 +63,8 @@ class UsersController extends Controller
     
     public function store(Request $data)
     {
-        User::create(
-            ['staffId' => $data['staffId'],
+        User::create([
+            'staffId' => $data['staffId'],
             'name' => $data['name'],
             'gender' => $data['gender'],
             'email' => $data['email'],
@@ -76,8 +76,8 @@ class UsersController extends Controller
             'level_id' => $data['level_id'],
             'reportsTo' => $data['reportsTo'],
             'userStatus' => $data['userStatus'],
-            'created_by'=>Auth::user()->id]
-        );
+            'created_by'=>Auth::user()->id
+            ]);
         return ['User added succesfully'];
     }
 
@@ -87,29 +87,26 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {   
-   
-        //Initualize  dates and months
         $year = $month = today();
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($user->id);
         $leaves = DB::table('leaves')
                     ->select('leavesetting_id','leave_status', DB::raw("SUM(duration) as duration"))
                     ->orderBy('created_at','desc')
-                    ->whereYear('start_date', '=', $year)
-                    ->whereYear('end_date', '=', $year)
-                    ->where('user_id', $id)
+                    ->whereYear('leave_start', '=', $month)
+                    ->whereYear('leave_end', '=', $month)
+                    ->where('user_id', $user->id)
                     ->groupBy('leavesetting_id','leave_status')
                     ->get();
         $absent = $leaves->sum('duration');
 
         //Timesheet
-        $timesheets = TaskUser::where('user_id', $id)->get();
-        $timesheets = DB::table('task_user')
-                    ->select(['beneficiary', DB::raw("SUM(duration) as duration")])
-                    ->orderBy("created_at")
-                    ->where('user_id', $id)
-                    ->groupBy('beneficiary')
+        $timesheets = DB::table('tasks')
+                    ->join('task_user', 'task_user.task_id', '=', 'tasks.id')
+                    ->join('servicelines', 'task_user.serviceline_id', '=', 'servicelines.id')
+                    ->orderBy("task_user.activity_date")
+                    ->where('task_user.user_id', $user->id)
                     ->get();
         $worked = $timesheets->sum('duration');
         return view('users.show',compact('user','leaves','timesheets','worked','absent'));
@@ -177,7 +174,7 @@ class UsersController extends Controller
             'role_id' => 'required|integer',
             'level_id' => 'required|integer',
             'reportsTo' => 'required|string',
-            'userStatus' => 'required|string|max:20',
+            'userStatus' => 'nullable|string|max:20',
         ]);
 
         //save the validated data

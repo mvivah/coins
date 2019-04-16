@@ -21,15 +21,8 @@ class TargetsController extends Controller
 
     public function index()
     {
-        if(!Gate::allows('isAdmin')){
 
-            abort(404,"Sorry, You cannot access this page");
-
-        }else{
-            
-            $targets = Target::all();
-            return $targets;
-        }
+        abort(404,"Sorry, You cannot access this page");
     }
 
     /**

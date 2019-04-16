@@ -69,6 +69,13 @@ class User extends Authenticatable
                                                 ->groupBy('targets.target_category');
     }
 
+    public function timesheets(){
+
+        return $this->hasMany('App\TaskUser')->selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")
+                                                ->join('targets', 'assessments.target_id', '=', 'targets.id')
+                                                ->groupBy('targets.target_category');
+    }
+
     public function projects(){
 
         return $this->belongsToMany('App\Project');

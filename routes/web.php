@@ -41,15 +41,16 @@ Route::post('/createProject','ProjectsController@createProject')->name('createPr
 Route::post('/projectUser', 'ProjectsController@addConsultants')->name('projectUser');
 Route::post('/projectassociates', 'ProjectsController@addAssociates')->name('addAssociates');
 Route::get('/getproject/{project}', 'ProjectsController@getproject')->name('getproject');
-Route::delete('/unassignConsultant/{id}', 'ProjectsController@removeConsultant')->name('unassignConsultant');
+Route::delete('/unassignConsultant/{consultant}', 'ProjectsController@removeConsultant')->name('unassignConsultant');
 Route::post('/filterProjects','ProjectsController@filterProjects')->name('filterProjects');
 
 //Routing everything about tasks
 Route::resource('tasks', 'TasksController');
 Route::get('/tasks/{task}/users','TasksController@tastUsers')->name('tastUsers');
+
 //Routing everything about timesheets
-Route::resource('/taskusers', 'TasksController');
-Route::put('/taskusers/{timesheet}', 'TasksController@updateUserTimesheet');
+Route::post('/taskusers', 'TasksController@create');
+Route::put('/taskusers/{taskuser}', 'TasksController@show');
 Route::post('/saveResponses','TasksController@saveResponses')->name('saveResponses');
 
 //Routing everything about partner firms
@@ -72,7 +73,7 @@ Route::resource('/scores', 'ScoresController');
 Route::resource('/teams', 'TeamsController');
 Route::get('/myteam', 'TeamsController@myteam');
 Route::get('/getteamleader/{team}', 'TeamsController@getteamleader');
-Route::post('/teams/{team}', 'TeamsController@update')->name('targets');
+Route::post('/teams/{team}', 'TeamsController@update');
 
 
 
@@ -113,8 +114,6 @@ Route::post('/getSpecilization','SpecializationsController@getSpecilization')->n
 
 //Routing everything about users
 Route::resource('/users', 'UsersController');
-Route::post('/users/{user}', 'UsersController@update');
-Route::get('/updateProfile','UsersController@updateProfile')->name('updateProfile');
 
 //User Live Search
 Route::get('/search', 'UsersController@search');
@@ -125,14 +124,6 @@ Route::get('/getAssociate/{associate}', 'AssociatesController@getAssociate')->na
 //Routing everything about comments
 Route::resource('/comments', 'CommentsController');
 Route::post('/comments/{comment}', 'CommentsController@update');
-
-/*
-*Reports Route
-*
-*/
-
-Route::get('/export_excel','OpportunitiesController@excel')->name('export_excel');
-Route::get('/generatepdf','PDFController@index');
 
 //Routing everything about targets
 Route::resource('/targets', 'TargetsController');

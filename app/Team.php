@@ -26,11 +26,4 @@ class Team extends Model
 
     }
 
-    public function team_leader(){
-        
-        return $this->belongsTo('App\User')->withDefault(function ($user) {
-            $user->id = 1;
-        });
-    }
-
 }

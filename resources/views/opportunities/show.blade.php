@@ -74,19 +74,22 @@
                 </div>
 
                 <div class="col-md-9">
-                    <div class="btn-group mb-2">
-                        <a href="#" id="editOpportunity"  data-id="{{$opportunity->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
+                    <div class="btn-group mb-2 opp">
+                        <button id="editOpportunity"  data-id="{{$opportunity->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
                             <i class="fa fa-edit"></i> Edit
-                        </a>
-                        <a href="#" id="opportunity_evaluation" data-id="{{ $opportunity->id}}" class="btn btn-outline-primary" title="Add Comment">
-                            <i class="fa fa-comment"></i> Comment
-                        </a>
-                        <a href="#" id="opportunity_evaluation" data-id="{{$opportunity->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Opportunity Evaluation">
-                            <i class="fas fa-clock"></i> Evaluation
-                        </a>
-                        <a href="#" class="btn btn-outline-dark" id="printOpportunity" title="Print">
+                        </button>
+                        <button id="opportunity_bid_scores" data-id="{{ $opportunity->id}}" class="btn btn-outline-dark" title="Add Bid Scores">
+                                <i class="fa fa-bars"></i> Bids
+                            </button>
+                        <button id="opportunity_comment" data-id="{{ $opportunity->id}}" class="btn btn-outline-primary" title="Add Comment">
+                            <i class="fa fa-comment"></i> Comments
+                        </button>
+                        <button id="opportunity_evaluation" data-id="{{$opportunity->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Opportunity Evaluation">
+                            <i class="fas fa-clock"></i> Evaluations
+                        </button>
+                        <button class="btn btn-outline-dark" id="printOpportunity" title="Print">
                             <i class="fas fa-print"></i> Print
-                        </a>
+                        </button>
                     </div>
 
                     <div id="opportunity_preview">
@@ -125,29 +128,30 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Tasks</th>
-                                                <th class="right">Deliverable</th>
+                                                <th>Deliverable</th>
                                                 <th>Status</th>
-                                                <th class="right">Responsible Persons</th>
-                                                <th class="center">Users</th>
+                                                <th>Due date</th>
+                                                <th>Progress</th>
+                                                <th>Users</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($opportunity->deliverables as $deliverable)
-                                            @foreach($deliverable->tasks as $task)
+                                            @foreach($deliverables as $deliverable)
                                             <tr>
-                                                <td class="left strong">{{$task->task_name}}</td>
-                                                <td class="right">{{$task->deliverable->deliverable_name}}</td>
-                                                <td class="left">{{$task->task_status}}</td>
-                                                <td class="right">
-                                                        @foreach($task->users as $user)
-                                                        {{$user->name}},
-                                                        @endforeach
+                                                <td>{{$deliverable->deliverable_name}}</td>
+                                                <td>{{$deliverable->deliverable_status}}</td>
+                                                <td>{{$deliverable->deliverable_completion}}</td>
+                                                <td>
+                                                    <div class="progress">
+                                                        <div class="progress-bar" role="progressbar" style="width: {{$deliverable->id}}%;" aria-valuenow="{{$deliverable->id}}" aria-valuemin="0" aria-valuemax="100">{{$deliverable->id}}</div>
+                                                    </div>
                                                 </td>
-                                                <td class="center">{{$task->users->count()}}</td>
-
+                                                <td>
+                                                    @foreach($opportunity_tasks as $task)
+                                                    {{$task->task_name}}
+                                                    @endforeach
+                                                </td>
                                             </tr>
-                                            @endforeach
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -162,22 +166,22 @@
                                   <table class="table table-clear">
                                   <tbody>
                                   <tr>
-                                  <td class="left">
+                                  <td>
                                   <strong>Deliverables</strong>
                                   </td>
-                                  <td class="right">{{$opportunity->deliverables->count()}}</td>
+                                  <td>{{$opportunity->deliverables->count()}}</td>
                                   </tr>
                                   <tr>
-                                  <td class="left">
+                                  <td>
                                   <strong>Probability</strong>
                                   </td>
-                                <td class="right">{{$opportunity->probability}}%</td>
+                                <td>{{$opportunity->probability}}%</td>
                                   </tr>
                                   <tr>
-                                  <td class="left">
+                                  <td>
                                   <strong>Total Revenue</strong>
                                   </td>
-                                  <td class="right">
+                                  <td>
                                   <strong>${{$opportunity->revenue}}</strong>
                                   </td>
                                   </tr>

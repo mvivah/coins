@@ -74,82 +74,83 @@
                         @endif
                     </li>
                     <div class="list-group" style="display:none">
-                            @foreach($deliverable->tasks as $task)
-                            <li class="list-group-item list-group-item-action">{{ $task->task_name }}
-                                @if($task->task_status == 'Completed'||$task->task_status == 'Done')
-                                    <div class="badge badge-success float-right">Done</div>
-                                @else
-                                <div class="btn-group float-right">
-                                    <i class="fa fa-edit text-success editTask pl-2" id="{{ $deliverable->id}}" title="Edit Task"></i> 
-                                    <i class="fa fa-times text-danger task_delete pl-2" id="{{ $deliverable->id}}" id="{{ $task->id }}" data-token="{{ csrf_token() }}" data-target="Task" title="Delete Task"></i>
-                                </div>
-                                @endif
-                            </li>
-                            @endforeach
-                        </div>
+                        @foreach($deliverable->tasks as $task)
+                        <li class="list-group-item list-group-item-action">{{ $task->task_name }}
+                            @if($task->task_status == 'Completed'||$task->task_status == 'Done')
+                                <div class="badge badge-success float-right">Done</div>
+                            @else
+                            <div class="btn-group float-right">
+                                <i class="fa fa-edit text-success editTask pl-2" id="{{ $deliverable->id}}" title="Edit Task"></i> 
+                                <i class="fa fa-times text-danger task_delete pl-2" id="{{ $deliverable->id}}" id="{{ $task->id }}" data-token="{{ csrf_token() }}" data-target="Task" title="Delete Task"></i>
+                            </div>
+                            @endif
+                        </li>
+                        @endforeach
+                    </div>
                     @endforeach                                  
                 </ol>  
             </div>
             <div class="col-md-9">
-                    <div class="btn-group mb-2">
-                        <a href="#" id="editProject"  data-id="{{$project->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
-                        <a href="#" id="project_co" data-id="{{ $project->id}}" class="btn btn-outline-primary" title="Add Comment">
-                            <i class="fa fa-comment"></i> Comment
-                        </a>
-                        <a href="#" id="project_evaluation" data-id="{{$project->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Opportunity Evaluation">
-                            <i class="fas fa-clock"></i> Evaluation
-                        </a>
-                        <a href="#" class="btn btn-outline-dark" id="printProject" title="Print">
-                            <i class="fas fa-print"></i> Print
-                        </a>
-                    </div>
-                    <div id="project_preview">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>{{$project->opportunity->opportunity_name}}</strong>
+                <div class="btn-group mb-2 opp">
+                    <button id="editProject"  data-id="{{$project->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Project" aria-disabled="true">
+                        <i class="fa fa-edit"></i> Edit
+                    </button>
+                    <button id="project_comment" data-id="{{ $project->id}}" class="btn btn-outline-primary" title="Add Comments">
+                        <i class="fa fa-comment"></i> Comments
+                    </button>
+                    <button id="project_evaluation" data-id="{{$project->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Project Evaluation">
+                        <i class="fas fa-clock"></i> Evaluations
+                    </button>
+                    <button class="btn btn-outline-dark" id="printProject" title="Print Project">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+
+                <div id="project_preview">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>{{$project->opportunity->opportunity_name}}</strong>
                                 {{$project->completion_date}}
-                                <span class="float-right"> <strong>Stage: </strong> {{$project->project_stage}}</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="row mb-4">
-                                    <div class="col-sm-4">
-                                        <h6 class="mb-3">Status:</h6>
-                                        <div>
-                                            <strong>{{$project->project_status}}</strong>
-                                        </div>
-                                        <div>{{$project->stage}}</div>
-                                        <div>{{$project->stage}}</div>
-                                        <div>Email:{{$project->stage}}</div>
-                                        <div>Phone: {{$project->stage}}</div>
+                            <span class="float-right"> <strong>Stage: </strong> {{$project->project_stage}}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-sm-4">
+                                    <h6 class="mb-3">Status:</h6>
+                                    <div>
+                                        <strong>{{$project->project_status}}</strong>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <h6 class="mb-3">To:</h6>
-                                        <div>
-                                        <strong>Bob Mart</strong>
-                                        </div>
-                                        <div>Attn: Daniel Marek</div>
-                                        <div>43-190 Mikolow, Poland</div>
-                                        <div>Email: marek@daniel.com</div>
-                                        <div>Phone: +48 123 456 789</div>
-                                    </div>
+                                    <div>{{$project->stage}}</div>
+                                    <div>{{$project->stage}}</div>
+                                    <div>Email:{{$project->stage}}</div>
+                                    <div>Phone: {{$project->stage}}</div>
                                 </div>
-                                    
-                                <div class="table-responsive-sm">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Tasks</th>
-                                                    <th>Status</th>
-                                                    <th class="right">Responsible</th>
-                                                    <th class="center">Users</th>
-                                                    <th class="right">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($project->deliverables as $deliverable)
-                                                @foreach($deliverable->tasks as $task)
+                                <div class="col-sm-4">
+                                    <h6 class="mb-3">To:</h6>
+                                    <div>
+                                    <strong>Bob Mart</strong>
+                                    </div>
+                                    <div>Attn: Daniel Marek</div>
+                                    <div>43-190 Mikolow, Poland</div>
+                                    <div>Email: marek@daniel.com</div>
+                                    <div>Phone: +48 123 456 789</div>
+                                </div>
+                            </div>                                  
+                            <div class="table-responsive-sm">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Tasks</th>
+                                            <th>Status</th>
+                                            <th class="right">Responsible</th>
+                                            <th class="center">Users</th>
+                                            <th class="right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($deliverables as $deliverable)
+                                        {{$deliverable->deliverable_name}}
+                                            @foreach($deliverable->tasks as $task)
                                                 <tr>
                                                     <td class="left strong">{{$task->task_name}}</td>
                                                     <td class="left">{{$task->task_status}}</td>
@@ -161,54 +162,48 @@
                                                     <td class="center">{{$task->users->count()}}</td>
                                                     <td class="right">$999,00</td>
                                                 </tr>
-                                                @endforeach
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="row">
-                                    <div class="col-lg-4 col-sm-5">
-                                    
-                                    </div>
-                                    
-                                    <div class="col-lg-4 col-sm-5 ml-auto">
-                                    <table class="table table-clear">
-                                    <tbody>
-                                    <tr>
-                                    <td class="left">
-                                    <strong>Subtotal</strong>
-                                    </td>
-                                    <td class="right">$8.497,00</td>
-                                    </tr>
-                                    <tr>
-                                    <td class="left">
-                                    <strong>Discount (20%)</strong>
-                                    </td>
-                                    <td class="right">$1,699,40</td>
-                                    </tr>
-                                    <tr>
-                                    <td class="left">
-                                    <strong>VAT (10%)</strong>
-                                    </td>
-                                    <td class="right">$679,76</td>
-                                    </tr>
-                                    <tr>
-                                    <td class="left">
-                                    <strong>Total</strong>
-                                    </td>
-                                    <td class="right">
-                                    <strong>$7.477,36</strong>
-                                    </td>
-                                    </tr>
+                                            @endforeach
+                                        @endforeach
                                     </tbody>
-                                    </table> 
-                                    </div>   
-                                </div>     
+                                </table>
                             </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-5"></div>
+                                <div class="col-lg-4 col-sm-5 ml-auto">
+                                    <table class="table table-clear">
+                                        <tbody>
+                                            <tr>
+                                                <td class="left"><strong>Subtotal</strong></td>
+                                                <td class="right">$8.497,00</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="left">
+                                                <strong>Discount (20%)</strong>
+                                                </td>
+                                                <td class="right">$1,699,40</td>
+                                            </tr>
+                                            <tr>
+                                            <td class="left">
+                                            <strong>VAT (10%)</strong>
+                                            </td>
+                                            <td class="right">$679,76</td>
+                                            </tr>
+                                            <tr>
+                                            <td class="left">
+                                            <strong>Total</strong>
+                                            </td>
+                                            <td class="right">
+                                            <strong>$7.477,36</strong>
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                    </table> 
+                                </div>   
+                            </div>     
                         </div>
                     </div>
-                    <div class="row mt-2" id="deliverableBody">                       
+                </div>
+                <div class="row mt-2" id="deliverableBody">                       
                     @foreach($project->deliverables as $deliverable)
                         <div class="col-md-6 mb-1">
                             <div class="list-group">

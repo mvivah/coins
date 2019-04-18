@@ -59,12 +59,16 @@
             </div>
         </div>
     </nav>
-
-    {{-- Notifications Area --}}
-    <div id="notices"></div>
-
     {{-- <main class=""> --}}
     <main class="container-fluid py-2">
+        {{-- Notifications Area --}}
+        <div class="row">
+                <div class="col-md-2 offset-md-10 mb-0">
+                    <div id="notices">
+                        <div id="noticesPoint" class="pr-0"></div>
+                    </div>
+                </div>
+            </div>
         {{-- Content for all the pages --}}
         @yield("content")
         {{-- Forms and Modals --}}

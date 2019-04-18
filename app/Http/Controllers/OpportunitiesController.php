@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Opportunity;
 use App\Project;
 use App\Team;
+use App\Task;
 use App\Contact;
 use App\User;
 use App\OpportunityUser;
@@ -13,10 +14,10 @@ use Carbon\Carbon;
 use App\Notifications\OpportunityCreated;
 use App\Notifications\OpportunityAssigned;
 use App\Notifications\OpportunityWon;
+use App\DeliverableOpportunity;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Notifications\Notifiable;
-use App\Exports\OpportunitiesExport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Charts\CoinChart;
 use Session;
 use Auth;
 use DB;
@@ -28,17 +29,52 @@ class OpportunitiesController extends Controller
         $this->middleware('auth');
     }
     
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function index(){
+        $opportunities_stage = Opportunity::selectRaw("count('id') as opportunities,sales_stage" )
+                                            ->whereMonth('created_at', now())
+                                            ->orWhere('updated_at', now())
+                                            ->groupBy("sales_stage")
+                                            ->get();
+        $stageData = [];
+        $stageLables = [];
+        foreach($opportunities_stage as $data){
+            array_push($stageData,[
+                    $data->opportunities
+            ]); 
+            array_push($stageLables,[
+                $data->sales_stage
+            ]);
+        }
 
-        $proposals = $this->makeSummary('Proposal');
-        $eois = $this->makeSummary('EOI');
-        $prequalifications = $this->makeSummary('Pre-Qualification');
+        $opportunity_stage = new CoinChart;
+        $opportunity_stage->labels($stageLables);
+        $colors = ['#229954','#BA4A00','#7DCEA0','#D1F2EB','#E8DAEF','#C0392B','#76D7C4','#117864','#E67E22','#AF7AC5'];
+        $opps = $opportunity_stage->dataset('Opportunities per Sales stage', 'bar',$stageData);
+        $opps->backgroundColor($colors);
+
+
+        $opportunity_team = Opportunity::selectRaw("count('id') as opportunities,teams.team_code as team_code")
+                                        ->join('teams', 'opportunities.team_id', '=', 'teams.id')
+                                        ->whereMonth('opportunities.created_at', now())
+                                        ->orWhere('opportunities.updated_at', now())
+                                        ->groupBy("teams.team_code")
+                                        ->get();
+        $teamData = [];
+        $teamLables = [];
+        foreach($opportunity_team as $data){
+            array_push($teamData,[
+                    $data->opportunities
+            ]); 
+            array_push($teamLables,[
+                $data->team_code
+            ]);
+        }
+        $opportunity_team = new CoinChart;
+        $opportunity_team->labels($teamLables);
+        $opportunity_team->title('Opportunities per Team');
+        $colors = ['#C0392B','#76D7C4','#117864','#E67E22','#AF7AC5','#D5F5E3','#D5DBDB','#7DCEA0','#D1F2EB','#E8DAEF'];
+        $opps = $opportunity_team->dataset('Group by Team', 'pie',$teamData);
+        $opps->backgroundColor($colors);
 
         if(!Gate::allows('isAdmin')){
             $opportunities = Opportunity::where('team_id', Auth::user()->team_id)
@@ -48,7 +84,8 @@ class OpportunitiesController extends Controller
             else{
                 $opportunities = Opportunity::all();
             }
-        return view('opportunities.index', compact('proposals','eois','prequalifications','opportunities'));
+            
+        return view('opportunities.index', compact('opportunity_stage','opportunity_team','opportunities'));
     }
 
     public function makeSummary($type,$start_date = NULL)
@@ -72,22 +109,6 @@ class OpportunitiesController extends Controller
         return $total;
     }
 
-     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('opportunities.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $opportunity = new Opportunity();
@@ -102,8 +123,8 @@ class OpportunitiesController extends Controller
             'sales_stage'=>'required',
             'type'=>'required',
             'lead_source'=>'required',
-            'external_deadline'=>'required',
-            'internal_deadline'=>'required',
+            'external_deadline'=>'required|date|after:internal_deadline',
+            'internal_deadline'=>'required|date|after:today',
             'team_id'=>'required',
             'probability'=>'nullable',
             'funder'=>'required',
@@ -127,7 +148,7 @@ class OpportunitiesController extends Controller
         ]);
         
         if(!$run){
-            return ['error' => 'The opportunity not created'];;
+            return ['The opportunity not created'];;
         }else{
 
             $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
@@ -135,7 +156,7 @@ class OpportunitiesController extends Controller
             }else{
                 User::find($team_leader)->notify(new OpportunityCreated($opportunity));
             }      
-            return ['success' => 'Opportunity successfully created'];
+            return ['Opportunity successfully created'];
         }
     }
 
@@ -154,16 +175,16 @@ class OpportunitiesController extends Controller
     public function show($id)
     {
         $opportunity = Opportunity::findOrFail($id);
-        
-        return view('opportunities.show',compact('opportunity'));
+
+        $deliverables = DeliverableOpportunity::where(['deliverable_opportunity.opportunity_id'=>$id])
+                                                ->join('deliverables', 'deliverable_opportunity.deliverable_id', '=', 'deliverables.id')
+                                                ->get();
+
+        $opportunity_tasks = Task::join('deliverables', 'tasks.deliverable_id', '=', 'deliverables.id')
+                                    ->join('deliverable_opportunity', 'tasks.deliverable_id', '=', 'deliverable_opportunity.deliverable_id')->get();
+        return view('opportunities.show',compact('opportunity','deliverables','opportunity_tasks'));
     }
 
-    /**
-     * Show the form for editing the resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $opps = Opportunity::findOrFail($id);
@@ -172,13 +193,6 @@ class OpportunitiesController extends Controller
         return $opportunity+$contact;
     }
 
-    /**
-     * Update the resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Opportunity $opportunity)
     {       
         $data = $request->validate([
@@ -220,28 +234,18 @@ class OpportunitiesController extends Controller
                 'project_stage'=>'Initiation',
                 'created_by'=>Auth::user()->id
             ]);
-
-            $team_leader = Team::where('id','=',$request->team_id)->first()->pluck('team_leader');
-
-            $receiver = User::find($team_leader);
-            if( !$receiver){
+        }
+        if(!$run){
+            return ['This opportunity was not updated'];;
+        }else{
+            $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
+            if( !User::find($team_leader)){
             }else{
                 User::find($team_leader)->notify(new OpportunityWon($project));
-            }
-        }
-
-        if(!$run){
-            return ['error' => 'This opportunity was not updated'];
-        }else{
-            return ['success' => 'Opportunity updated successfully'];
+            }      
+            return ['Opportunity successfully created'];
         }
     }
-
-    
-    /**
-     * Assign consultant to an apportunity
-     *
-     */
 
     public function addConsultants(Request $request){
         $data = $request->validate([
@@ -261,9 +265,6 @@ class OpportunitiesController extends Controller
         return ['Cosulntant added successfully'];
     }
 
-    /*
-     * Remove consultant from an Opportunity
-     */
     public function removeConsultant($id){
         $user = OpportunityUser::where('user_id',$id)->first()->delete();
         if($user){
@@ -272,12 +273,7 @@ class OpportunitiesController extends Controller
             return['Failed'];
         }
     }
-    /*
-     * Remove the resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         $opportunity = Opportunity::findOrFail($id);

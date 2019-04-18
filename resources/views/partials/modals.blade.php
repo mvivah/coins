@@ -198,12 +198,12 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                            <label for="external_deadline">Expected Close Date</label>
-                            <input type="date" name="external_deadline" id="external_deadline" class="form-control">  
-                        </div>
-                        <div class="form-group col-md-4">
                             <label for="internal_deadline">Internal Deadline</label>
                             <input type="date" name = "internal_deadline" id="internal_deadline" class="form-control" >
+                        </div>
+                        <div class="form-group col-md-4">
+                                <label for="external_deadline">External Deadline</label>
+                                <input type="date" name="external_deadline" id="external_deadline" class="form-control">  
                         </div>
                         <div class="form-group col-md-4">
                             <label for="Probability">Probability(%)</label>
@@ -226,7 +226,7 @@
     <div class="modal-content">
         <form autocomplete="off" id="timesheetForm">
             <div class="modal-header">
-            <h4 class="modal-title">Timesheet</h4>
+            <h4 class="modal-title" id="timesheet_title">Timesheet</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>           
             <div class="modal-body">
@@ -236,7 +236,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label>Beneficiary:</label>
-                        <select name="beneficiary" id="beneficiary" class="form-control getBeneficiary">
+                        <select name="beneficiary" id="beneficiary" class="form-control">
                             <option value="0" selected disabled>- Select Beneficiary -</option>
                             <option value="Business Development">Business Development</option>
                             <option value="Opportunities">Opportunities and Projects</option>
@@ -285,23 +285,19 @@
 
 {{-- Bid Scores --}}
 <div class="modal fade bs-example-modal-lg" id="addScore" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{url('scores')}}" method="POST" autocomplete="off" id="scoresForm">
+            <form autocomplete="off" id="scoresForm">
                 <div class="modal-header">
-                    <h4 class="modal-title">Technical and Financial scores</h4>
+                    <h4 class="modal-title">Opportunity Bid Scores</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     @csrf
+                    <input type="hidden" name="opportunity_id" id="this_opportunity_id">
                     <div class="row">
                         <div class="col-md-3">
-                            <label>OM Number:</label>
-                            <input type="text" id="omnumber" class="form-control" readonly>
-                            <input type="hidden" name="opportunity_id" id="this_opportunity_id">
-                        </div>
-                        <div class="col-md-5">
                             <label>Bid opening date:</label><br>
                             <div class="input-group mb-3">
                                 <input type="date" name="opening_date" id="opening_date" class="form-control">
@@ -311,7 +307,6 @@
                             </div>
                         </div>             
                     </div>
-                    <br>
                     <div class="row">
                         <div class="col-md-12">
                             <label>Bidding Details</label>
@@ -319,8 +314,8 @@
                                 <thead>
                                     <tr>
                                     <th scope="col">Name of the Firm</th>
-                                    <th scope="col">Technical Scores (%)</th>
-                                    <th scope="col">Financial Scores (%)</th>
+                                    <th scope="col">Technical (%)</th>
+                                    <th scope="col">Financial (%)</th>
                                     <th scope="col"></th>
                                     </tr>
                                 </thead>
@@ -421,7 +416,7 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <label>Team</label>
-                                <select name="team_id" id="user_team_id" class="form-control">                            
+                                <select name="user_team_id" id="user_team_id" class="form-control">                            
                                     <option>Choose...</option>
                                     @foreach(App\Team::all() as  $team)
                                     <option value="{{$team->id}}">{{$team->team_code}}</option>
@@ -734,11 +729,11 @@
         </div>
         <div class="modal-body"> 
             @csrf
+            <input type="hidden" name="deliverable_id" id="the_deliverable">
+            <input type="hidden" name="task_id" id="task_id">
             <div class="row">
                 <div class="col-md-12">
                     <label>Task Name</label>
-                    <input type="hidden" name="deliverable_id" id="the_deliverable">
-                    <input type="hidden" name="task_id" id="task_id">
                     <input type="text" class="form-control" name="task_name" id="task_name">
                 </div>
             </div>

@@ -45,12 +45,13 @@ Route::delete('/unassignConsultant/{consultant}', 'ProjectsController@removeCons
 Route::post('/filterProjects','ProjectsController@filterProjects')->name('filterProjects');
 
 //Routing everything about tasks
-Route::resource('tasks', 'TasksController');
-Route::get('/tasks/{task}/users','TasksController@tastUsers')->name('tastUsers');
+Route::resource('/tasks', 'TasksController');
+Route::post('tasks/{task}', 'TasksController@update');
 
 //Routing everything about timesheets
-Route::post('/taskusers', 'TasksController@create');
-Route::put('/taskusers/{taskuser}', 'TasksController@show');
+Route::resource('/timesheets', 'TimesheetsController');
+Route::post('/timesheets/{timesheets}', 'TimesheetsController@update');
+
 Route::post('/saveResponses','TasksController@saveResponses')->name('saveResponses');
 
 //Routing everything about partner firms
@@ -114,7 +115,7 @@ Route::post('/getSpecilization','SpecializationsController@getSpecilization')->n
 
 //Routing everything about users
 Route::resource('/users', 'UsersController');
-
+Route::post('/users/{user}', 'UsersController@update');
 //User Live Search
 Route::get('/search', 'UsersController@search');
 Route::resource('/associates', 'AssociatesController');

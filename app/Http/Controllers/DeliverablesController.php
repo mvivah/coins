@@ -57,7 +57,7 @@ class DeliverablesController extends Controller
             'deliverable_completion' => $data['deliverable_completion'],
             'created_by'=>Auth::user()->id
         ]);
-        return ['Success'=>'Deliverable created successfully'];
+        return ['Deliverable created successfully'];
     }
 
     /**
@@ -146,7 +146,7 @@ class DeliverablesController extends Controller
                     return $query->where('opportunity_id',$oid);
                 }),
                 'deliverable_status'=>'required',
-                'deliverable_completion'=>'required|date|after:tomorrow',
+                'deliverable_completion'=>'required|date|after:today',
             ]);
 
             DeliverableOpportunity::firstOrCreate([
@@ -165,7 +165,7 @@ class DeliverablesController extends Controller
                     return $query->where('project_id', $pid);
                 }),
                 'deliverable_status'=>'required',
-                'deliverable_completion'=>'required|date|after:tomorrow',
+                'deliverable_completion'=>'required|date|after:today',
             ]);
 
             DeliverableProject::create([

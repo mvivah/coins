@@ -8,6 +8,8 @@ use App\Project;
 use App\Associate;
 use App\User;
 use App\Team;
+use App\Task;
+use App\DeliverableProject;
 use App\ProjectUser;
 use App\AssociateProject;
 use App\Notifications\ProjectAssigned;
@@ -18,11 +20,6 @@ use DB;
 
 class ProjectsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function __construct()
     {
         $this->middleware('auth');
@@ -34,16 +31,17 @@ class ProjectsController extends Controller
         return view('projects.index',['projects'=>$projects,]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-
     public function show(Project $project)
     {
-        $project = Project::findOrFail($project->id);   
+        $project = Project::findOrFail($project->id);
+
+        $deliverables = DeliverableProject::where(['deliverable_project.project_id'=>$project->id])
+                                            ->join('deliverables', 'deliverable_project.deliverable_id', '=', 'deliverables.id')
+                                            ->get();
+
+        $project_tasks = Task::join('deliverables', 'tasks.deliverable_id', '=', 'deliverables.id')
+                                    ->join('deliverable_project', 'tasks.deliverable_id', '=', 'deliverable_project.deliverable_id')->get();  
+
         return view('projects.show',compact('project'));
     }
     
@@ -82,7 +80,7 @@ class ProjectsController extends Controller
         ]);
 
         if(!$run){
-            return ['error' => 'Project has not been updated'];;
+            return ['Project has not been updated'];;
         }else{
             $project = Project::find($request->id);
             $team_leader = Team::where('id','=',$request->team_id)->pluck('team_leader')->first();
@@ -93,7 +91,7 @@ class ProjectsController extends Controller
                 User::find($team_leader)->notify(new OpportunityCreated($opportunity));
             }
 
-            return ['success' => 'Project has been successfully updated'];
+            return ['Project has been successfully updated'];
         }
     }
     /**
@@ -131,14 +129,10 @@ class ProjectsController extends Controller
      *
      */
 
-    public function addConsultants(Request $request){
+    public function addConsultants(Request $request){          
         $data = $request->validate([
             "project_id"    => "required",
-            "user_id"  => Rule::unique('project_user')->where(function($query){
-
-                return $query->join('projects', 'projects.id', '=', 'project_user.project_id')->where('project_status','!=','Completed')->get();
-
-            }),
+            "user_id" =>"required|unique:project_user",
         ]);
         ProjectUser::create([
             'project_id' => $data['project_id'],

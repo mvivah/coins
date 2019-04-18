@@ -25,7 +25,7 @@ class Deliverable extends Model
 
     public function tasks(){
 
-        return $this->hasMany('App\Task'); 
+        return $this->belongsToMany('App\Task'); 
 
     }
 

@@ -28,8 +28,12 @@ class Task extends Model
         return $this->belongsToMany('App\User');
 
     }
-    
-    public function deliverable(){
+    public function timesheet(){
+
+        return $this->belongsToMany('App\Timesheet');
+
+    }
+    public function deliverables(){
 
         return $this->belongsTo('App\Deliverable');
 

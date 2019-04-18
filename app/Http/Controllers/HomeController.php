@@ -60,7 +60,10 @@ class HomeController extends Controller
                             ->groupBy("type")
                             ->get();
 
-        $oppTeam= DB::SELECT("SELECT count('id') as opportunitiesdone,t.team_code AS team FROM opportunities o JOIN teams t ON o.team_id = t.id GROUP BY team");
+        $oppTeam= Opportunity::selectRaw("count('id') as opportunitiesdone,teams.team_code as team")
+                            ->join('teams', 'opportunities.team_id', '=', 'teams.id')
+                            ->groupBy("teams.team_code")
+                            ->get();
         
         $oppCountry= DB::table('opportunities')
                             ->selectRaw("count('id') as opportunitiesdone,country" )
@@ -168,7 +171,7 @@ class HomeController extends Controller
         //Opportunities
         $opportunityStage = new CoinChart;
         $opportunityStage->labels($stageLables);
-        $colors = ['#D5F5E3','#D5DBDB','#7DCEA0','#D1F2EB','#E8DAEF','#C0392B','#76D7C4','#117864','#E67E22','#AF7AC5'];
+        $colors = ['#2C3E50','#196F3D','#7DCEA0','#D1F2EB','#E8DAEF','#C0392B','#76D7C4','#117864','#E67E22','#AF7AC5'];
         $opps = $opportunityStage->dataset('Opportunities per Stage', 'bar',$stageData);
         $opps->backgroundColor($colors);
 

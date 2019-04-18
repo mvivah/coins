@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Leave;
 use App\TaskUser;
+use App\Timesheet;
+use App\Assessment;
 use Auth;
 use DB;
 use Gate;
@@ -31,18 +33,6 @@ class UsersController extends Controller
         return view('users.index')->with('users', $users);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -81,12 +71,6 @@ class UsersController extends Controller
         return ['User added succesfully'];
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show(User $user)
     {   
         $year = $month = today();
@@ -102,14 +86,30 @@ class UsersController extends Controller
         $absent = $leaves->sum('duration');
 
         //Timesheet
-        $timesheets = DB::table('tasks')
-                    ->join('task_user', 'task_user.task_id', '=', 'tasks.id')
-                    ->join('servicelines', 'task_user.serviceline_id', '=', 'servicelines.id')
-                    ->orderBy("task_user.activity_date")
+        $opportunities = DB::table('users')
+                    ->join('task_user', 'task_user.user_id', '=', 'users.id')
+                    ->join('tasks', 'task_user.task_id', '=', 'tasks.id')
+                    ->join('deliverable_opportunity', 'tasks.deliverable_id', '=', 'deliverable_opportunity.deliverable_id')
+                    ->join('opportunities', 'deliverable_opportunity.opportunity_id', '=', 'opportunities.id')
+                    ->orderBy("opportunities.opportunity_name")
                     ->where('task_user.user_id', $user->id)
                     ->get();
-        $worked = $timesheets->sum('duration');
-        return view('users.show',compact('user','leaves','timesheets','worked','absent'));
+
+        $timesummary = Timesheet::select('beneficiary', DB::raw("SUM(duration) as duration"))
+                                ->whereMonth('activity_date',now())
+                                ->where(['user_id'=>$user->id])
+                                ->groupBy('beneficiary')->get();
+
+        $worked = $timesummary->sum('duration');
+        $timesheets = Timesheet::where(['user_id'=>$user->id])->whereMonth('activity_date',now())->get();
+        
+        
+
+        $assessments = Assessment::selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")
+                                ->join('targets', 'assessments.target_id', '=', 'targets.id')
+                                ->groupBy('targets.target_category')
+                                ->get();
+        return view('users.show',compact('user','leaves','timesummary','timesheets','assessments','opportunities','worked','absent'));
     }
     /*
     * Custom search engine
@@ -125,9 +125,9 @@ class UsersController extends Controller
             foreach ($users as $key=> $user) {
                 $output = $user->name;
                 return $output;
-                }
-            }else{
-                return $request;
+            }
+        }else{
+            return $request;
         }
     }
         
@@ -170,7 +170,7 @@ class UsersController extends Controller
             'email' => 'required|string|email|max:255',
             'mobilePhone' => 'required|string|max:20',
             'alternativePhone' => 'required|string|max:20',
-            'team_id' => 'required|integer|max:50',
+            'user_team_id' => 'required|integer|max:50',
             'role_id' => 'required|integer',
             'level_id' => 'required|integer',
             'reportsTo' => 'required|string',
@@ -185,7 +185,7 @@ class UsersController extends Controller
             'email' => $data['email'],
             'mobilePhone' => $data['mobilePhone'],
             'alternativePhone' => $data['alternativePhone'],
-            'team_id' => $data['team_id'],
+            'team_id' => $data['user_team_id'],
             'role_id' => $data['role_id'],
             'level_id' => $data['level_id'],
             'reportsTo' => $data['reportsTo'],

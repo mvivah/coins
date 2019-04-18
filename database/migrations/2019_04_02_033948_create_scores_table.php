@@ -20,11 +20,11 @@ class CreateScoresTable extends Migration
             $table->string('firm_name');
             $table->string('technical_score');
             $table->string('financial_score');
-            $table->string('user_id');
+            $table->string('created_by');
             $table->string('updated_by')->nullable();
             
             $table->foreign('opportunity_id')->references('id')->on('opportunities');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();
         });

@@ -6,6 +6,7 @@ use App\Team;
 use App\User;
 use App\Target;
 use App\Assessment;
+use App\Timesheet;
 use App\TaskUser;
 use DB;
 use Session;
@@ -111,9 +112,6 @@ class TeamsController extends Controller
         //    ]); 
         // }
         return view('teams.show', compact('team','users'));
-        // return view('teams.show', compact('opportunities','assessments','timesheets'));
-        // return view('teams.show', compact('opportunities','assessments','timesheets'));
-        // return view('teams.show', compact('opportunities','assessments','timesheets'));
     }
 
     public function edit(Team $team)

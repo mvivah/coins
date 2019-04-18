@@ -83,3 +83,12 @@ legend{
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
 }
+
+.opp > .btn {
+  border: none !important;
+  cursor: pointer!important;
+}
+.alert{
+  position: fixed !important;
+  z-index: 9999 !important;
+}

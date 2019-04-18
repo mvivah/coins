@@ -43,7 +43,7 @@ class ScoresController extends Controller
     {
         $this->validate($request,[
             'opportunity_id' => 'required',
-            'opening_date' => 'required|date',
+            'opening_date' => 'required|date|before:tomorrow',
             'firm_name' => 'required',
             'technical_score' => 'required',
             'financial_score' => 'required',

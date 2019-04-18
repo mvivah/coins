@@ -8,10 +8,21 @@ class Timesheet extends Model
 {
     protected $guarded=[];
 
-    public function taskusers(){
+    public function users(){
 
-        return $this->hasMany('App\TaskUser');
+        return $this->belongsToMany('App\User');
 
     }
 
+    public function serviceline(){
+
+        return $this->belongsTo('App\Serviceline');
+
+    }
+    
+    public function tasks(){
+
+        return $this->belongsToMany('App\Task');
+
+    }
 }

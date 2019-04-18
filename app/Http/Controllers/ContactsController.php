@@ -77,7 +77,7 @@ class ContactsController extends Controller
             throw('Failed to save contact');
         }
         else{
-            return ['success'=>'Contact saved successfully'];
+            return ['Contact saved successfully'];
         }
     }
 
@@ -147,7 +147,7 @@ class ContactsController extends Controller
         if(!$run){
             return ['error'=>'Contact not updated'];
         }else{
-            return ['success'=>'Contact updated successfully'];
+            return ['Contact updated successfully'];
         }
     }
 

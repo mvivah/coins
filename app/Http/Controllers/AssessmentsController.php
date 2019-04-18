@@ -37,7 +37,7 @@ class AssessmentsController extends Controller
     {
         if (Assessment::where(['assessment_period'=>$request->assessment_period,'user_id'=>$request->user_id])->exists()) {
     
-            return['error' => 'Assessment for this month already done for this user'];
+            return['Assessment for this month already done for this user'];
         }
         else{
             $assessments = $request->except(['_token','user_id','assessment_period']);
@@ -50,7 +50,7 @@ class AssessmentsController extends Controller
                 ];
                 $assessment = Assessment::insert($user_info+$data+$timestamps); 
             }
-            return['success' => 'Assessment successfully recorded'];
+            return['Assessment successfully recorded'];
 
         }
     }

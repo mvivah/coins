@@ -15,7 +15,8 @@ class CreateTimesheetsTable extends Migration
     {
         Schema::create('timesheets', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('taskuser_id')->unsigned();
+            $table->string('user_id');
+            $table->string('task_id')->nullable();
             $table->string('beneficiary')->nullable();
             $table->string('serviceline_id')->nullable();
             $table->string('activity_date')->nullable();
@@ -23,8 +24,9 @@ class CreateTimesheetsTable extends Migration
             $table->longText('activity_description')->nullable();
             $table->string('created_by');
             $table->string('updated_by')->nullable();
-            $table->foreign('taskuser_id')->references('id')->on('task_user');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('serviceline_id')->references('id')->on('servicelines');
+            $table->foreign('task_id')->references('id')->on('tasks');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();

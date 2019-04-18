@@ -8,4 +8,10 @@ class DeliverableProject extends Model
 {
     protected $guarded = [];
     protected $table = 'deliverable_project';
+
+    public function tasks(){
+
+        return $this->hasMany('App\Task'); 
+
+    }
 }

@@ -61,7 +61,11 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Task');
 
     }
+    public function timesheets(){
 
+        return $this->belongsToMany('App\Timesheet');
+
+    }
     public function assessments(){
 
         return $this->hasMany('App\Assessment')->selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")
@@ -69,9 +73,9 @@ class User extends Authenticatable
                                                 ->groupBy('targets.target_category');
     }
 
-    public function timesheets(){
+    public function scores(){
 
-        return $this->hasMany('App\TaskUser')->selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")
+        return $this->hasMany('App\TaskUser')->selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS grade")
                                                 ->join('targets', 'assessments.target_id', '=', 'targets.id')
                                                 ->groupBy('targets.target_category');
     }

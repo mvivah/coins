@@ -89,106 +89,19 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-			<div class="table-responsive">
-				<table class="table table-sm table-bordered table-striped">
-					<caption>Proposals</caption>
-					<thead class="bg-primary text-white">
-							<tr>
-							<td>Teams</td>
-							<td>Preparation</td>
-							<td>Review</td>
-							<td>Submitted</td>
-							<td>Not Submitted</td>
-							<td>Dropped</td>
-							<td>Lost</td>
-							<td>Won</td>
-							</tr>
-						</thead>
-					<tbody>
-						@foreach($proposals as $proposal)       
-						<tr>
-							<th scope="row">{{$proposal['team']}}</td>
-							<td>{{$proposal['underpreparation']}}</td>
-							<td>{{$proposal['underreview']}}</td>
-							<td>{{$proposal['submitted']}}</td>
-							<td>{{$proposal['notsubmitted']}}</td>
-							<td>{{$proposal['dropped']}}</td>
-							<td>{{$proposal['lost']}}</td>
-							<td>{{$proposal['won']}}</td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
+			<div class="card-body">
+				{!! $opportunity_stage->container() !!}
+				{!! $opportunity_stage->script() !!}
 			</div>
 		</div>
 		<div class="col-md-6">
-			<div class="table-responsive">
-				<table class="table table-sm table-bordered table-striped">
-					<caption>EOIs</caption>
-					<thead class="bg-success text-white">
-						<tr>
-						<td>Teams</td>
-						<td>Preparation</td>
-						<td>Review</td>
-						<td>Submitted</td>
-						<td>Not Submitted</td>
-						<td>Dropped</td>
-						<td>Lost</td>
-						<td>Won</td>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach($eois as $eoi)       
-						<tr>
-							<th scope="row">{{$eoi['team']}}</th>
-							<td>{{$eoi['underpreparation']}}</td>
-							<td>{{$eoi['underreview']}}</td>
-							<td>{{$eoi['submitted']}}</td>
-							<td>{{$eoi['notsubmitted']}}</td>
-							<td>{{$eoi['dropped']}}</td>
-							<td>{{$eoi['lost']}}</td>
-							<td>{{$eoi['won']}}</td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
+			<div class="card-body">
+				{!! $opportunity_team->container() !!}
+				{!! $opportunity_team->script() !!}
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-6">
-			<div class="table-responsive">
-				<table class="table table-sm table-bordered table-striped">
-					<caption>Pre-Qualifications</caption>
-					<thead class="bg-secondary text-white">
-						<tr>
-						<td>Teams</td>
-						<td>Preparation</td>
-						<td>Review</td>
-						<td>Submitted</td>
-						<td>Not Submitted</td>
-						<td>Dropped</td>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach($prequalifications as $prequalification)       
-						<tr>
-							<th scope="row">{{$prequalification['team']}}</th>
-							<td>{{$prequalification['underpreparation']}}</td>
-							<td>{{$prequalification['underreview']}}</td>
-							<td>{{$prequalification['submitted']}}</td>
-							<td>{{$prequalification['notsubmitted']}}</td>
-							<td>{{$prequalification['dropped']}}</td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="col-md-6">
-		</div>
-	</div>
-	<br />
+
 	<div class="row">
 		<div class="table-responsive">
 			<table class="table table-hover dat" >

@@ -23,11 +23,11 @@
                                     <h5>{{$user->name}}</h5>
                                     <table class="table table-sm">
                                         @foreach($user->assessments as $assessment)
-                                        <tr><td>{{$assessment->category}}</td><td>{{$assessment->score}}</td></tr>
+                                        <tr><td>{{ str_limit($assessment->category, $limit = 10, $end = '...')}}</td><td>{{$assessment->score+0}}</td></tr>
                                         @endforeach
-                                        @foreach($user->timesheets as $timesheet)
-                                        <tr><td>{{$timesheet->category}}</td><td>{{$timesheet->score}}</td></tr>
-                                        @endforeach
+                                        {{-- @foreach($user->scores as $score)
+                                        <tr><td>{{$score->category}}</td><td>{{$score->grade}}</td></tr>
+                                        @endforeach --}}
                                     </table>
                                 </div>
                             </div>
@@ -40,88 +40,15 @@
                     </div>
                 </div>
             @endforeach
-        {{-- <div class="row">
+        </div>
+        <div class="row">
             <div class="col-md-12">
-                    <table class="table table-sm table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <td colspan="16">
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="col">
-                                                <select type="text" class="form-control">
-                                                    <option value=""> -Select Name- </option>
-                                                </select>
-                                            </div>
-                                            <div class="col">
-                                                <select type="text" class="form-control">
-                                                    <option value=""> -Select Opportunity- </option>
-                                                </select>
-                                            </div>
-                                            <div class="col">
-                                                <select type="text" class="form-control">
-                                                    <option value=""> -Select Period- </option>
-                                                </select>
-                                            </div>
-                                            <div class="col">
-                                                <input type="submit" class="btn btn-outline-danger" value="Filter">
-                                            </div>
-                                        </div>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tr class="bg-danger text-white">
-                                <th>Staff Name</th>
-                                <th colspan="5">Proposals</th>
-                                <th colspan="5">EOIs</th>
-                                <th colspan="5">Pre-Qualifications</th>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>Identified</td>
-                                <td>Qualified</td>
-                                <td>Prepared</td>
-                                <td>Submitted</td>
-                                <td>Successful</td>
-                                <td>Identified</td>
-                                <td>Qualified</td>
-                                <td>Prepared</td>
-                                <td>Submitted</td>
-                                <td>Successful</td>
-                                <td>Identified</td>
-                                <td>Qualified</td>
-                                <td>Prepared</td>
-                                <td>Submitted</td>
-                                <td>Successful</td>
-                            </tr>
-                            <tbody>
-                                @foreach($summary as $record)       
-                                <tr>
-                                    <th>{{$record['user']}}</th>
-
-                                    <th>{{$record['Proposal']['identified']}}</th>
-                                    <th>{{$record['Proposal']['qualified']}}</th>
-                                    <th>{{$record['Proposal']['prepared']}}</th>
-                                    <th>{{$record['Proposal']['submitted']}}</th>
-                                    <th>{{$record['Proposal']['won']}}</th>
-                                    <th>{{$record['EOI']['identified']}}</th>
-                                    <th>{{$record['EOI']['qualified']}}</th>
-                                    <th>{{$record['EOI']['prepared']}}</th>
-                                    <th>{{$record['EOI']['submitted']}}</th>
-                                    <th>{{$record['EOI']['won']}}</th>
-                                    <th>{{$record['Pre-Qualification']['identified']}}</th>
-                                    <th>{{$record['Pre-Qualification']['qualified']}}</th>
-                                    <th>{{$record['Pre-Qualification']['prepared']}}</th>
-                                    <th>{{$record['Pre-Qualification']['submitted']}}</th>
-                                    <th>{{$record['Pre-Qualification']['won']}}</th>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                <div class="card-body">
+                    <h5 class="mx-auto"> Team Opportunities</h5>
+                    @foreach ($team->opportunities as $opportunity)
+                    @endforeach
+                </div>
             </div>
-        </div> --}}
-
+        </div>
     </div>
-</div>
 @endsection

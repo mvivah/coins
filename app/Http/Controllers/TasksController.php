@@ -12,6 +12,7 @@ use App\Notifications\TaskCompleted;
 use Session;
 use Auth;
 use Notification;
+
 class TasksController extends Controller
 {
 
@@ -25,6 +26,7 @@ class TasksController extends Controller
         return abort(404);
 
     }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -56,45 +58,17 @@ class TasksController extends Controller
 
     public function edit(Task $task)
     {
-        return $task;
+        return Task::where(['tasks.id'=>$task->id])->join('task_user', 'tasks.id', '=', 'task_user.task_id')->get();
     }
 
-    public function update(Task $task, Request $request)
+    public function update(TaskUser $taskuser, Request $request)
     {
-        //validate the received data
         $data = $request->validate([
-            'task_name'    => 'required',
-            'task_deadline'  => 'required|date|after_or_equal:tomorrow',
+            'task_id'=>'required',
             'task_status'=>'required',
         ]);
-        //save the validated data
-        $task->update([
-            'task_name' => $data['newtask_name'],
-            'deadline' => $data['newDeadline'],
-            'completed' => $data['newtask_status'],
-            'updated_by'=>Auth::user()->id
-        ]);
-        return $request;
-    }
 
-    public function completeTask(Request $request)
-    {
-        $task = Task::findOrFail($request->id);
-        $task->update(request()->validate(
-            [
-                'completed'=>'required',
-                'updated_by'=>Auth::user()->id
-            ]));
-        return $task;
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Task $task)
-    {
-        //
+        $run = TaskUser::where(['task_id'=>$data['task_id']])->update(['task_status'=>$data['task_status'],'updated_by'=>Auth::user()->id]);
+        return ['Task updated successfully'];
     }
 }

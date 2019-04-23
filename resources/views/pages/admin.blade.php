@@ -231,11 +231,11 @@
                                             <p>No records found...</p>
                                             @else
                                             <table class="table table-sm  table-striped">
-                                                <thead><th>Leave Type</th><th>Annual Lot</th><th>Bookable</th><th></th></thead>
+                                                <thead><th>Name</th><th>Forwarded</th><th>Taken</th><th>Left</th><th></th></thead>
                                                     <tbody>
                                                         @foreach($leaveforwards as $leaveforward)
                                                         <tr>
-                                                            <td>{{$leaveforward->leave_type}} Leave</td><td>{{$leaveforward->annual_lot}}</td><td>{{$leaveforward->bookable_days}}</td>
+                                                            <td>{{$leaveforward->name}}</td><td>{{$leaveforward->days_forwarded}}</td><td>{{$leaveforward->days_taken}}</td><td>{{$leaveforward->days_left}}</td>
                                                             <td>
                                                                 <a href="#"><i class="fa fa-edit editLeaveforward" id="{{$leaveforward->id}}"></i></a>
                                                             </td>

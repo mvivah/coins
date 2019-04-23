@@ -27,14 +27,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies($gate);
         //Senior Management
         $gate->define('isAdmin', function($user){
-            return $user->level_id == 4;
+            return $user->level_id == 3;
         });
         //Directors
         $gate->define('isDirector', function($user){
-            return $user->level_id == 3;
-        });
-        //Managers
-        $gate->define('isManager', function($user){
             return $user->level_id == 2;
         });
         //Consultants

@@ -15,23 +15,25 @@
                                         <div class="row">
                                             <div class="col-sm-4 mx-auto">
                                                 <i class="fas fa-6x fa-user-tie"></i>
-                                                <br>
-                                                @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                                                    <a href="#" id="editUser" data-id="{{$user->id}}" class="btn btn-outline-danger btn-block mt-3" title="Edit Profile"><i class="fa fa-edit"></i> Edit</a>
-                                                @endif
+                                                <br />
+                                                <button id="editUser" data-id="{{$user->id}}" class="btn btn-outline-danger btn-block mt-3" title="Edit Profile" style="@if(Gate::check('isConsultant'))display:none @endif"><i class="fa fa-edit"></i> Edit</button>
                                             </div>
                                             <div class="col-sm-8">
                                                 <h5>{{$user->name}}</h5>
                                                 <table class="table table-sm">
-                                                        <tr><td>Name: </td><td>{{$user->name}}</td></tr>
-                                                        <tr><td>Staff Id: </td><td>{{$user->staffId}}</td></tr>
-                                                        <tr><td>Gender: </td><td>{{$user->gender}}</td></tr>
-                                                        <tr><td>Email: </td><td>{{$user->email}}</td></tr>
-                                                        <tr><td>Phone: </td><td>{{$user->mobilePhone}}</td></tr>
-                                                        <tr><td>Alternative: </td><td>{{$user->alternativePhone}}</td></tr>
-                                                        <tr><td>Team: </td><td>{{$user->team->team_code}}</td></tr>
-                                                        <tr><td>Role: </td><td>{{$user->role->role_name}}</td></tr>
-                                                        <tr><td>Reports To: </td><td>{{$user->reportsTo}}</td></tr>
+                                                    <tr><td colspan="2">{{$user->staffId}}</td></tr>
+                                                    <tr><td colspan="2">{{$user->email}}</td></tr>
+                                                    <tr><td colspan="2">{{$user->mobilePhone}}</td></tr>
+                                                    <tr><td colspan="2">{{$user->alternativePhone}}</td></tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table class="table table-sm">
+                                                    <tr><td>Team: </td><td colspan="2">{{$user->team->team_code}}</td></tr>
+                                                    <tr><td>Title: </td><td colspan="2">{{$user->role->role_name}}</td></tr>
+                                                    <tr><td>Reporting to: </td><td>{{$user->reportsTo}}</td></tr>
                                                 </table>
                                             </div>
                                         </div>
@@ -65,12 +67,12 @@
                         </li>
                         @foreach($user->tasks as $task)
                         <li class="list-group-item">
-                            {{ str_limit($task->task_name, $limit = 30, $end = '...') }}
+                            {{ str_limit($task->task_name, $limit = 30, $end = '...') }} - {{$task->pivot->task_status}}
                             <div class="btn-group float-right">
-                                @if($task->task_status !='Done' || $task->task_status !='Completed')
+                                @if($task->pivot->task_status !='Done' || $task->pivot->task_status !='Completed'|| $task->pivot->task_status !='Canceled')
                                     <i class="fa fa-edit text-success edit_user_task pl-2" id="{{ $task->id}}" title="Edit Task"></i>
                                 @else
-                                <span class="badge badge-success">Done</span>
+                                    <span class="badge badge-success">{{$task->pivot->task_status}}</span>
                                 @endif 
                                 <i class="far fa-calendar-check text-danger add_task_timesheet pl-2" id="{{$task->id}}" title="Add Timesheet"></i>
                             </div>
@@ -128,24 +130,23 @@
                                 </div>
                                 <div class="card-body" id="leavesBody">
                                     @if(count($leaves)>0)
-                                    <table class="table table-sm dat">
+                                    <table class="table table-sm">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Leave Type</th>
+                                                <th scope="col">Type</th>
                                                 <th scope="col">Starting</th>
                                                 <th scope="col">Ending</th>
                                                 <th scope="col">Duration</th>
                                                 <th scope="col">Status</th>
-                                                <th scope="col">Modified</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($leaves as $leave)
                                                 <tr>
-                                                    <td>{{$leave->leavesetting->leave_type}}</td>
-                                                    <td>{{$leave->start_date}}</td>
-                                                    <td>{{$leave->end_date}}</td>
+                                                    <td>{{$leave->leave_type}} Leave</td>
+                                                    <td>{{$leave->leave_start}}</td>
+                                                    <td>{{$leave->leave_end}}</td>
                                                     <td>{{$leave->duration}} Days</td>
                                                     <td>{{$leave->leave_status}}</td>
                                                     <td>{{$leave->start_date}}</td>
@@ -175,8 +176,8 @@
                                         <table class="table table-sm  table-hover dat2">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">Date</th>
-                                                    <th scope="col">Task Name</th>
+                                                    <th scope="col">Date</th>;
+                                                    <th scope="col">Activity Description</th>
                                                     <th scope="col">Duration</th>
                                                     <th scope="col">Beneficiary</th>
                                                     <th scope="col">Service Line</th>
@@ -186,11 +187,7 @@
                                             @foreach($timesheets as $timesheet)
                                             <tr>
                                                 <td><a href="#"><i class="fa fa-edit editTimesheet" id="{{$timesheet->id}}" title="Edit"></i></a>{{$timesheet->activity_date}}</td>
-                                                <td>
-                                                    @foreach($timesheet->tasks as $task)
-                                                    {{$task->task_name}}
-                                                    @endforeach
-                                                </td>
+                                                <td>{{$timesheet->activity_description}}</td>
                                                 <td>{{$timesheet->duration}} Hours</td>
                                                 <td>{{$timesheet->beneficiary}}</td>
                                                 <td>{{$timesheet->serviceline->service_name}}</td>

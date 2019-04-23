@@ -140,103 +140,83 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Tasks</th>
+                                            <th>Deliverable</th>
                                             <th>Status</th>
-                                            <th class="right">Responsible</th>
-                                            <th class="center">Users</th>
-                                            <th class="right">Total</th>
+                                            <th>Due date</th>
+                                            <th>Progress</th>
+                                            <th>Users</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($deliverables as $deliverable)
-                                        {{$deliverable->deliverable_name}}
-                                            @foreach($deliverable->tasks as $task)
-                                                <tr>
-                                                    <td class="left strong">{{$task->task_name}}</td>
-                                                    <td class="left">{{$task->task_status}}</td>
-                                                    <td class="right">
-                                                            @foreach($task->users as $user)
-                                                            {{$user->name}}
-                                                            @endforeach
-                                                    </td>
-                                                    <td class="center">{{$task->users->count()}}</td>
-                                                    <td class="right">$999,00</td>
-                                                </tr>
-                                            @endforeach
+                                        <tr>
+                                            <td>{{$deliverable->deliverable_name}}</td>
+                                            <td>{{$deliverable->deliverable_status}}</td>
+                                            <td>{{$deliverable->deliverable_completion}}</td>
+                                            <td>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{$deliverable->id}}%;" aria-valuenow="{{$deliverable->id}}" aria-valuemin="0" aria-valuemax="100">{{$deliverable->id}}</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @foreach($project_tasks as $task)
+                                                {{$task->task_name}}
+                                                @endforeach
+                                            </td>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-4 col-sm-5"></div>
-                                <div class="col-lg-4 col-sm-5 ml-auto">
-                                    <table class="table table-clear">
-                                        <tbody>
+
+                              <div class="row">
+                              <div class="col-lg-4 col-sm-5 mr-auto">
+                                <table class="table table-clear">
+                                    <tbody>
+                                        @foreach($project_tasks as $task)
                                             <tr>
-                                                <td class="left"><strong>Subtotal</strong></td>
-                                                <td class="right">$8.497,00</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="left">
-                                                <strong>Discount (20%)</strong>
+                                                <td>
+                                                    <strong>{{$task->task_name}}</strong>
                                                 </td>
-                                                <td class="right">$1,699,40</td>
+                                                <td>{{$task->task_status}}</td>
                                             </tr>
-                                            <tr>
-                                            <td class="left">
-                                            <strong>VAT (10%)</strong>
-                                            </td>
-                                            <td class="right">$679,76</td>
-                                            </tr>
-                                            <tr>
-                                            <td class="left">
-                                            <strong>Total</strong>
-                                            </td>
-                                            <td class="right">
-                                            <strong>$7.477,36</strong>
-                                            </td>
-                                            </tr>
-                                        </tbody>
-                                    </table> 
-                                </div>   
-                            </div>     
+                                        @endforeach
+                                    </tbody>
+                                  </table>
+                              </div>
+                              
+                              <div class="col-lg-4 col-sm-5 ml-auto">
+                              <table class="table table-clear">
+                              <tbody>
+                              <tr>
+                              <td>
+                              <strong>Deliverables</strong>
+                              </td>
+                              <td>{{$project->deliverables->count()}}</td>
+                              </tr>
+                              <tr>
+                              <td>
+                              <strong>Probability</strong>
+                              </td>
+                            <td>{{$project->opportunity->probability}}%</td>
+                              </tr>
+                              <tr>
+                              <td>
+                              <strong>Total Revenue</strong>
+                              </td>
+                              <td>
+                              <strong>${{$project->opportunity->revenue}}</strong>
+                              </td>
+                              </tr>
+                              </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="row mt-2" id="deliverableBody">                       
-                    @foreach($project->deliverables as $deliverable)
-                        <div class="col-md-6 mb-1">
-                            <div class="list-group">
-                                <li class="list-group-item list-group-item-action"><strong>{{ $deliverable->deliverable_name}}</strong> - Deadline: {{ $deliverable->deliverable_completion}}
-                                    <div class="btn-group btn-group-sm" role="group" style="float:right">
-                                        @if($deliverable->deliverable_status =='Done')
-                                        @else              
-                                        <i class="fa fa-edit text-primary editDeliverable" id="{{ $deliverable->id}}" title="Edit Deliverable"></i>
-                                        @endif      
-                                    </div>
-                                </li>
-                                <div class="list-group">
-                                    @foreach($deliverable->tasks as $task)
-                                        <li class="list-group-item list-group-item-action">
-                                            <a href="#"><i class="far fa-folder text-dark taskDetail"></i></a> {{ $task->task_name}}
-                                            <div class="btn-group btn-group-sm" style="float:right">
-                                                @if($task->task_status == 'Completed')
-                                                    <i class="fa fa-check icon-sm text-success editTask"></i>
-                                                @else
-                                                    <a href="#"><i class="far fa-edit icon-sm text-danger editTask" id="{{ $task->id}}" title="Edit Task"></i></a>
-                                                @endif
-                                            </div>
-                                            @foreach($task->users as $consultant)
-                                            <li class="list-group-item list-group-item-action asigned-users" style="display:none">{{ $consultant->name }} <span id="{{ $consultant->id }}" data-token="{{ csrf_token() }}" data-target="task" class="fa fa-times text-danger removeConsultant" title="Remove Consultant" style="float:right"></span></li>
-                                            @endforeach
-                                        </li>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
             </div>
-        </div>
+        </div>   
     </div>
-@endSection
+</div>
+</div>
+</div>
+@endsection

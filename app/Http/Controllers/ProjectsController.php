@@ -42,7 +42,7 @@ class ProjectsController extends Controller
         $project_tasks = Task::join('deliverables', 'tasks.deliverable_id', '=', 'deliverables.id')
                                     ->join('deliverable_project', 'tasks.deliverable_id', '=', 'deliverable_project.deliverable_id')->get();  
 
-        return view('projects.show',compact('project'));
+        return view('projects.show',compact('project','deliverables','project_tasks'));
     }
     
     /**

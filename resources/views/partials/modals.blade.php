@@ -688,31 +688,27 @@
         </div>
         <div class="modal-body">
             @csrf
-                <div class="row">
-                    <div class="col-md-8">
-                        <label>Select Consultants</label>
-                        <div class="form-group mb-3">
-                            <input type="hidden" name="opportunity_id" id="the_opportunity_id">
-                            <input type="hidden" name="project_id" id="project_id">
-                            <select class="form-control" id="the_user_id" name="user_id">
-                                <option value="" disabled selected>Choose consultant</option>
-                                @foreach(App\User::all() as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4" id="forProject">
-                        <label>Project Manager</label>           
-                        <br><input type="radio" name="projectManager" class="radio-label" value="1"> Yes &nbsp;<input type="radio" name="projectManager" class="radio-label" value="0" checked>No
+            <div class="row">
+                <div class="col-md-8">
+                    <label>Select Consultants</label>
+                    <div class="form-group mb-3">
+                        <input type="hidden" name="opportunity_id" id="the_opportunity_id">
+                        <input type="hidden" name="project_id" id="project_id">
+                        <select class="form-control" id="the_user_id" name="user_id">
+                            <option value="" disabled selected>Choose consultant</option>
+                            @foreach(App\User::all() as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-outline-danger" id="saveConsultant">Submit</button>
-                </div>
-            </form>
+            </div>
         </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-outline-danger" id="saveConsultant">Submit</button>
+        </div>
+    </form>
+    </div>
     </div>   
 </div>
 
@@ -858,15 +854,16 @@
                 </div>
                 <div class="modal-body">
                     @csrf
+                    <input type="hidden" name="leave_id" id="leave_id">
+                    <input type="hidden" name="user_id" id="booked_for">
                     <div class="row">
                         <div class="col-md-6">
                             <label>Leave Type</label>
-                            <select class="form-control" name="leavesetting_id" id="the_leavesetting">
+                            <select class="form-control" name="the_leavesetting" id="the_leavesetting">
                                 @foreach(App\Leavesetting::all() as  $leavesetting)
-                                <option value="{{$leavesetting->id}}">{{$leavesetting->leave_type}} Leave</option>
+                                <option value="{{$leavesetting->id}}" data-type="{{$leavesetting->leave_type}}">{{$leavesetting->leave_type}} Leave</option>
                                 @endforeach
                             </select>
-                            <input type="hidden" name="leave_id" id="leave_id">
                         </div>
                     </div>
                     <div class="row">
@@ -1329,11 +1326,8 @@
                 {{-- Modal body --}}
                 <div class="modal-body">
                     @csrf
+                    <input type="hidden" name="previous_year" id="previous_year" value="{{date('Y')-1}}">
                     <div class="row">
-                        <div class="col-md-3">
-                            <label>Year:</label>
-                            <input type="number" class="form-control" name="previous_year" id="previous_year" max="{{date('Y')}}" min="{{date('Y')-1}}" maxlength="4">
-                        </div>
                         <div class="col-md-6">
                             <label>Staff:</label>
                             <select type="text" class="form-control" name="user_id" id="forwarding_user">
@@ -1370,7 +1364,6 @@
                 {{-- Modal body --}}
                 <div class="modal-body">
                     @csrf
-                    <p class="text-danger text-center">Please <strong>NOTE</strong> that assessments are availed only once for the current month</p>
                     <input type="hidden" name="user_id" id="consultant_id">
                     <input type="hidden" name="assessment_period" id="assessment_period">
                     <div class="row" id="assessment_page">

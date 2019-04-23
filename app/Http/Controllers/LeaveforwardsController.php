@@ -42,10 +42,12 @@ class LeaveforwardsController extends Controller
             'previous_year'=>'required',
             'days_forwarded'=>'required',
         ]);
+
         Leaveforward::create([
             'user_id' => $data['user_id'],
             'previous_year' => $data['previous_year'],
             'days_forwarded' => $data['days_forwarded'],
+            'days_left' => $data['days_forwarded'],
             'created_by'=>Auth::user()->id
         ]);
         return ['Record created successfully'];

@@ -23,10 +23,11 @@ class CreateLeavesTable extends Migration
             $table->longText('leave_detail');
             $table->integer('duration');
             $table->string('leave_status');
+            $table->string('created_by');
             $table->string('updated_by')->nullable();
-
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('leavesetting_id')->references('id')->on('leavesettings');
+            $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();
         });

@@ -19,8 +19,8 @@ class CreateLeaveforwardsTable extends Migration
             $table->string('user_id');
             $table->string('previous_year');
             $table->integer('days_forwarded')->unsigned();
-            $table->integer('days_taken')->unsigned()->nullable();
-            $table->integer('days_left')->unsigned()->nullable();
+            $table->integer('days_taken')->default(0);
+            $table->integer('days_left')->default(0);
             $table->string('created_by');
             $table->string('updated_by')->nullable();
 

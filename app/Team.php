@@ -14,6 +14,12 @@ class Team extends Model
 
     }
 
+    public function leader(){
+
+        return $this->belongsTo('App\User')->join('teams','teams.team_leader','=','users.id');
+
+    }
+
     public function targets(){
 
         return $this->belongsToMany('App\Target');

@@ -18,7 +18,7 @@ class CreateTasksTable extends Migration
             $table->primary('id');
             $table->string('deliverable_id');
             $table->string('task_name');
-            $table->date('task_deadline'); 
+            $table->date('task_deadline');
             $table->string('created_by');
             $table->string('updated_by')->nullable();
             $table->foreign('deliverable_id')->references('id')->on('deliverables');

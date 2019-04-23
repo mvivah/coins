@@ -22,9 +22,11 @@
                         <ol class="list-group">
                             <li class="list-group-item list-group-item-action active">
                                 Consultants
+                                @if(Gate::check('isAdmin') || Gate::check('isDirector'))
                                 <a href="#" class="btn btn-sm btn-outline-light {{($disabled? 'disabled':'')}}" id="opportunity_user" data-id="{{ $opportunity->id}}" style="float:right;" title="Assign Consultants">
                                 Add
                                 </a>
+                                @endif
                             </li>
                             @foreach($opportunity->users as $consultant)
                                 <li class="list-group-item list-group-item-action responsible_users" id="{{ $consultant->id }}">{{ $consultant->name }} <span data-token="{{ csrf_token() }}" data-source="Opportunity" class="fa fa-times text-danger delConsultant" id="{{ $consultant->id }}" title="Remove Consultant" style="float:right"></span></li>
@@ -50,17 +52,21 @@
                         <ol class="list-group">
                             <li class="list-group-item list-group-item-action active">
                                 Derivelables
+                                @if(Gate::check('isAdmin') || Gate::check('isDirector'))
                                 <a href="#" class="btn btn-sm btn-outline-light {{($disabled? 'disabled':'')}}" data-id="{{ $opportunity->id}}" id="add_opportunity_deliverable" style="float:right;" title="Add Deliverable">
                                     Add
                                 </a>
+                                @endif
                             </li>
                             @foreach($opportunity->deliverables as $deliverable)
                                 <li class="list-group-item list-group-item-action">{{ $deliverable->deliverable_name }}
                                     @if($deliverable->deliverable_status !='Done' || $deliverable->deliverable_status !='Completed')
                                     <div class="btn-group float-right">
-                                        <i class="fa fa-plus text-success {{($disabled? 'disabled':'')}} opportunity_task" id="{{ $deliverable->id}}" title="Add Task"></i> 
-                                        <i class="fa fa-edit text-primary edit_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
-                                        <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
+                                        @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                                            <i class="fa fa-plus text-success {{($disabled? 'disabled':'')}} opportunity_task" id="{{ $deliverable->id}}" title="Add Task"></i> 
+                                            <i class="fa fa-edit text-primary edit_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
+                                            <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
+                                        @endif
                                         <i class="fa fa-chevron-right text-dark opportunity_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i> 
                                     </div>
                                     @else
@@ -75,12 +81,14 @@
 
                 <div class="col-md-9">
                     <div class="btn-group mb-2 opp">
-                        <button id="editOpportunity"  data-id="{{$opportunity->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
-                            <i class="fa fa-edit"></i> Edit
-                        </button>
-                        <button id="opportunity_bid_scores" data-id="{{ $opportunity->id}}" class="btn btn-outline-dark" title="Add Bid Scores">
+                        @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                            <button id="editOpportunity"  data-id="{{$opportunity->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
+                                <i class="fa fa-edit"></i> Edit
+                            </button>
+                            <button id="opportunity_bid_scores" data-id="{{ $opportunity->id}}" class="btn btn-outline-dark" title="Add Bid Scores">
                                 <i class="fa fa-bars"></i> Bids
                             </button>
+                        @endif
                         <button id="opportunity_comment" data-id="{{ $opportunity->id}}" class="btn btn-outline-primary" title="Add Comment">
                             <i class="fa fa-comment"></i> Comments
                         </button>
@@ -140,6 +148,7 @@
                                             <tr>
                                                 <td>{{$deliverable->deliverable_name}}</td>
                                                 <td>{{$deliverable->deliverable_status}}</td>
+                                                <td>{{$deliverable->tasks}}</td>
                                                 <td>{{$deliverable->deliverable_completion}}</td>
                                                 <td>
                                                     <div class="progress">
@@ -147,9 +156,6 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    @foreach($opportunity_tasks as $task)
-                                                    {{$task->task_name}}
-                                                    @endforeach
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -158,9 +164,20 @@
                                 </div>
 
                                   <div class="row">
-                                  <div class="col-lg-4 col-sm-5">
-                                  
-                                  </div>
+                                <div class="col-lg-4 col-sm-5 mr-auto">
+                                    <table class="table table-clear">
+                                        <tbody>
+                                            @foreach($opportunity_tasks as $task)
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{$task->task_name}}</strong> From{{$task->deliverable->deliverable_name}}
+                                                    </td>
+                                                    <td>{{$task->task_status}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                                   
                                   <div class="col-lg-4 col-sm-5 ml-auto">
                                   <table class="table table-clear">

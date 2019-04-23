@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Timesheet;
-use App\TaskTimesheet;
 use App\User;
 use Auth;
 use Session;
@@ -52,9 +51,6 @@ class TimesheetsController extends Controller
 
            Timesheet::insert($data);
         }
-        $id = DB::table('timesheets')->insertGetId($data);
-        TaskTimesheet::insert([$id,$request->task_id]);
-
         return ['Record added successfully!'];
     }
     public function show($id)

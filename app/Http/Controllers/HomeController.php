@@ -223,7 +223,8 @@ class HomeController extends Controller
     public function admin(){
         if(Gate::check('isAdmin') || Gate::check('isDirector')){
 
-            $leaveforwards = Leaveforward::all();
+            $leaveforwards = Leaveforward::join('users','leaveforwards.user_id','=','users.id')
+                                        ->get(['users.name','leaveforwards.days_forwarded','leaveforwards.days_taken','leaveforwards.days_left']);
             $roles = Role::all();
             $teams = Team::all();
             $expertises = Expertise::all();

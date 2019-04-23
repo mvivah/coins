@@ -75,11 +75,10 @@ class UsersController extends Controller
     {   
         $year = $month = today();
         $user = User::findOrFail($user->id);
-        $leaves = DB::table('leaves')
-                    ->select('leavesetting_id','leave_status', DB::raw("SUM(duration) as duration"))
-                    ->orderBy('created_at','desc')
-                    ->whereYear('leave_start', '=', $month)
-                    ->whereYear('leave_end', '=', $month)
+        $leaves = Leave::select('leavesettings.leave_type','leaves.leave_start','leaves.leave_end','leavesetting_id','leaves.leave_status','leaves.leave_detail', DB::raw("SUM(leaves.duration) as duration"))
+                    ->join('leavesettings','leaves.leavesetting_id','=','leavesettings.id')
+                    ->whereYear('leaves.leave_start', '=', $month)
+                    ->whereYear('leaves.created_at', '=', $month)
                     ->where('user_id', $user->id)
                     ->groupBy('leavesetting_id','leave_status')
                     ->get();
@@ -107,6 +106,7 @@ class UsersController extends Controller
 
         $assessments = Assessment::selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")
                                 ->join('targets', 'assessments.target_id', '=', 'targets.id')
+                                ->where(['assessments.user_id'=>$user->id])
                                 ->groupBy('targets.target_category')
                                 ->get();
         return view('users.show',compact('user','leaves','timesummary','timesheets','assessments','opportunities','worked','absent'));

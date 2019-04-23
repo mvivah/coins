@@ -30,6 +30,7 @@ class OpportunitiesController extends Controller
     }
     
     public function index(){
+
         $opportunities_stage = Opportunity::selectRaw("count('id') as opportunities,sales_stage" )
                                             ->whereMonth('created_at', now())
                                             ->orWhere('updated_at', now())
@@ -80,10 +81,11 @@ class OpportunitiesController extends Controller
             $opportunities = Opportunity::where('team_id', Auth::user()->team_id)
                                         ->orwhere('created_by', Auth::user()->id)
                                         ->get();
-            }
-            else{
-                $opportunities = Opportunity::all();
-            }
+        }
+        else
+        {
+            $opportunities = Opportunity::all();
+        }
             
         return view('opportunities.index', compact('opportunity_stage','opportunity_team','opportunities'));
     }

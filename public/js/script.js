@@ -196,7 +196,7 @@ try{
     //Save Opportunity Tasks 
     document.getElementById('taskForm').addEventListener('submit', function(e){
         e.preventDefault()
-        saveTask();
+        saveTask(['task_name','task_deadline','task_status','taskStaff']);
     });
 
     //Add Opportunity Deliverable
@@ -358,7 +358,8 @@ try{
         document.getElementById('the_contact_id').value = selectedContact.value;
         document.getElementById('selectedContact').style.display = 'none';
     })
-    
+
+    //Filter Opportunities
     document.getElementById('opportunityFilter').addEventListener('click', e =>{
         e.preventDefault();
         document.getElementById('summaries').innerText = ``;
@@ -369,7 +370,7 @@ try{
             let opportunitiesFilterForm = document.getElementById('opportunitiesFilterForm');
             document.getElementById('records-list').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
-            setTimeout(calculateResults('filterOpportunities',opportunitiesFilterForm),1000);
+            setTimeout(calculateResults('filterOpportunities',opportunitiesFilterForm,'export_opportunities'),1000);
         }
     })
 
@@ -524,26 +525,7 @@ try{
 
     //Save Project tasks 
     document.getElementById('taskForm').addEventListener('submit', function(e){
-        saveTask();
-    });
-    
-    //Edit Task
-    document.querySelectorAll('.editTask').forEach( editDeliverable => {
-        editDeliverable.addEventListener('click', e =>{
-            let options = [];
-            axios.get(`/tasks/${e.target.id}/edit`)
-            .then( response => {
-                data = response.data
-                document.getElementById("the_serviceline").innerHTML = options;
-                document.getElementById('task_name').value = data.task_name;
-                document.getElementById('task_deadline').value = data.task_deadline;
-                document.getElementById('task_status').value = data.task_status;
-                document.getElementById('task_id').value = data.id;
-                document.getElementById('task_title').innerText = 'Update Task';
-                $('#addTask').modal('show');
-            })
-            .catch( error => console.log(error) );
-        });
+        saveTask(['task_name','task_deadline','task_status','taskStaff']);
     });
 
     //Show Project tasks
@@ -574,15 +556,15 @@ catch(err){
 try{
     document.getElementById('projectFilter-btn').addEventListener('click', e =>{
         e.preventDefault();
-        document.getElementById('projectSummaries').innerText = ``;
+        document.getElementById('summaries').innerText = ``;
         elementRemove(`sorted_projects`);
         FIELD_IDS = ['project-status','project-stage','project-country','initiation-date','completion-date','searchRange'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let projectsFilterForm = document.getElementById('projectsFilterForm');
-            document.getElementById('project-records').style.display = 'none';
+            document.getElementById('records-list').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
-            setTimeout(calculateResults('filterProjects',projectsFilterForm),1000);
+            setTimeout(calculateResults('filterProjects',projectsFilterForm,'export_projects'),1000);
         }
     })
 }
@@ -739,13 +721,13 @@ try{
         element.addEventListener('click', e =>{
             axios.get(`/tasks/${e.target.id}/edit`)
             .then( response => {
-                data = response.data
+                data = response.data[0]
                 document.getElementById('task_name').value = data.task_name;
                 document.getElementById('task_name').setAttribute('readonly','readonly');
                 document.getElementById('task_status').value = data.task_status;
                 document.getElementById('task_deadline').value = data.task_deadline;
                 document.getElementById('task_deadline').setAttribute('readonly','readonly');
-                document.getElementById('task_id').value = data.id
+                document.getElementById('task_id').value = data.task_id
                 document.getElementById('staff_assignment').style.display = 'none';
                 document.getElementById('task_title').innerText = 'Update Task';
                 $('#addTask').modal('show');
@@ -753,6 +735,12 @@ try{
             .catch( error => console.log(error.message) );
         });
     });
+    
+    //Save update
+    document.getElementById('taskForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        saveTask(['task_name','task_deadline','task_status']);
+    })
 
     //Add user timesheet
     document.querySelectorAll('.add_task_timesheet').forEach( element => {
@@ -881,141 +869,138 @@ try{
     });
 
     //Request Leave
-    const PUBLIC_HOLIDAYS = [];
-    let LEAVE_OPTIONS,FORWARDED_LEAVE,booked_days;
     document.getElementById('requestLeave').addEventListener('click', (e) =>{
-        const THIS_USER = e.target.dataset.user;
-        axios.get('/holidays')
-        .then( response => {
-            data = response.data
-            data.forEach((object) =>{
-                let savedHolidays = new Date(object.holiday_date);
-                let savedMonth = GET_MONTH_NAME(new Date(object.holiday_date));
-                let savedDate = savedHolidays.getDate();
-                let actualHoliday = `${THISYEAR}-${savedMonth}-${savedDate}`;
-                PUBLIC_HOLIDAYS.push(actualHoliday);
-            });
-        })
-        .catch( error => backendValidation(error.response.data.errors) );
-
-        //leave options object
-        axios.get('/leavesettings')
-        .then( response => {
-
-            LEAVE_OPTIONS = response.data;
-        })
-        .catch( error => backendValidation(error.response.data.errors) );
-        //forwarded leave object
-        axios.get(`/leaveforwards/${THIS_USER}`)
-        .then( response => {
-            FORWARDED_LEAVE = response.data;
-        })
-        .catch( error => backendValidation(error.response.data.errors) );
-
+        document.getElementById('booked_for').value = e.target.dataset.user
         $('#addleave').modal('show');
     });
 
     document.getElementById('leaveForm').addEventListener('submit', function(e){
         e.preventDefault();
-        FIELD_IDS = ['leavesetting_id','leaveStart','leaveStop','leave_detail']
+        const LEAVE_INDEX = document.getElementsByName('leave_id');
+        const LEAVE_ID = (LEAVE_INDEX == null)? null:LEAVE_INDEX.value;
+        FIELD_IDS = ['the_leavesetting','leave_start','leave_end','leave_detail']
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
-        if( validateForm === 0 ){
-            let leaveStart = document.getElementById('leaveStart').value;
-            console.log(leaveStart)
-            let start = new Date(leaveStart);
-            let startTime= start.getTime();//Returns the number of milliseconds since midnight Jan 1 1970, and a specified date
-            let firstDate = start.getDate();//Returns the day of the month (from 1-31)
-            let startMonth = GET_MONTH_NAME(start);//Returns the name of the month (from January-December)
+        let sel = document.getElementById('the_leavesetting');
+        let selected = sel.options[sel.selectedIndex];
+        let leaveType = selected.getAttribute('data-type');
         
-            //End date
-            let leaveStop = document.getElementById('leaveStop').value;
-            let stop = new Date(leaveStop);
-            let stopTime = stop.getTime();
+        if( validateForm === 0 ){
+            let formData = new FormData(this);
+            formData.append('leaveType',leaveType);
+            if( LEAVE_ID != null){
+                axios.post(`/leaves/${LEAVE_ID}`,formData,{
+                    method: 'PUT'
+                })
+                .then( response => {
+                    $('#leaveForm')[0].reset();
+                    $('#addleave').modal('hide');
+                    showAlert('success',response.data);
+                    location.reload();
+                } )
+                .catch( error => backendValidation(error.response.data.errors));
+            }
+            else{
+                axios.post('/leaves',formData)
+                .then( response =>{
+                    data = response.data
+                    console.log(data)
+                    $('#leaveForm')[0].reset();
+                    $('#addleave').modal('hide');
+                    // showAlert('success',data);
+                    // location.reload()
+                })
+                .catch( error => backendValidation(error.response.data.errors) );
+            }
+
+            // let leaveStart = document.getElementById('leaveStart').value;
+            // console.log(leaveStart)
+            // let start = new Date(leaveStart);
+            // let startTime= start.getTime();//Returns the number of milliseconds since midnight Jan 1 1970, and a specified date
+            // let firstDate = start.getDate();//Returns the day of the month (from 1-31)
+            // let startMonth = GET_MONTH_NAME(start);//Returns the name of the month (from January-December)
+        
+            // //End date
+            // let leaveStop = document.getElementById('leaveStop').value;
+            // let stop = new Date(leaveStop);
+            // let stopTime = stop.getTime();
                 
-            //Calculating the leave duration excluding weekends
-            let diffDays = Math.round(Math.abs((stopTime - startTime)/(ONEDAY)));
-            console.log(diffDays)
-            let lists = [];
-            let listbooked = [];
+            // //Calculating the leave duration excluding weekends
+            // let diffDays = Math.round(Math.abs((stopTime - startTime)/(ONEDAY)));
+            // console.log(diffDays)
+            // let lists = [];
+            // let listbooked = [];
 
-            //loop through the selected days to make an array of days(names)
-            for(let i=0; i<=diffDays; i++){
-                let currentDate = firstDate++;
-                let nextName = GET_DAY_NAME(new Date(`${currentDate}/${startMonth}/${THISYEAR}`));
-                let bookedDates = `${THISYEAR}-${startMonth}-${currentDate}`;
-                //Make an array of booked days(Names)
-                lists.push(nextName);
-                //Make an array of booked dates
-                listbooked.push(bookedDates);
-            }
+            // //loop through the selected days to make an array of days(names)
+            // for(let i=0; i<=diffDays; i++){
+            //     let currentDate = firstDate++;
+            //     let nextName = GET_DAY_NAME(new Date(`${currentDate}/${startMonth}/${THISYEAR}`));
+            //     let bookedDates = `${THISYEAR}-${startMonth}-${currentDate}`;
+            //     //Make an array of booked days(Names)
+            //     lists.push(nextName);
+            //     //Make an array of booked dates
+            //     listbooked.push(bookedDates);
+            // }
 
-            let max = diffDays+1;
-            if(lists.length == max){
+            // let max = diffDays+1;
+            // if(lists.length == max){
 
-                //The function to determine the occurance of weekends from the booked days
-                let getOccurrence = (array, value) =>{
-                    let count = 0;
-                    array.forEach((v) => (v === value && count++));
-                    return count;
-                }
+            //     //The function to determine the occurance of weekends from the booked days
+            //     let getOccurrence = (array, value) =>{
+            //         let count = 0;
+            //         array.forEach((v) => (v === value && count++));
+            //         return count;
+            //     }
 
-                //Skipping saturdays and sundays
-                let noSunday = getOccurrence(lists, 'Sunday');
-                let noSaturday = getOccurrence(lists, 'Saturday');
-                let except  = noSunday + noSaturday;
-                booked_days = max - except;
+            //     //Skipping saturdays and sundays
+            //     let noSunday = getOccurrence(lists, 'Sunday');
+            //     let noSaturday = getOccurrence(lists, 'Saturday');
+            //     let except  = noSunday + noSaturday;
+            //     booked_days = max - except;
 
-            }
+            // }
 
-            if(PUBLIC_HOLIDAYS.length == data.length){
-                let booked = parseInt(sessionStorage.getItem('booked'));
-                let matched = [];
-                listbooked.forEach((date1)=>PUBLIC_HOLIDAYS.forEach((date2)=>{
-                    if( date1 === date2 ){
-                        matched.push(date1);
-                    }
-                }));
-                let matchingDays = matched.length;
-                let actualLeave = booked - matchingDays;
-                // Save the duration in session storage
-                sessionStorage.setItem('actual',actualLeave);
-            }
+            // if(PUBLIC_HOLIDAYS.length == data.length){
+            //     let booked = parseInt(sessionStorage.getItem('booked'));
+            //     let matched = [];
+            //     listbooked.forEach((date1)=>PUBLIC_HOLIDAYS.forEach((date2)=>{
+            //         if( date1 === date2 ){
+            //             matched.push(date1);
+            //         }
+            //     }));
+            //     let matchingDays = matched.length;
+            //     let actualLeave = booked - matchingDays;
+            //     // Save the duration in session storage
+            //     sessionStorage.setItem('actual',actualLeave);
+            // }
 
-            axios.get('/leavesettings')
-            .then( response => {
-                data = response.data
-                let leave_types = [];
-                leave_types.push(data.id)
-                let leave_type = document.getElementById('leavesetting_id').value;
-                let leaveDuration  = sessionStorage.getItem('actual');
-                let leaveBookable = data.bookable_days;
-                leave_type.forEach(() =>{
-                    if(leaveDuration>leaveBookable){
-                        return false;
-                    }
-                });
-            })
-            .catch( error => backendValidation(error.response.data.errors) );
+            // axios.get('/leavesettings')
+            // .then( response => {
+            //     data = response.data
+            //     let leave_types = [];
+            //     leave_types.push(data.id)
+            //     let leave_type = document.getElementById('leavesetting_id').value;
+            //     let leaveDuration  = sessionStorage.getItem('actual');
+            //     let leaveBookable = data.bookable_days;
+            //     leave_type.forEach(() =>{
+            //         if(leaveDuration>leaveBookable){
+            //             return false;
+            //         }
+            //     });
+            // })
+            // .catch( error => backendValidation(error.response.data.errors) );
 
-            axios.get('/leaveforwards')
-            .then( response => console.log(response.data) )
-            .catch( error => backendValidation(error.response.data.errors) );
+            // axios.get('/leaveforwards')
+            // .then( response => console.log(response.data) )
+            // .catch( error => backendValidation(error.response.data.errors) );
 
-            let formData = new FormData();
-            formData.append('leavesetting_id',document.getElementById('leavesetting_id').value)
-            formData.append('start_date', document.querySelector('input[name=leaveStart]').value)
-            formData.append('end_date',document.querySelector('input[name=leaveStop]').value)
-            formData.append('leave_detail', document.getElementById('leave_detail').value)
-            formData.append('duration', sessionStorage.getItem('actual'))
-            formData.append('leave_status', document.querySelector('input[name=leave_status]').value)
-            axios.post('/leaves',formData)
-            .then( response =>{
-                data = response.data
-                showAlert('success',data);
-                location.reload()
-            })
-            .catch( error => backendValidation(error.response.data.errors) );
-            
+            // let formData = new FormData();
+            // formData.append('leavesetting_id',document.getElementById('leavesetting_id').value)
+            // formData.append('start_date', document.querySelector('input[name=leaveStart]').value)
+            // formData.append('end_date',document.querySelector('input[name=leaveStop]').value)
+            // formData.append('leave_detail', document.getElementById('leave_detail').value)
+            // formData.append('duration', sessionStorage.getItem('actual'))
+            // formData.append('leave_status', document.querySelector('input[name=leave_status]').value)           
+        }else{
         }
     });
 
@@ -1199,6 +1184,7 @@ try{
     document.getElementById('delService').addEventListener('click', e =>{
        confirmDelete(e.target.dataset.id)
     });
+    
     document.getElementById('deleteBtn').addEventListener('click', ()=>{
         let url = `servicelines/${id}/delete`;
         processDelete(url);
@@ -1534,53 +1520,16 @@ try{
             });
         });
     });
-  
-    //Confirm Leave Request
-    document.getElementById('acceptLeave').addEventListener('click', e =>{
-        let formData = new FormData()
-        formData.append('status','Confirmed')
-        axios.post(`/leaves/${e.target.dataset.id}`,formData,{
-            method: 'PUT'
-        })
-        .then( response =>{
-            showAlert('success',response.data);
-            location.reload()
-        })
-        .catch( error => backendValidation(error.response.data.errors) );
-    });
 
-    //Reject Leave Request
-    document.getElementById('denyLeave').addEventListener('click', e =>{
-        let formData = new FormData()
-        formData.append('status','Denied')
-        axios.post(`/leaves/${e.target.dataset.id}`,formData,{
-            method: 'PUT'
-        })
-        .then( response =>{
-            showAlert('success',response.data);
-            location.reload();
-        })
-        .catch( error => backendValidation(error.response.data.errors) );
-    });
-
-    //Delete Leave
-    document.getElementById('delLeve').addEventListener('click', e =>{
-        confirmDelete(e.target.dataset.id);
-    });
-    
-    document.getElementById('deleteBtn').addEventListener('click', ()=>{
-        let item = document.getElementById('item-delete');
-        deleteItem(`leaves/${id}`);
-    });
-
-    document.getElementById('forwardedLeaveForm').addEventListener('submit', function(e){
+    //Leave carried forward
+    document.getElementById('saveForwardedLeave').addEventListener('click', function(e){
         e.preventDefault()
         const LEAVEFORWAD_INDEX = document.getElementById('leaveforward_id');
         const LEAVEFORWAD_ID = (LEAVEFORWAD_INDEX == null)? null:LEAVEFORWAD_INDEX.value;
         FIELD_IDS = ['forwarding_user','days_forwarded'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
-            let formData = new FormData(this);
+            let formData = new FormData(document.getElementById('forwardedLeaveForm'));
             if( LEAVEFORWAD_ID !=null ){
                 axios.post(`/leaveforwards/${LEAVEFORWAD_ID}`,formData,{
                     method: 'PUT'
@@ -1605,6 +1554,45 @@ try{
             }
         }
     })
+    // //Confirm Leave Request
+    // document.getElementById('acceptLeave').addEventListener('click', e =>{
+    //     let formData = new FormData()
+    //     formData.append('status','Confirmed')
+    //     axios.post(`/leaves/${e.target.dataset.id}`,formData,{
+    //         method: 'PUT'
+    //     })
+    //     .then( response =>{
+    //         showAlert('success',response.data);
+    //         location.reload()
+    //     })
+    //     .catch( error => backendValidation(error.response.data.errors) );
+    // });
+
+    // //Reject Leave Request
+    // document.getElementById('denyLeave').addEventListener('click', e =>{
+    //     let formData = new FormData()
+    //     formData.append('status','Denied')
+    //     axios.post(`/leaves/${e.target.dataset.id}`,formData,{
+    //         method: 'PUT'
+    //     })
+    //     .then( response =>{
+    //         showAlert('success',response.data);
+    //         location.reload();
+    //     })
+    //     .catch( error => backendValidation(error.response.data.errors) );
+    // });
+
+    // //Delete Leave
+    // document.getElementById('delLeve').addEventListener('click', e =>{
+    //     confirmDelete(e.target.dataset.id);
+    // });
+    
+    // document.getElementById('deleteBtn').addEventListener('click', ()=>{
+    //     let item = document.getElementById('item-delete');
+    //     deleteItem(`leaves/${id}`);
+    // });
+
+
 }
 catch(err){
 
@@ -1802,7 +1790,7 @@ let markerDetach = elementID => {
     if( ELEMENT != null ) ELEMENT.classList.remove('error-marker')
 }
 
-let calculateResults = (url,formId) =>{
+let calculateResults = (url,formId,exportBtn) =>{
     let formData = new FormData(formId);
     for(let i = 0; i < FIELD_IDS.length; i++ ) {
         formData.append(document.getElementById( FIELD_IDS[i] ).name, document.getElementById( FIELD_IDS[i] ).value);
@@ -1821,17 +1809,20 @@ let calculateResults = (url,formId) =>{
             recordsHTML += `<tbody></table>`;
             document.getElementById('summaries').innerHTML = `Total records - ${data.length}`;
             elementAdd( 'records-list', 'beforeend', recordsHTML );
-            document.getElementById('export_opportunities').style.display = 'block';
+            document.getElementById(exportBtn).style.display = 'block';
         }
         else {
             document.getElementById('summaries').innerText = `No records found`;
-            document.getElementById('export_opportunities').style.display = 'none';
+            document.getElementById(exportBtn).style.display = 'none';
         }
         document.getElementById('records-list').style.display = 'block';
         document.getElementById('loading').style.display = 'none';
 
     })
-    .catch( error => backendValidation(error.response.data.errors) );
+    .catch( error => {
+        console.log(error)
+        //backendValidation(error.response.data.errors)
+    });
 }
 
 let openConsultation = (workstation,id) => {
@@ -1988,10 +1979,9 @@ let assignTask = id =>{
 
 }
 
-let saveTask = () =>{
+let saveTask = (FIELD_IDS) =>{
     const TASK_INDEX = document.getElementById('task_id');
     const TASK_ID = (TASK_INDEX == null)? null:TASK_INDEX.value;
-    FIELD_IDS = ['task_name','task_deadline','task_status','taskStaff'];
     let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
     if( validateForm === 0 ){
         let formData = new FormData(document.getElementById('taskForm'));
@@ -2108,7 +2098,7 @@ let storeDeliverable = (FIELD_IDS) =>{
 
         if( the_opportunity_id != null ){
             axios.post('/deliverableopportunities',formData)
-            .then( response => {
+            .then( response =>{
                 $('#deliverablesForm')[0].reset();
                 $('#add_deliverables').modal('hide');
                 showAlert('success',response.data);
@@ -2132,6 +2122,7 @@ let storeDeliverable = (FIELD_IDS) =>{
                 method: 'PUT'
             })
             .then( response => {
+                console.log(response)
                 $('#deliverablesForm')[0].reset();
                 $('#add_deliverables').modal('hide');
                 showAlert('success',response.data);

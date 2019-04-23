@@ -75,8 +75,9 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h5 id="projectSummaries"></h5>
-                <div id="project-records">
+                <h5 id="summaries"></h5>
+                <div id="records-list">
+                    <button type="button" class="btn btn-outline-success" id="export_projects" style="float:right; display:none">Export <i class="fa fa-file-excel"></i></button>
                 </div>
                 <!-- Loader here -->
                 <div id="loading">

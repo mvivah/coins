@@ -58,12 +58,12 @@ class User extends Authenticatable
 
     public function tasks(){
 
-        return $this->belongsToMany('App\Task');
+        return $this->belongsToMany('App\Task')->withPivot('task_status');
 
     }
     public function timesheets(){
 
-        return $this->belongsToMany('App\Timesheet');
+        return $this->hasMany('App\Timesheet');
 
     }
     public function assessments(){
@@ -101,6 +101,12 @@ class User extends Authenticatable
     public function team(){
 
         return $this->belongsTo('App\Team')->withDefault(['id' =>1]);
+
+    }
+
+    public function leads(){
+
+        return $this->hasOne('App\Team')->join('users','users.id','=','teams.team_leader');
 
     }
 

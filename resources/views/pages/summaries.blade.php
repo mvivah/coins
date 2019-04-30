@@ -3,12 +3,16 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Reports</li>
+            <li class="breadcrumb-item active" aria-current="page">Summaries</li>
         </ol>
     </nav>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
+                <h3 class="mx-auto">Opportunities Monthly</h3>
+            </div>
+            <div class="col-md-6">
+                    <h3 class="mx-auto">Opportunities General</h3>
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered table-striped">
                         <caption>Proposals</caption>
@@ -99,6 +103,14 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="mx-auto">Projects Monthly</h3>
+            </div>
+            <div class="col-md-6">
+                    <h3 class="mx-auto">Projects General</h3>
             </div>
         </div>
     </div>         

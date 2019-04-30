@@ -20,11 +20,9 @@
     <link rel="icon" href="{{ asset('/files/ahlogo.png') }}" type="image/png">
     
 </head>
-<body>
-    <div id="app">
-        <main class="py-4">
-            @yield('content')
-        </main>
+<body class="bg-dark">
+    <div class="container">
+        @yield('content')
     </div>
 </body>
 </html>

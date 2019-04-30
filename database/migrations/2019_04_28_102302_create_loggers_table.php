@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProjectUsersTable extends Migration
+class CreateLoggersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,21 @@ class CreateProjectUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_user', function (Blueprint $table) {
+        Schema::create('loggers', function (Blueprint $table){
+
             $table->bigIncrements('id');
             $table->string('project_id');
-            $table->string('user_id')->unique();
-            $table->boolean('project_manager')->default(0);
-            $table->boolean('availability')->default(0);
-            $table->string('created_by');
-            $table->string('updated_by')->nullable();
+            $table->string('user_id')->nullable();
+            $table->string('associate_id')->nullable();
+            $table->date('checkin');
+            $table->date('checkout');
+            $table->string('availability')->default(0);
+            $table->string('notes')->nullable();
             $table->foreign('project_id')->references('id')->on('projects');
+            $table->foreign('associate_id')->references('id')->on('associates');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();
+            
         });
     }
 
@@ -36,6 +38,6 @@ class CreateProjectUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_users');
+        Schema::dropIfExists('loggers');
     }
 }

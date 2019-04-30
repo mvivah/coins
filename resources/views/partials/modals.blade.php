@@ -466,7 +466,7 @@
 <div class="modal fade" id="addAssociate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form class="form-group" id="associatesForm" autocomplete="off">
+            <form class="form-group" id="associateRegister" autocomplete="off">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Associate</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -561,28 +561,13 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="hidden" name="project_id" id="projectAssociate">
+                        <input type="hidden" name="projectAssociate" id="projectAssociate">
                         <label>Associate Name</label>
-                        <select name="associate_id" class="form-control">
-                            <option value="" disabled selected>--Choose associate--</option>
+                        <select name="associate_id" id="associates_id" class="form-control">
                             @foreach(App\Associate::all() as $associate)
                             <option value="{{ $associate->id }}">{{ $associate->associate_name }}</option>
                             @endforeach
                         </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>Start Date</label>
-                        <div class="input-group mb-3">
-                            <input type="date" name="start_date" id="start_date" class="form-control" >
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label>End Date</label>
-                        <div class="input-group mb-3">
-                            <input type="date" name="end_date" id="end_date" class="form-control" >
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1240,7 +1225,7 @@
         <div class="modal-content">
         <form class="form-group" id="commentsForm" autocomplete="off">
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Comment</h4>
+                    <h4 class="modal-title" id="comment_title">Add Comment</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>           
                 {{-- Modal body --}}
@@ -1249,7 +1234,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <input type="hidden" name="comment_id" id="comment_id">
-                            <input type="hidden" name="commentable" id="commentable">
+                            <input type="hidden" name="commentable_type" id="commentable_type">
                             <input type="hidden" name="commentable_id" id="commentable_id">
                             <label for="comment">Comment</label>
                             <textarea name="comment_body" id="comment_body" rows="2" class="form-control"></textarea>
@@ -1300,8 +1285,8 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label for="action_plans">Improvement Plan (Actions to improve performance)</label>
-                            <textarea name="action_plans" id="action_plans" class="form-control"></textarea>
+                            <label for="improvement_plans">Improvement Plan (Actions to improve performance)</label>
+                            <textarea name="improvement_plans" id="improvement_plans" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>

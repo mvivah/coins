@@ -12,11 +12,7 @@ use Gate;
 use DB;
 class ScoresController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -24,11 +20,6 @@ class ScoresController extends Controller
     
     public function index()
     {
-        // if(!Gate::allows('isAdmin')){
-        //     abort(404,"Sorry, You cannot access this page");
-        // }
-
-        //$scores = Score::all();
         $scores = Score::groupBy('opportunity_id')->get();
         return view('pages.scores',compact('scores'));
     }

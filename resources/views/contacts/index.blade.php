@@ -1,14 +1,9 @@
 @extends('layouts.app')
     @section('content')
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Contacts</li>
-            </ol>
-        </nav>
-        <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
             @can('isAdmin')
-            <button class="btn btn-outline-danger mb-2" data-toggle="modal" data-target="#addContact"><i class="fas fa-users-cog"></i> Add contacts</button>
+            <button class="btn btn-outline-danger mb-2 btn-xs" data-toggle="modal" data-target="#addContact"><i class="fas fa-users-cog"></i> Add contacts</button>
             @endcan
             <div class="table-responsive">
                 <table class="table table-sm table-hover dat">
@@ -33,4 +28,5 @@
                 </table>
             </div>
         </div>
+    </div>
     @endsection

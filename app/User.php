@@ -66,10 +66,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Timesheet');
 
     }
+    public function comments(){
+
+        return $this->hasMany('App\Comment');
+
+    }
     public function assessments(){
 
         return $this->hasMany('App\Assessment')->selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")
                                                 ->join('targets', 'assessments.target_id', '=', 'targets.id')
+                                                ->where(['targets.assessable' => true])
                                                 ->groupBy('targets.target_category');
     }
 
@@ -77,6 +83,7 @@ class User extends Authenticatable
 
         return $this->hasMany('App\TaskUser')->selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS grade")
                                                 ->join('targets', 'assessments.target_id', '=', 'targets.id')
+                                                ->where(['targets.assessable' => false])
                                                 ->groupBy('targets.target_category');
     }
 

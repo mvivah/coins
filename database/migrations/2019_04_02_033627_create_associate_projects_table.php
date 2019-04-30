@@ -16,13 +16,11 @@ class CreateAssociateProjectsTable extends Migration
         Schema::create('associate_project', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('project_id');
-            $table->string('associate_id')->unique();
-            $table->boolean('team_leader')->default(0);
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->string('associate_id');
+            $table->boolean('project_manager')->default(0);
+            $table->boolean('availability')->default(0);
             $table->string('created_by');
             $table->string('updated_by')->nullable();
-
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
             $table->foreign('project_id')->references('id')->on('projects');

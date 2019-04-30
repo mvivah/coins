@@ -1,12 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/projects">Projects</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{$project->opportunity->opportunity_name}} - <strong>{{$project->opportunity->om_number}}</strong></li>
-        </ol>
-    </nav>
     <?php
         $disabled = false
     ?>
@@ -15,7 +8,6 @@
         $disabled=true;
     ?>
     @endif
-    <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
                 <ol class="list-group mb-2">
@@ -25,8 +17,26 @@
                     Add
                     </a>
                     </li>
-                    @foreach($project->users as $consultant)
-                        <li class="list-group-item list-group-item-action responsible_users" id="{{ $consultant->id }}">{{ $consultant->name }} <span data-token="{{ csrf_token() }}" id="{{ $consultant->id }}" data-source="Project" class="fa fa-times text-danger delConsultant" style="float:right"></span></li>
+                    @foreach($project->users as $user)
+                        <li class="list-group-item list-group-item-action responsible_users" id="{{ $user->id }}">{{ $user->name }}
+                            <div class="btn-group" style="float:right">
+                                @if( $user->pivot->availability != 1 )
+                                <button id="{{$user->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
+                                    Off
+                                </button>
+                                @else
+                                <button id="{{$user->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
+                                    On
+                                </button>
+                                @endif
+                                <button class="btn btn-outline-dark btn-xs user_logs" id="{{$user->id}}" title="Print Logs">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                                <button class="btn btn-xs btn-outline-danger project_staffdel" data-token="{{ csrf_token() }}" id="{{ $user->id }}">
+                                    <i  class="fa fa-times text-danger" style="float:right"></i>
+                                </button>
+                            </div>
+                        </li>
                     @endforeach
                 </ol>
                 <ol class="list-group mb-2">
@@ -38,7 +48,23 @@
                     </li>
                     @foreach($project->associates as $associate)
                         <li class="list-group-item list-group-item-action">{{ $associate->associate_name }}
-                            <span id="removeAssociate" data-id="{{ $associate->id }}" data-token="{{ csrf_token() }}" data-source="Project" class="fa fa-times text-danger" style="float:right"></span>
+                            <div class="btn-group" style="float:right">
+                                @if( $associate->pivot->availability != 1 )
+                                <button id="{{$associate->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
+                                    Off
+                                </button>
+                                @else
+                                <button id="{{$associate->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
+                                    On
+                                </button>
+                                @endif
+                                <button class="btn btn-outline-dark btn-xs associate_logs" id="{{$associate->id}}" title="Print Logs">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                                <button class="btn btn-xs btn-outline-danger removeAssociate" data-token="{{ csrf_token() }}" id="{{ $associate->id }}">
+                                    <i  class="fa fa-times text-danger" style="float:right"></i>
+                                </button>                
+                            </div>
                         </li>
                     @endforeach
                 </ol>
@@ -54,7 +80,7 @@
                     @endforeach                                  
                 </ol>
                 <ol class="list-group mb-2">
-                    <li class="list-group-item list-group-item-action bg-primary text-white">
+                    <li class="list-group-item list-group-item-action bg-secondary text-white">
                         Deliverables <span class="badge badge-danger">{{ $project->deliverables->count() }}</span>
                         <button  class="btn btn-sm btn-outline-light" id="add_project_deliverable" data-id="{{$project->id}}" title="Add Deliverables" style="float:right;">
                         Add
@@ -214,9 +240,62 @@
                     </div>
                 </div>
             </div>
-        </div>   
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="table-responsive-sm">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th><i class="far fa-user"></i> Associate</th>
+                                        <th>Status</th>
+                                        <th>Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($project->associates as $associate)
+                                        <tr>
+                                            <td>{{ $associate->associate_name }}</td>
+                                            <td>
+                                                @if( $associate->pivot->availability != 1 )
+                                                <button id="{{$associate->id}}" class="btn btn-outline-danger btn-xs {{($disabled? 'disabled':'')}}" title="Checkin">
+                                                    Off
+                                                </button>
+                                                @else
+                                                <button id="{{$associate->id}}" class="btn btn-outline-success btn-xs {{($disabled? 'disabled':'')}}" title="Checkout">
+                                                    On
+                                                </button>
+                                                @endif
+                                            </td>
+                                        <td>{{$associate->pivot->notes}}</td>
+                                        </tr>
+                                    @endforeach
+                                    @foreach($project->users as $user)
+                                    <tr>
+                                        <td>{{ $user->name }}</td>
+                                        <td>
+                                            @if( $user->pivot->availability != 1 )
+                                            <button id="{{$user->id}}" class="btn btn-outline-danger btn-xs {{($disabled? 'disabled':'')}}" title="Checkin">
+                                                Off
+                                            </button>
+                                            @else
+                                            <button id="{{$user->id}}" class="btn btn-outline-success btn-xs {{($disabled? 'disabled':'')}}" title="Checkout">
+                                                On
+                                            </button>
+                                            @endif
+                                        </td>
+                                    <td>{{$user->pivot->notes}}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
 @endsection

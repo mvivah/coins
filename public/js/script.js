@@ -15,10 +15,10 @@ const GET_MONTH_NAME = (dt)=>{
 let FIELD_IDS = [];
 let ERROR_COUNT = 0
 let station;
+
 try{
     //Save contacts
     document.getElementById('contactsForm').addEventListener('submit', function(e){
-        let contactsForm = document.getElementById('contactsForm');
         e.preventDefault();
         const CONTACT_INDEX = document.getElementById('contact_id');
         const CONTACT_ID = (CONTACT_INDEX == null)? null:CONTACT_INDEX.value;
@@ -279,20 +279,26 @@ try{
 
     //Add opportunity comments
     document.getElementById('opportunity_comment').addEventListener('click', e =>{
-        console.log(e.target.dataset.id)
-        openCommentForm(e.target.dataset.id)
+        createComment(e.target.dataset.id,'Opportunity');
     });
    
     //Save opportunity comments
     document.getElementById('commentsForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        saveComment();
+        saveComment(document.getElementById('commentsForm'));
     });
 
+    //Add opportunity evaluation
     document.getElementById('opportunity_evaluation').addEventListener('click', e =>{
         e.preventDefault()
-        console.log(e.target)
+        doEvaluation(e.target.dataset.id,'Opportunity');
     })
+
+    //Save opportunity evaluation
+    document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveEvaluation(document.getElementById('evaluationForm'));
+    });
 }
 catch(err){
 
@@ -477,9 +483,38 @@ try{
         })
     });
 
+    //Save Associates for a project
+    document.getElementById('associateForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        FIELD_IDS = ['projectAssociate','associates_id'];
+        let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
+        if( validateForm === 0 ){
+            let formData = new FormData(this);
+            axios.post(`/projectassociates`,formData)
+            .then( response => {
+                $('#pickAssociate').modal('hide');
+                $('#associateForm')[0].reset();
+                showAlert('success',response.data);
+                location.reload();
+            })
+            .catch( error => backendValidation(error.response.data.errors) );
+        }else{
+            console.log(validateForm)
+        }
+    });
+
+    //Associate logbook
+    document.querySelectorAll('.staffCheckins').forEach(element =>{
+        element.addEventListener('click', e =>{
+            changeAvailability(element);
+        })
+    });
+
     //Remove Associate
-    document.getElementById('removeAssociate').addEventListener('click', e =>{
-        confirmDelete(e.target.id)
+    document.querySelectorAll('.removeAssociate').forEach(element =>{
+        element.addEventListener('click',e =>{
+            confirmDelete(e.target.id)
+        })
     });
 
     document.getElementById('deleteBtn').addEventListener('click', () =>{
@@ -514,6 +549,12 @@ try{
     document.getElementById('project_evaluation').addEventListener('click', e =>{
         doEvaluation(e.target.dataset.id,'Project');
     })
+
+    //Save Project evaluation
+    document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveEvaluation(document.getElementById('evaluationForm'));
+    });
 
     //Add Project tasks
     document.querySelectorAll('.project_task').forEach(element =>{
@@ -574,7 +615,7 @@ catch(e){
 
 try{
     //Add associate
-    document.getElementById('associatesForm').addEventListener('submit', function(e){
+    document.getElementById('associateRegister').addEventListener('submit', function(e){
         e.preventDefault();
         const ASSOCIATE_INDEX = document.getElementById('associate_id');
         const ASSOCIATE_ID = (ASSOCIATE_INDEX == null)? null:ASSOCIATE_INDEX.value;
@@ -587,7 +628,7 @@ try{
                     method: 'PUT'
                 })
                 .then( response => {
-                    $('#associateForm')[0].reset();
+                    $('#associateRegister')[0].reset();
                     $('#addAssociate').modal('hide');
                     showAlert('success',response.data);
                     location.reload();
@@ -597,7 +638,7 @@ try{
             else{ 
                 axios.post('/associates',formData)
                 .then( response => {
-                    $('#associateForm')[0].reset();
+                    $('#associateRegister')[0].reset();
                     $('#addAssociate').modal('hide');
                     showAlert('success',response.data);
                     location.reload();
@@ -632,8 +673,8 @@ try{
         .catch( error => backendValidation(error.response.data.errors) );
     });
 
-    document.querySelector('.editAssociate').addEventListener('click', e =>{
-        axios.get(`/associates/${e.target.id}/edit`)
+    document.querySelector('#editAssociate').addEventListener('click', e =>{
+        axios.get(`/associates/${e.target.dataset.id}/edit`)
         .then( response => {
             data = response.data
             document.getElementById('associate_name').value = data.associate_name;
@@ -1638,38 +1679,6 @@ catch(err){
 
 }
 
-try{
-    // Comments CRUD
-    document.querySelector('.comment').addEventListener('click', e =>{
-        const comment = document.querySelector('.comment');
-        const theModel = comment.dataset.model;
-        document.getElementById('commentable_id').value = e.target.id;
-        document.getElementById('commentable').value = theModel;
-        document.querySelector('.modal-title').innerText = `${theModel} Comments`;
-        $('#addComments').modal('show');
-    });
-
-    document.getElementById('evaluationForm').addEventListener('submit', function(e){
-        e.preventDefault();
-        FIELD_IDS = [];
-        let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
-        if( validateForm === 0 ){
-            let formData = new FormData(this);
-            axios.post('/evaluations',formData)
-            .then( response => {
-                $('#evaluationForm')[0].reset();
-                $('#addEvaluations').modal('hide');
-                showAlert('success',response.data);
-                location.reload();
-            })
-            .catch( error => backendValidation(error.response.data.errors) );
-        }
-    })
-
-}catch(e){
-    
-}
-
 
 try{
     document.getElementById('tableName').addEventListener('change', e =>{
@@ -1912,12 +1921,28 @@ let showTaskDetails = (e) =>{
     }
 }
 
-let doEvaluation = (id,theModel) =>{
+let doEvaluation = (id,modal) =>{
     document.getElementById('evaluationable_id').value = id;
-    document.getElementById('evaluationable_type').value = theModel;
-    document.getElementById('evaluation_title').innerText = `${theModel} Evaluation`;
+    document.getElementById('evaluationable_type').value = `App\\${modal}`;
+    document.getElementById('evaluation_title').innerText = `${modal} Evaluation`;
     $('#addEvaluations').modal('show');
 };
+
+let saveEvaluation = (formId) =>{
+    FIELD_IDS = ['evaluationForm','results_achieved','challenges_faced','improvement_plans'];
+       let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
+    if( validateForm === 0 ){
+        let formData = new FormData(formId);
+        axios.post('/evaluations',formData)
+        .then( response => {
+            $('#evaluationForm')[0].reset();
+            $('#addEvaluations').modal('hide');
+            location.reload();
+            showAlert('success',response.data);
+        })
+        .catch( error => backendValidation(error.response.data.errors) );
+    }
+}
 
 let removeRow = (id) =>{
     document.getElementById(`row${id}`).remove();
@@ -2150,13 +2175,22 @@ let deliverableDelete = id =>{
     console.log(id)
 }
 
-let saveComment = () =>{
+let createComment = (id,modal) =>{
+
+    document.getElementById('commentable_id').value = id;
+    document.getElementById('commentable_type').value = `App\\${modal}`;
+    document.getElementById('comment_title').innerText = `${modal} Comments`;
+    $('#addComments').modal('show');
+
+}
+
+let saveComment = (formId) =>{
     const COMMENT_INDEX = document.getElementById('comment_id');
     const COMMENT_ID = (COMMENT_INDEX == null)? null:COMMENT_INDEX.value;
-    FIELD_IDS = ['comment_body','commentable','commentable_id'];
+    FIELD_IDS = ['comment_body','commentable_type','commentable_id'];
     let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
     if( validateForm === 0 ){
-        let formData = new FormData(this);
+        let formData = new FormData(formId);
         if( COMMENT_ID != null ){
             axios.post(`/comments/${COMMENT_ID}`,formData,{
                 method: 'PUT'
@@ -2180,4 +2214,24 @@ let saveComment = () =>{
             .catch( error => backendValidation(error.response.data.errors) );
         }
     }
+}
+
+let changeAvailability = (element) =>{
+
+    element.classList.remove()
+    element.classList.add()
+    let formData = new FormData();
+    formData.append('today',THISDAY);
+    axios.post('/logs',formData)
+    .then( response => {
+        console.log(response)
+        //showAlert('success',response.data);
+        //location.reload();
+    })
+    .catch( error => backendValidation(error.response.data.errors) );
+}
+
+let pageRouter = ( HTML_PAGE_ID ) => {
+    document.querySelectorAll( '.page' ).forEach( PAGE => PAGE.style.display = 'none' )
+    if( document.getElementById(HTML_PAGE_ID) != null ) document.getElementById(HTML_PAGE_ID).style.display = 'block'
 }

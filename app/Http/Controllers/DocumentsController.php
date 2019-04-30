@@ -7,32 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 class DocumentsController extends Controller
 {
-     /**
-     * Checking if a user is logged in.
-     *
-     */
 
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
        $documents = Document::all();
        return view('documents.index',compact('documents'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function create()
     {
         return view('documents.create');

@@ -7,11 +7,10 @@ use Illuminate\Http\Request;
 
 class CommentsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         abort('404');
@@ -25,14 +24,14 @@ class CommentsController extends Controller
     {
         $data = $request->validate([
             "comment_body"    => "required|string|min:10",
-            "commentable"  => "required|string",
-            "commentable_id"  => "required|integer",
+            "commentable_type"  => "required|string",
+            "commentable_id"  => "required|string",
         ]);
         $comment = Comment::create([
-            'body' => $data['comment_body'],
-            'commentable' => $data['commentable'],
+            'comment_body' => $data['comment_body'],
+            'commentable_type' => $data['commentable_type'],
             'commentable_id' => $data['commentable_id'],
-            'created_by'=>Auth::user()->id
+            'user_id'=>Auth::user()->id
         ]);
 
         if(!$comment){
@@ -42,23 +41,11 @@ class CommentsController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         abort('404');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function supervisorComments(Request $request, Evaluation $evaluation){
 
         TaskUser::update(request()->validate([
@@ -82,31 +69,28 @@ class CommentsController extends Controller
         return NULL;
     }
     
-    public function edit($id)
+    public function edit(Comment $comment)
     {
-        //
+       return Comment::findOrFail($comment->id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Comment $comment)
     {
-        //
+        $data = $request->validate([
+            "comment_body"    => "required|string|min:10",
+            "commentable_type"  => "required|string",
+            "commentable_id"  => "required|string",
+        ]);
+        $comment->update([
+            'comment_body' => $data['comment_body'],
+            'commentable_type' => $data['commentable_type'],
+            'commentable_id' => $data['commentable_id'],
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        abort('404');
     }
 }

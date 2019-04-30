@@ -8,11 +8,7 @@ use App\Holiday;
 use Auth;
 class HolidaysController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -20,15 +16,9 @@ class HolidaysController extends Controller
     
     public function index()
     {
-        return abort(404);
-
+        abort('404');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return Holiday::all();

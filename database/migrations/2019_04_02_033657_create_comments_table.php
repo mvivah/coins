@@ -18,7 +18,7 @@ class CreateCommentsTable extends Migration
             $table->primary('id');
             $table->string('commentable_id');
             $table->string('commentable_type');
-            $table->longText('body');
+            $table->longText('comment_body');
             $table->string('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

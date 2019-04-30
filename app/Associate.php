@@ -20,7 +20,9 @@ class Associate extends Model
     }
     
     public function project(){
-        return $this->belongsToMany('App\Project');
+
+      return $this->belongsToMany('App\Project')->withPivot('availability','updated_at','notes');
+
     }
 
     public function documents(){

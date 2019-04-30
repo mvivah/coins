@@ -7,97 +7,61 @@ use Illuminate\Http\Request;
 
 class EvaluationsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        abort('404');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        abort('404');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //validate the received data
         $data = $request->validate([
         "evaluationable_id"    => "required",
         "evaluationable_type"  => "required|string",
         "exceptional_tasks"    => "required|string",
         "results_achieved"  => "required|string",
         "challenges_faced"  => "required|string",
-        "action_plans"  => "required|string",
+        "improvement_plans"  => "required|string",
         ]);
-        //save the validated data
-        Evaluation::create([
+        
+        $evaluation = Evaluation::create([
             'evaluationable_id' => $data['evaluationable_id'],
             'evaluationable_type' => $data['evaluationable_type'],
             'exceptional_tasks' => $data['exceptional_tasks'],
             'results_achieved' => $data['results_achieved'],
             'challenges_faced' => $data['challenges_faced'],
-            'action_plans' => $data['action_plans'],
-            'created_by' => Auth::user()->id,
+            'improvement_plans' => $data['improvement_plans'],
+            'user_id' => Auth::user()->id,
         ]);
+        
+        if($evaluation){
+            return ['Information saved successfully'];
+        }else{
+            return ['Failed to save information'];
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
+        abort('404');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        abort('404');
     }
 }

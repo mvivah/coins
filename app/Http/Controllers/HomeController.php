@@ -217,7 +217,16 @@ class HomeController extends Controller
         $opps = $projectChart->dataset('Projects per Stage', 'bar',$projectData);
         $opps->backgroundColor($colors);
 
-        return view('pages.home',compact('projects','teams','streams','opportunities','users','contacts','userChart','teamChart','projectChart','opportunityTeam','opportunityStage','opportunityStatus','opportunityCountry'));
+        return view('pages.home',compact(
+            'projects','teams','streams',
+            'opportunities','users',
+            'contacts','userChart',
+            'teamChart','projectChart',
+            'opportunityTeam',
+            'opportunityStage',
+            'opportunityStatus',
+            'opportunityCountry',
+        ));
     }
 
     public function admin(){
@@ -246,6 +255,7 @@ class HomeController extends Controller
             abort(404);
         }
     }
+
     public function makeSummary($type){
         $teams = Team::all();
         $sales_stages = ['Closed Lost','Closed Won','Under Preparation','Under Review','Submitted','Not submitted','Dropped'];      
@@ -264,6 +274,7 @@ class HomeController extends Controller
     }
 
     public function staffSummary($period = NULL){
+
         $users = User::all();
         $types = ['Proposal','EOI','Pre-Qualification'];
         $records = [];
@@ -281,20 +292,20 @@ class HomeController extends Controller
             $index +=1;
         endforeach;
         return $records;
+
     }
 
     public function display(){
         $proposals = $this->makeSummary('Proposal');
         $eois = $this->makeSummary('EOI');
         $prequalifications = $this->makeSummary('Pre-Qualification');
-        return view('pages.report', compact('proposals','eois','prequalifications'));
+        return view('pages.summaries', compact('proposals','eois','prequalifications'));
     }
 
     public function performance($period = NULL){
         $records = $this->staffSummary($period);
         return view('pages.performance', compact('records'));
     }
-
 
     public function prepare(Request $request){
         $tableName = $request->tableName;
@@ -322,19 +333,61 @@ class HomeController extends Controller
         return view('pages.support');
     }
 
+    public function showUser(User $user){
+        $year = $month = today();
+        $user = User::findOrFail($user->id);
+        $leaves = Leave::select('leavesettings.leave_type','leaves.leave_start','leaves.leave_end','leavesetting_id','leaves.leave_status','leaves.leave_detail', DB::raw("SUM(leaves.duration) as duration"))
+                    ->join('leavesettings','leaves.leavesetting_id','=','leavesettings.id')
+                    ->whereYear('leaves.leave_start', '=', $month)
+                    ->whereYear('leaves.created_at', '=', $month)
+                    ->where('leaves.user_id', $user->id)
+                    ->get();
+        $absent = $leaves->sum('duration');
+
+        //Timesheet
+        $opportunities = DB::table('users')
+                    ->join('task_user', 'task_user.user_id', '=', 'users.id')
+                    ->join('tasks', 'task_user.task_id', '=', 'tasks.id')
+                    ->join('deliverable_opportunity', 'tasks.deliverable_id', '=', 'deliverable_opportunity.deliverable_id')
+                    ->join('opportunities', 'deliverable_opportunity.opportunity_id', '=', 'opportunities.id')
+                    ->orderBy("opportunities.opportunity_name")
+                    ->where('task_user.user_id', $user->id)
+                    ->get();
+
+        $timesummary = Timesheet::select('beneficiary', DB::raw("SUM(duration) as duration"))
+                                ->whereMonth('activity_date',now())
+                                ->where(['user_id'=>$user->id])
+                                ->groupBy('beneficiary')->get();
+
+        $worked = $timesummary->sum('duration');
+        $timesheets = Timesheet::where(['user_id'=>$user->id])->whereMonth('activity_date',now())->get();
+        
+        
+
+        $assessments = Assessment::selectRaw("targets.target_category AS category,assessments.assessment_score/targets.target_value*100 AS score")
+                                ->join('targets', 'assessments.target_id', '=', 'targets.id')
+                                ->where(['assessments.user_id'=>$user->id])
+                                ->groupBy('targets.target_category')
+                                ->get();
+        return view('pages.home',compact('user','leaves','timesummary','timesheets','assessments','opportunities','worked','absent'));
+    }
+
     public function sendMessage(Request $request){
+
         $this->validate($request,[
             "name"   => "required",
             "email"   => "required|email",
             "subject"   => "required",
             "message_body"   => "required",
         ]);
+
         $data = [
             'name' => $request->name,
             'email' => $request->email,
             'subject' => $request->subject,
             'message_body' => $request->message_body,
         ];
+
         $recipient = "vmugisha@ahcul.com";
 
         Mail::to($recipient)->send(new FeedbackMail($data));

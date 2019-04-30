@@ -8,11 +8,7 @@ use Session;
 use Auth;
 class AssociatesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -20,28 +16,11 @@ class AssociatesController extends Controller
     
     public function index()
     {
-        //List of all associates and their contacts
         $associates = Associate::all();
         return view('associates.index',compact('associates'));
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
 
@@ -53,10 +32,10 @@ class AssociatesController extends Controller
             'associate_country'=>'required',
             'associate_phone'=>'required',
             'associate_phone1'=>'required',
-            'date_enrolled'=>'required',
+            'date_enrolled'=>'required|date|before:tomorrow',
             'associate_expertise'=>'required',
             'associate_specialization'=>'required',
-            'associate_experience'=>'required'
+            'associate_experience'=>'required|max:30'
         ]);
 
         //save the validated data
@@ -73,16 +52,9 @@ class AssociatesController extends Controller
             'associate_experience' => $data['associate_experience'],
             'created_by'=>Auth::user()->id
         ]);
-        return redirect('associates')->with('success', 'Associate added sucessively');    
+        return['Associate added sucessively'];    
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    
     public function show($id)
     {
         $associate = Associate::findOrFail($id);
@@ -103,11 +75,11 @@ class AssociatesController extends Controller
     }
      /*****Download associates transcript**/
 
-  public function downloadTranscript($id)
-  {
-        $associate = Associate::findOrFail($id);
-        return Storage::download($associate->transcript_url, $associate->name);
-  }
+    public function downloadTranscript($id)
+    {
+            $associate = Associate::findOrFail($id);
+            return Storage::download($associate->transcript_url, $associate->name);
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -116,7 +88,7 @@ class AssociatesController extends Controller
      */
     public function edit(Associate $associate)
     {
-        return view('associates.edit',compact('associate'));
+        return Associate::findOrFail($associate->id);
     }
 
     /**

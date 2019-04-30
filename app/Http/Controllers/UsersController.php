@@ -17,11 +17,6 @@ use Session;
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function __construct()
     {
         $this->middleware('auth');
@@ -72,15 +67,14 @@ class UsersController extends Controller
     }
 
     public function show(User $user)
-    {   
+    {
         $year = $month = today();
         $user = User::findOrFail($user->id);
         $leaves = Leave::select('leavesettings.leave_type','leaves.leave_start','leaves.leave_end','leavesetting_id','leaves.leave_status','leaves.leave_detail', DB::raw("SUM(leaves.duration) as duration"))
                     ->join('leavesettings','leaves.leavesetting_id','=','leavesettings.id')
                     ->whereYear('leaves.leave_start', '=', $month)
                     ->whereYear('leaves.created_at', '=', $month)
-                    ->where('user_id', $user->id)
-                    ->groupBy('leavesetting_id','leave_status')
+                    ->where('leaves.user_id', $user->id)
                     ->get();
         $absent = $leaves->sum('duration');
 
@@ -140,26 +134,12 @@ class UsersController extends Controller
         unset($llusers);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    //public function edit(User $user)
-    public function edit($id)
+
+    public function edit(User $user)
     {
-        // $user = User::findOrFail($id);
-        return User::findOrFail($id);
+        return User::findOrFail($user->id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, User $user)
     {
          //validate the received data
@@ -196,12 +176,6 @@ class UsersController extends Controller
         return['User Updated Successfully'];
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(User $user)
     {
         $user->delete();

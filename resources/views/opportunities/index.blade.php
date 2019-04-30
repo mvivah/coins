@@ -1,17 +1,12 @@
 @extends('layouts.app')
 	@section('content')
-	<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item"><a href="/">Home</a></li>
-			<li class="breadcrumb-item active" aria-current="page">Opportunities</li>
-		</ol>
-	</nav>
-	<div class="container-fluid">
-        <button class="btn btn-outline-danger mb-2" id="create_opportunity" style="@if(Gate::check('isConsultant'))	display:none @endif">
+	<div class="row">
+		<div class="col-md-12">
+        <button class="btn btn-outline-danger mb-2 btn-xs" id="create_opportunity" style="@if(Gate::check('isConsultant'))	display:none @endif">
 			<i class="fa fa-cart-plus"></i> Create Opportunity
 		</button>
 		<div class="row">
-			<div class="col-md-12 p-3 mb-3 shadow-sm">
+			<div class="col-md-12 mb-2 shadow-sm">
 				<form id="opportunitiesFilterForm">
 					@csrf
 					<div class="form-row">
@@ -68,12 +63,11 @@
 					</div>
 					<div class="form-row mt-2">
 						<div class="btn-group mx-auto">
-							<button type="button" id="opportunityFilter" class="btn btn-outline-success">Search <i class="fa fa-search"></i></button>
+							<button type="button" id="opportunityFilter" class="btn btn-outline-success mb-2">Search <i class="fa fa-search"></i></button>
 						</div>
 					</div>
 				</form>
 			</div>
-		</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -119,7 +113,13 @@
 					<tbody>
 						@foreach($opportunities as $opportunity)
 						<tr>
-							<td><a href="/opportunities/{{$opportunity->id}}" class="text-primary" title="View Opportunity">{{$opportunity->om_number}}</a></td>
+							<td>
+								@if(Gate::check('isAdmin') || Gate::check('isDirector'))
+								<a href="/opportunities/{{$opportunity->id}}" class="text-primary" title="View Opportunity">{{$opportunity->om_number}}</a>
+								@else
+								{{$opportunity->om_number}}
+								@endif
+							</td>
 							<td>{{$opportunity->opportunity_name}}</td>
 							<td>{{$opportunity->country}}</td>
 							<td>{{$opportunity->team->team_code}}</td>
@@ -133,4 +133,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 @endSection

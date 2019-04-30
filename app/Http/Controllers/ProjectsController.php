@@ -25,14 +25,14 @@ class ProjectsController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
-    {
+    public function index(){
+
         $projects = Project::all();
         return view('projects.index',['projects'=>$projects,]);
     }
 
-    public function show(Project $project)
-    {
+    public function show(Project $project){
+
         $project = Project::findOrFail($project->id);
 
         $deliverables = DeliverableProject::where(['deliverable_project.project_id'=>$project->id])
@@ -43,27 +43,17 @@ class ProjectsController extends Controller
                                     ->join('deliverable_project', 'tasks.deliverable_id', '=', 'deliverable_project.deliverable_id')->get();  
 
         return view('projects.show',compact('project','deliverables','project_tasks'));
+
     }
     
-    /**
-     * Show the form for editing the resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project $project)
-    {
+    public function edit(Project $project){
+
         return (Project::findOrFail($project->id));
+
     }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Project $project)
-    {
+
+    public function update(Request $request, Project $project){
+
         $data = $request->validate([
             "project_status"    => "required",
             "project_stage"  => "required",
@@ -94,42 +84,44 @@ class ProjectsController extends Controller
             return ['Project has been successfully updated'];
         }
     }
-    /**
-     * Assign an associate to a project
-     *
-     */
-    public function addAssociates(Request $request, Project $project){
-        $associate = AssociateProject::create(request()->validate([
-            'project_id' => 'required',
-            'associate_id' => Rule::unique('associate_project')->where(function($query){
-                return $query->where('project_status','!=','Completed');
-            }),
-            'initiation_date' =>'required',
-            'completion_date' =>'required',
-            'created_by'=>Auth::user()->id]));
 
-        $associate = Associate::findOrFail($request->associate_id);
-        $project = Project::findOrFail($request->project_id);
-        $associate->notify(new ProjectAssigned($project));
+    public function addAssociates(Request $request, Project $project){
+
+        $data = $request->validate([
+            "projectAssociate"=> "required",
+            'associate_id' => "required|unique:associate_project",
+        ]);
+
+        AssociateProject::create([
+            'project_id' => $data['projectAssociate'],
+            'associate_id' => $data['associate_id'],
+            'created_by'=>Auth::user()->id
+        ]);
+
+        //$associate = Associate::where(['id'=>$request->associate_id])->get('id');
+        $project = Project::findOrFail($request->projectAssociate);
+        Associate::find($request->associate_id)->notify(new ProjectAssigned($project));
+
         return ['Associate added successfully'];
         
     }
     
-        /*
-     * Remove an associate from a project
-     */
-    public function removeAssociate(Request $request){
-        $associate = AssociateProject::where('associate_id',$request->associate_id)->first();
-        $associate->delete();
-        return NULL;
+    public function log(Request $request){
+
+        return $request;
+
     }
 
-    /**
-     * Assign a consultant to a project
-     *
-     */
+    public function removeAssociate(Request $request){
 
-    public function addConsultants(Request $request){          
+        $associate = AssociateProject::where('associate_id',$request->associate_id)->first();
+        $associate->delete();
+        return ['Associate removed'];
+
+    }
+
+    public function addConsultants(Request $request){
+
         $data = $request->validate([
             "project_id"    => "required",
             "user_id" =>"required|unique:project_user",
@@ -147,20 +139,14 @@ class ProjectsController extends Controller
 
     }
 
-    /*
-     * Remove consultant from a project
-     */
     public function removeConsultant(Request $request){
+
         $user = ProjectUser::where('user_id',$request->user_id)->first();
         $user->delete();
         return ['You have sucessfully removed a consultant'];
+
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function filterProjects(Request $request){
 
         $project_status = $request->project_status;

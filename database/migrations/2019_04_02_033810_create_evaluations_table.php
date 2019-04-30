@@ -21,10 +21,8 @@ class CreateEvaluationsTable extends Migration
             $table->longText('exceptional_tasks');
             $table->longText('results_achieved');
             $table->longText('challenges_faced');
-            $table->longText('action_plans');
+            $table->longText('improvement_plans');
             $table->string('user_id');
-            $table->string('updated_by')->nullable();
-
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });

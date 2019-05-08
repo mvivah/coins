@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="form-row mt-2">
-                    <button type="button" id="projectFilter-btn"  class="btn btn-success mx-auto">Search <i class="fa fa-search"></i></button>
+                    <button type="button" id="projectFilter-btn"  class="btn btn-primary btn-xs mx-auto">Search <i class="fa fa-search"></i></button>
                 </div>
             </form>
         </div>
@@ -66,7 +66,7 @@
         <div class="col-md-12">
             <h5 id="summaries"></h5>
             <div id="records-list">
-                <button type="button" class="btn btn-outline-success" id="export_projects" style="float:right; display:none">Export <i class="fa fa-file-excel"></i></button>
+                <button type="button" class="btn btn-outline-primary" id="export_projects" style="float:right; display:none">Export <i class="fa fa-file-excel"></i></button>
             </div>
             <!-- Loader here -->
             <div id="loading">

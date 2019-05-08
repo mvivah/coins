@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
 
 Route::get('/', 'HomeController@index');
@@ -17,7 +18,11 @@ Route::get('/home', 'HomeController@index');
 Route::get('/admin', 'HomeController@admin');
 Route::get('/help', 'HomeController@support');
 Route::post('/help', 'HomeController@sendMessage');
-Route::get('/summaries', 'HomeController@display')->name('summaries');
+Route::get('/display/{current_month}', 'HomeController@display');
+Route::get('/display/{current_quater}', 'HomeController@display');
+Route::get('/display/{current_year}', 'HomeController@display');
+
+//Routing everything about contacts
 Route::resource('/contacts', 'ContactsController');
 Route::post('/contacts/{contact}', 'ContactsController@update');
 Route::get('getcontacts','ContactsController@getcontacts')->name('getcontacts');

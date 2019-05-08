@@ -1,18 +1,9 @@
 @extends('layouts.app')
     @section('content')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Summaries</li>
-        </ol>
-    </nav>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                <h3 class="mx-auto">Opportunities Monthly</h3>
-            </div>
-            <div class="col-md-6">
-                    <h3 class="mx-auto">Opportunities General</h3>
+                <h3 class="mx-auto">Opportunities</h3>
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered table-striped">
                         <caption>Proposals</caption>
@@ -104,13 +95,36 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="row">
+
             <div class="col-md-6">
-                <h3 class="mx-auto">Projects Monthly</h3>
-            </div>
-            <div class="col-md-6">
-                    <h3 class="mx-auto">Projects General</h3>
+                <h3 class="mx-auto">Projects</h3>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-striped">
+                        <caption>Projects</caption>
+                        <thead class="bg-primary">
+                            <tr>
+                            <th>Teams</th>
+                            <th>Inception</th>
+                            <th>Planning</th>
+                            <th>Execution</th>
+                            <th>Evaluation</th>
+                            <th>Completion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($projects as $project)       
+                            <tr>
+                                <th scope="row">{{$project['team']}}</th>
+                                <td>{{$project['inception']}}</td>
+                                <td>{{$project['planning']}}</td>
+                                <td>{{$project['execution']}}</td>
+                                <td>{{$project['evaluation']}}</td>
+                                <td>{{$project['completion']}}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>         

@@ -70,7 +70,7 @@ class UsersController extends Controller
     {
         $year = $month = today();
         $user = User::findOrFail($user->id);
-        $leaves = Leave::select('leavesettings.leave_type','leaves.leave_start','leaves.leave_end','leavesetting_id','leaves.leave_status','leaves.leave_detail', DB::raw("SUM(leaves.duration) as duration"))
+        $leaves = Leave::select('leaves.leave_start','leaves.leave_end','leavesetting_id','leaves.leave_status','leaves.leave_detail', DB::raw("SUM(leaves.duration) as duration"),'leavesettings.leave_type',)
                     ->join('leavesettings','leaves.leavesetting_id','=','leavesettings.id')
                     ->whereYear('leaves.leave_start', '=', $month)
                     ->whereYear('leaves.created_at', '=', $month)

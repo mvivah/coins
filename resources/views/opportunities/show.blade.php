@@ -9,7 +9,7 @@
     ?>
     @endif
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="btn-group mb-2 opp">
                 @if(Gate::check('isAdmin') || Gate::check('isDirector'))
                     <button id="editOpportunity"  data-id="{{$opportunity->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Opportunity" aria-disabled="true">
@@ -154,65 +154,57 @@
                 </div>
             </div>   
         </div>
-        <div class="col-md-3">
-            <div class="card mb-2 shadow-sm">
-                <ol class="list-group">
-                    <li class="list-group-item list-group-item-action">
-                        Consultants
-                        @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                        <a href="#" class="btn btn-sm btn-outline-primary {{($disabled? 'disabled':'')}}" id="opportunity_user" data-id="{{ $opportunity->id}}" style="float:right;" title="Assign Consultants">
+        <div class="col-md-4">
+            <ol class="list-group mb-4 shadow">
+                <li class="list-group-item list-group-item-action">
+                    Consultants
+                    @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                    <a href="#" class="btn btn-xs btn-outline-primary {{($disabled? 'disabled':'')}}" id="opportunity_user" data-id="{{ $opportunity->id}}" style="float:right;" title="Assign Consultants">
+                    Add
+                    </a>
+                    @endif
+                </li>
+                @foreach($opportunity->users as $consultant)
+                    <li class="list-group-item list-group-item-action responsible_users" id="{{ $consultant->id }}">{{ $consultant->name }} <span data-token="{{ csrf_token() }}" data-source="Opportunity" class="fa fa-times text-danger delConsultant" id="{{ $consultant->id }}" title="Remove Consultant" style="float:right"></span></li>
+                @endforeach                                  
+            </ol>
+            <ol class="list-group mb-4 shadow">
+                <li class="list-group-item list-group-item-action">
+                    Documents
+                    <a href="#" class="btn btn-xs btn-outline-primary {{($disabled? 'disabled':'')}}" data-name="{{ $opportunity->opportunity_name}}" data-owner="opportunity_id" data-id="{{ $opportunity->id}}" id="opportunity_document" style="float:right;" title="Add Document">
+                    Add
+                    </a>
+                </li>
+                @foreach($opportunity->documents as $document)
+                    <li class="list-group-item list-group-item-action">{{ $document->document_url }} <span id="{{ $document->id }}" class="fa fa-times text-danger" style="float:right"></span></li>
+                @endforeach                                  
+            </ol>
+            <ol class="list-group mb-4 shadow">
+                <li class="list-group-item list-group-item-action">
+                    Derivelables
+                    @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                    <a href="#" class="btn btn-xs btn-outline-primary {{($disabled? 'disabled':'')}}" data-id="{{ $opportunity->id}}" id="add_opportunity_deliverable" style="float:right;" title="Add Deliverable">
                         Add
-                        </a>
+                    </a>
+                    @endif
+                </li>
+                @foreach($opportunity->deliverables as $deliverable)
+                <li class="list-group-item list-group-item-action">{{ $deliverable->deliverable_name }}
+                    @if($deliverable->deliverable_status !='Done' || $deliverable->deliverable_status !='Completed')
+                    <div class="btn-group float-right">
+                        @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                            <i class="fa fa-plus text-success {{($disabled? 'disabled':'')}} opportunity_task" id="{{ $deliverable->id}}" title="Add Task"></i> 
+                            <i class="fa fa-edit text-primary edit_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
+                            <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
                         @endif
-                    </li>
-                    @foreach($opportunity->users as $consultant)
-                        <li class="list-group-item list-group-item-action responsible_users" id="{{ $consultant->id }}">{{ $consultant->name }} <span data-token="{{ csrf_token() }}" data-source="Opportunity" class="fa fa-times text-danger delConsultant" id="{{ $consultant->id }}" title="Remove Consultant" style="float:right"></span></li>
-                    @endforeach                                  
-                </ol>
-            </div>
-
-                <div class="card mb-2 shadow-sm">
-                    <ol class="list-group">
-                        <li class="list-group-item list-group-item-action active">
-                            Documents
-                            <a href="#" class="btn btn-sm btn-outline-light {{($disabled? 'disabled':'')}}" data-name="{{ $opportunity->opportunity_name}}" data-owner="opportunity_id" data-id="{{ $opportunity->id}}" id="opportunity_document" style="float:right;" title="Add Document">
-                            Add
-                            </a>
-                        </li>
-                        @foreach($opportunity->documents as $document)
-                            <li class="list-group-item list-group-item-action">{{ $document->document_url }} <span id="{{ $document->id }}" class="fa fa-times text-danger" style="float:right"></span></li>
-                        @endforeach                                  
-                    </ol>
-                </div>
-
-                <div class="card mb-2 shadow-sm">
-                    <ol class="list-group">
-                        <li class="list-group-item list-group-item-action active">
-                            Derivelables
-                            @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                            <a href="#" class="btn btn-sm btn-outline-light {{($disabled? 'disabled':'')}}" data-id="{{ $opportunity->id}}" id="add_opportunity_deliverable" style="float:right;" title="Add Deliverable">
-                                Add
-                            </a>
-                            @endif
-                        </li>
-                        @foreach($opportunity->deliverables as $deliverable)
-                        <li class="list-group-item list-group-item-action">{{ $deliverable->deliverable_name }}
-                            @if($deliverable->deliverable_status !='Done' || $deliverable->deliverable_status !='Completed')
-                            <div class="btn-group float-right">
-                                @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                                    <i class="fa fa-plus text-success {{($disabled? 'disabled':'')}} opportunity_task" id="{{ $deliverable->id}}" title="Add Task"></i> 
-                                    <i class="fa fa-edit text-primary edit_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
-                                    <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
-                                @endif
-                                <i class="fa fa-chevron-right text-dark opportunity_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i> 
-                            </div>
-                            @else
-                            <span class="badge badge-success">Done</span>
-                            @endif
-                        </li>
-                    @endforeach                                  
-                </ol>
-            </div>
-        </div>
+                        <i class="fa fa-chevron-right text-dark opportunity_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i> 
+                    </div>
+                    @else
+                    <span class="badge badge-success">Done</span>
+                    @endif
+                </li>
+            @endforeach                                  
+        </ol>
+    </div>
     </div>
 @endsection

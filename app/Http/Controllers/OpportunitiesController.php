@@ -274,7 +274,7 @@ class OpportunitiesController extends Controller
                 $project = Project::create([
                     'opportunity_id'=>$opportunity->id,
                     'project_status'=>'Open',
-                    'project_stage'=>'Initiation',
+                    'project_stage'=>'Inception',
                     'created_by'=>Auth::user()->id
                 ]);
 

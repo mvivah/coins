@@ -13,8 +13,8 @@
 
             </div>
             <div class="modal-footer" id="error_footer">
-                <button type="button" class="btn btn-outline-danger" id="deleteBtn" data-token="{{ csrf_token() }}">Delete</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" id="deleteBtn" data-token="{{ csrf_token() }}">Delete</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">Close</button>
                 </div>
             </form>   
         </div>
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-danger">Save</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
             </div>
         </form>       
     </div>
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="roleBtn" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" id="roleBtn" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>  
         </div>
@@ -213,7 +213,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>
@@ -263,7 +263,7 @@
                     </div>
                     <div class="col-md-3">
                         <label>Add:</label>
-                        <button type="button" id="addhours" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Add</button>
+                        <button type="button" id="addhours" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i> Add</button>
                     </div>
                 </div>
                 <div id="hours_row"></div>
@@ -275,7 +275,7 @@
                 </div>
             </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-danger">Save</button>  
+            <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>  
         </div>
     </form>   
 </div>
@@ -324,7 +324,7 @@
                                     <td><input type="text" name="firm_name[]" id="firm_name" class="form-control"></td>
                                     <td><input type="number" name="technical_score[]" id="technical_score" class="form-control"></td>
                                     <td><input type="number" name="financial_score[]" id="financial_score" class="form-control"></td>
-                                    <td><button  type="button" id="add_score" name="firm" class="btn btn-outline-danger">Add</button></td>
+                                    <td><button  type="button" id="add_score" name="firm" class="btn btn-outline-primary btn-sm">Add</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -332,7 +332,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Submit</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>
         </div>
@@ -455,7 +455,7 @@
                 </fieldset>        
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-danger">Save</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
             </div>
         </form>
         </div>
@@ -539,7 +539,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="associate_btn" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" id="associate_btn" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>
         </div>
@@ -571,7 +571,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Submit</button>
+                    <button type="submit" class="btn btn-sm btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>
         </div>   
@@ -654,7 +654,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger confirm" data-token="{{ csrf_token() }}"><i class="fas fa-trash"></i> Delete</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" data-token="{{ csrf_token() }}"><i class="fas fa-trash"></i> Delete</button>
             </div>
         </div>
     </div>
@@ -690,7 +690,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-sm btn-outline-danger" id="saveConsultant">Submit</button>
+            <button type="submit" class="btn btn-sm btn-outline-primary btn-sm" id="saveConsultant">Submit</button>
         </div>
     </form>
     </div>
@@ -742,7 +742,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-danger">Save</button>
+            <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
         </div>
     </form>
     </div>
@@ -777,7 +777,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-danger">Save</button>
+            <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
         </div>
     </form>
 </div>
@@ -819,7 +819,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-danger">Save</button>
+            <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
         </div>
     </form>
 </div>
@@ -869,7 +869,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn  btn-outline-danger">Submit</button>
+                    <button type="submit" class="btn  btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>
         </div>
@@ -913,7 +913,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-danger">Save</button>
+            <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
         </div>
     </form>
     </div>
@@ -969,7 +969,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
                 </form>
             </div>
@@ -1040,7 +1040,7 @@
             </div>
             {{-- Modal footer --}}
             <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-danger" id="saveContact">Save</button>  
+                <button type="submit" class="btn btn-outline-primary btn-sm" id="saveContact">Save</button>  
             </div>
         </form>
         </div>
@@ -1075,7 +1075,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>
@@ -1101,14 +1101,14 @@
                             <input type="text" name="specialization[]" id="specialization" class="form-control" placeholder="Specilaization">
                         </div>
                         <div class="col-md-2">
-                        <button type="button" class="btn btn-primary" id="addSpecials">Add</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="addSpecials">Add</button>
                         </div>
                     </div>
                     <div id="specials_row"></div>              
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger" >Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>
@@ -1157,7 +1157,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>
@@ -1212,7 +1212,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger" id="project_update_btn">Update</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm" id="project_update_btn">Update</button>
                 </div>
             </form>   
         </div>
@@ -1243,7 +1243,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>
@@ -1292,7 +1292,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>
@@ -1330,7 +1330,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger" id="saveForwardedLeave">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm" id="saveForwardedLeave">Save</button>
                 </div>
             </form>   
         </div>
@@ -1356,7 +1356,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Submit</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>
@@ -1422,7 +1422,7 @@
                 </div>
                 {{-- Modal footer --}}
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-danger">Save</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>   
         </div>

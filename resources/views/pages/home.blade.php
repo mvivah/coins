@@ -19,7 +19,7 @@
                         <a class="card-footer text-info small" href="/users">
                             <span class="float-left">View Details</span>
                             <span class="float-right">
-                            <i class="fa fa-arrow-right-circle"></i>  
+                            <span data-feather="arrow-right-circle"></span> 
                             </span>
                         </a>
                     </div>
@@ -44,7 +44,7 @@
                         <a class="card-footer text-success small" href="/contacts">
                             <span class="float-left">View Details</span>
                             <span class="float-right">
-                            <i class="fa fa-arrow-right-circle"></i> 
+                            <span data-feather="arrow-right-circle"></span>
                             </span>
                         </a>
                     </div>
@@ -65,7 +65,7 @@
                         <a class="card-footer text-danger small" href="/opportunities">
                             <span class="float-left">View Details</span>
                             <span class="float-right">
-                            <i class="fa fa-arrow-right-circle"></i> 
+                            <span data-feather="arrow-right-circle"></span>
                             </span>
                         </a>
                     </div>
@@ -85,7 +85,7 @@
                         <a class="card-footer text-secondary small" href="/projects">
                             <span class="float-left">View Details</span>
                             <span class="float-right">
-                            <i class="fa fa-arrow-right-circle"></i> 
+                            <span data-feather="arrow-right-circle"></span>
                             </span>
                         </a>
                     </div>

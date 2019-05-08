@@ -256,7 +256,7 @@ class HomeController extends Controller
         }
     }
 
-    public function makeSummary($type){
+    public function makeSummary($type,$period){
         $teams = Team::all();
         $sales_stages = ['Closed Lost','Closed Won','Under Preparation','Under Review','Submitted','Not submitted','Dropped'];      
         $total = [];
@@ -264,7 +264,22 @@ class HomeController extends Controller
         foreach($teams as $team ):
             $total[$index]['team'] = $team->team_code;
             foreach($sales_stages as $sales_stage):
-                $opportunities = Opportunity::where(['team_id'=> $team->id,'type'=>$type,'sales_stage'=>$sales_stage])->get();
+                if( $period == NULL ):
+                    $opportunities = Opportunity::where(['team_id'=> $team->id,'type'=>$type,'sales_stage'=>$sales_stage])->get();
+                else:
+                    $dateE = Carbon::now();
+                    if($period = 'current_month'):
+                        $dateS = Carbon::now()->startOfMonth();
+                    elseif($period = 'current_quater'):
+                        $dateS = Carbon::now()->startOfMonth()->subMonth(3);
+                    elseif($period = 'current_year'):
+                        $dateS = $dateE->copy()->startOfYear();
+                    endif;
+                    $opportunities = Opportunity::where(['team_id'=> $team->id,'type'=>$type,'sales_stage'=>$sales_stage])
+                                                    ->whereBetween('updated_at',[$dateS,$dateE])
+                                                    ->get();
+
+                endif;
                 $sales_stage = strtolower(implode(explode(' ',$sales_stage),''));
                 $total[$index][$sales_stage] = $opportunities->count();
             endforeach;
@@ -273,38 +288,47 @@ class HomeController extends Controller
         return $total;
     }
 
-    public function staffSummary($period = NULL){
-
-        $users = User::all();
-        $types = ['Proposal','EOI','Pre-Qualification'];
-        $records = [];
+    public function projectSummary ($period){
+        $teams = Team::all();
+        $project_stages = ['Initiation','Inception','Planning','Execution','Evaluation','Completion','Dropped'];
+        $total = [];
         $index = 0;
-        foreach($users as $user ):
-            $records[$index]['user'] = $user->name;
-            foreach($types as $type):
-                $opportunities = DB::table('opportunities')
-                            ->join('opportunity_user','opportunity_user.opportunity_id','=','opportunities.id')
-                            ->where(['opportunities.type'=>$type,'opportunity_user.user_id' => $user->id])
-                            ->get();
-                $type = strtolower(implode(explode(' ',$type),''));
-                $records[$index][$type] = $opportunities->count();
+        foreach($teams as $team ):
+            $total[$index]['team'] = $team->team_code;
+            foreach($project_stages as $project_stage):
+                if( $period == NULL ):
+                    $projects = Project::where(['opportunities.team_id'=> $team->id,'projects.project_stage'=>$project_stage])
+                    ->join('opportunities', 'projects.opportunity_id', '=', 'opportunities.id')
+                    ->get();
+                else:
+                    $dateE = Carbon::now();
+                    if($period = 'current_month'):
+                        $dateS = Carbon::now()->startOfMonth();
+                    elseif($period = 'current_quater'):
+                        $dateS = Carbon::now()->startOfMonth()->subMonth(3);
+                    elseif($period = 'current_year'):
+                        $dateS = $dateE->copy()->startOfYear();
+                    endif;
+                    $projects = Project::where(['opportunities.team_id'=> $team->id,'projects.project_stage'=>$project_stage])
+                                        ->join('opportunities', 'projects.opportunity_id', '=', 'opportunities.id')
+                                        ->whereBetween('projects.updated_at',[$dateS,$dateE])
+                                        ->get();
+
+                endif;
+                $project_stage = strtolower(implode(explode(' ',$project_stage),''));
+                $total[$index][$project_stage] = $projects->count();
             endforeach;
             $index +=1;
         endforeach;
-        return $records;
-
+        return $total;
     }
 
-    public function display(){
-        $proposals = $this->makeSummary('Proposal');
-        $eois = $this->makeSummary('EOI');
-        $prequalifications = $this->makeSummary('Pre-Qualification');
-        return view('pages.summaries', compact('proposals','eois','prequalifications'));
-    }
-
-    public function performance($period = NULL){
-        $records = $this->staffSummary($period);
-        return view('pages.performance', compact('records'));
+    public function display($period = NULL){
+        $proposals = $this->makeSummary('Proposal',$period);
+        $eois = $this->makeSummary('EOI',$period);
+        $prequalifications = $this->makeSummary('Pre-Qualification',$period);
+        $projects = $this->projectSummary($period);
+        return view('pages.summaries', compact('proposals','eois','prequalifications','projects'));
     }
 
     public function prepare(Request $request){

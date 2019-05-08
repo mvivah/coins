@@ -50,16 +50,16 @@
                                 <h5>Leave Requests</h5>
                             </div>
                             <div class="card-body" id="leavesBody">
-                                @if(count($leaves)>0)
+                                @if(count($leaves)>1)
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
                                             <th scope="col">Type</th>
-                                            <th scope="col">Starting</th>
-                                            <th scope="col">Ending</th>
+                                            <th scope="col">Start Date</th>
+                                            <th scope="col">End Date</th>
                                             <th scope="col">Duration</th>
                                             <th scope="col">Status</th>
-                                            <th scope="col"></th>
+                                            <th scope="col">Options</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,7 +70,6 @@
                                                 <td>{{$leave->leave_end}}</td>
                                                 <td>{{$leave->duration}} Days</td>
                                                 <td>{{$leave->leave_status}}</td>
-                                                <td>{{$leave->start_date}}</td>
                                                 <td>
                                                 <a href="#"><i class="fa fa-edit text-secondary" id="editLeave" data-id="{{$leave->id}}" title="Edit Leave"></i></a>
                                                 <a href="#"><i class="fa fa-times text-danger" id="delLeve" data-id="{{$leave->id}}" title="Cancel Leave"></i></a>
@@ -97,7 +96,7 @@
                                     <table class="table table-sm  table-hover dat2">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Date</th>;
+                                                <th scope="col">Date</th>
                                                 <th scope="col">Activity Description</th>
                                                 <th scope="col">Duration</th>
                                                 <th scope="col">Beneficiary</th>

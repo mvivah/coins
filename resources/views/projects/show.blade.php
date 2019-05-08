@@ -9,113 +9,6 @@
     ?>
     @endif
         <div class="row">
-            <div class="col-md-3">
-                <ol class="list-group mb-2">
-                    <li class="list-group-item list-group-item-action bg-primary text-white">
-                    Consultants <span class="badge badge-danger">{{ $project->users->count() }}</span>
-                    <a href="#"  class="btn btn-sm btn-outline-light" data-id="{{ $project->id}}" id="user-project" style="float:right;" title="Assign Consultants">
-                    Add
-                    </a>
-                    </li>
-                    @foreach($project->users as $user)
-                        <li class="list-group-item list-group-item-action responsible_users" id="{{ $user->id }}">{{ $user->name }}
-                            <div class="btn-group" style="float:right">
-                                @if( $user->pivot->availability != 1 )
-                                <button id="{{$user->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
-                                    Off
-                                </button>
-                                @else
-                                <button id="{{$user->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
-                                    On
-                                </button>
-                                @endif
-                                <button class="btn btn-outline-dark btn-xs user_logs" id="{{$user->id}}" title="Print Logs">
-                                    <i class="fas fa-print"></i>
-                                </button>
-                                <button class="btn btn-xs btn-outline-danger project_staffdel" data-token="{{ csrf_token() }}" id="{{ $user->id }}">
-                                    <i  class="fa fa-times text-danger" style="float:right"></i>
-                                </button>
-                            </div>
-                        </li>
-                    @endforeach
-                </ol>
-                <ol class="list-group mb-2">
-                    <li class="list-group-item list-group-item-action bg-secondary text-white">
-                      Associates <span class="badge badge-danger">{{ $project->associates->count() }}</span>
-                        <button class="btn btn-sm btn-outline-light" id="assignAssociate" data-id="{{ $project->id}}"  style="float:right;">
-                            Add
-                        </button>
-                    </li>
-                    @foreach($project->associates as $associate)
-                        <li class="list-group-item list-group-item-action">{{ $associate->associate_name }}
-                            <div class="btn-group" style="float:right">
-                                @if( $associate->pivot->availability != 1 )
-                                <button id="{{$associate->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
-                                    Off
-                                </button>
-                                @else
-                                <button id="{{$associate->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
-                                    On
-                                </button>
-                                @endif
-                                <button class="btn btn-outline-dark btn-xs associate_logs" id="{{$associate->id}}" title="Print Logs">
-                                    <i class="fas fa-print"></i>
-                                </button>
-                                <button class="btn btn-xs btn-outline-danger removeAssociate" data-token="{{ csrf_token() }}" id="{{ $associate->id }}">
-                                    <i  class="fa fa-times text-danger" style="float:right"></i>
-                                </button>                
-                            </div>
-                        </li>
-                    @endforeach
-                </ol>
-                <ol class="list-group mb-2">
-                    <li class="list-group-item list-group-item-action bg-primary text-white">
-                        Documents <span class="badge badge-danger">{{ $project->documents->count() }}</span>
-                        <button  class="btn btn-sm btn-outline-light " data-name="{{ $project->opportunity->opportunity_name}}" data-owner="project_id" data-id="{{ $project->id}}" id="project_document" style="float:right;">
-                        Add
-                        </button>
-                    </li>
-                    @foreach($project->documents as $document)
-                        <li class="list-group-item list-group-item-action">{{ $document->document_url }} <span id="{{ $document->id }}" class="fa fa-times text-danger" style="float:right"></span></li>
-                    @endforeach                                  
-                </ol>
-                <ol class="list-group mb-2">
-                    <li class="list-group-item list-group-item-action bg-secondary text-white">
-                        Deliverables <span class="badge badge-danger">{{ $project->deliverables->count() }}</span>
-                        <button  class="btn btn-sm btn-outline-light" id="add_project_deliverable" data-id="{{$project->id}}" title="Add Deliverables" style="float:right;">
-                        Add
-                        </button>
-                    </li>
-                    @foreach($project->deliverables as $deliverable)
-                    <li class="list-group-item list-group-item-action">{{ $deliverable->deliverable_name }}
-                        @if($deliverable->deliverable_status =='Done')
-                        <div class="badge badge-success float-right">Done</div>
-                        @else
-                        <div class="btn-group float-right">
-                            <i class="fa fa-plus text-primary {{($disabled? 'disabled':'')}} project_task" id="{{ $deliverable->id}}" title="Add Task"></i>
-                            <i class="fa fa-edit text-success edit_project_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
-                            <i class="fa fa-times text-danger delete_project_deliverable pl-2" id="{{ $deliverable->id}}" title="Delete Deliverable"></i>
-                            <i class="fa fa-chevron-right text-dark project_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i>
-                        </div>
-                        @endif
-                    </li>
-                    <div class="list-group" style="display:none">
-                        @foreach($deliverable->tasks as $task)
-                        <li class="list-group-item list-group-item-action">{{ $task->task_name }}
-                            @if($task->task_status == 'Completed'||$task->task_status == 'Done')
-                                <div class="badge badge-success float-right">Done</div>
-                            @else
-                            <div class="btn-group float-right">
-                                <i class="fa fa-edit text-success editTask pl-2" id="{{ $deliverable->id}}" title="Edit Task"></i> 
-                                <i class="fa fa-times text-danger task_delete pl-2" id="{{ $deliverable->id}}" id="{{ $task->id }}" data-token="{{ csrf_token() }}" data-target="Task" title="Delete Task"></i>
-                            </div>
-                            @endif
-                        </li>
-                        @endforeach
-                    </div>
-                    @endforeach                                  
-                </ol>  
-            </div>
             <div class="col-md-9">
                 <div class="btn-group mb-2 opp">
                     <button id="editProject"  data-id="{{$project->id}}" class="btn btn-outline-primary {{($disabled? 'disabled':'')}}" title="Edit Project" aria-disabled="true">
@@ -296,6 +189,113 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-3">
+        <ol class="list-group mb-4 shadow">
+            <li class="list-group-item list-group-item-action">
+            Consultants <span class="badge badge-danger">{{ $project->users->count() }}</span>
+            <a href="#"  class="btn btn-xs btn-outline-primary" data-id="{{ $project->id}}" id="user-project" style="float:right;" title="Assign Consultants">
+            Add
+            </a>
+            </li>
+            @foreach($project->users as $user)
+                <li class="list-group-item list-group-item-action responsible_users" id="{{ $user->id }}">{{ $user->name }}
+                    <div class="btn-group" style="float:right">
+                        @if( $user->pivot->availability != 1 )
+                        <button id="{{$user->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
+                            Off
+                        </button>
+                        @else
+                        <button id="{{$user->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
+                            On
+                        </button>
+                        @endif
+                        <button class="btn btn-outline-dark btn-xs user_logs" id="{{$user->id}}" title="Print Logs">
+                            <i class="fas fa-print"></i>
+                        </button>
+                        <button class="btn btn-xs btn-outline-danger project_staffdel" data-token="{{ csrf_token() }}" id="{{ $user->id }}">
+                            <i  class="fa fa-times text-danger" style="float:right"></i>
+                        </button>
+                    </div>
+                </li>
+            @endforeach
+        </ol>
+        <ol class="list-group mb-4 shadow">
+            <li class="list-group-item list-group-item-action">
+                Associates <span class="badge badge-danger">{{ $project->associates->count() }}</span>
+                <button class="btn btn-xs btn-outline-secondary" id="assignAssociate" data-id="{{ $project->id}}"  style="float:right;">
+                    Add
+                </button>
+            </li>
+            @foreach($project->associates as $associate)
+                <li class="list-group-item list-group-item-action">{{ $associate->associate_name }}
+                    <div class="btn-group" style="float:right">
+                        @if( $associate->pivot->availability != 1 )
+                        <button id="{{$associate->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
+                            Off
+                        </button>
+                        @else
+                        <button id="{{$associate->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
+                            On
+                        </button>
+                        @endif
+                        <button class="btn btn-outline-dark btn-xs associate_logs" id="{{$associate->id}}" title="Print Logs">
+                            <i class="fas fa-print"></i>
+                        </button>
+                        <button class="btn btn-xs btn-outline-danger removeAssociate" data-token="{{ csrf_token() }}" id="{{ $associate->id }}">
+                            <i  class="fa fa-times text-danger" style="float:right"></i>
+                        </button>                
+                    </div>
+                </li>
+            @endforeach
+        </ol>
+        <ol class="list-group mb-4 shadow">
+            <li class="list-group-item list-group-item-action">
+                Deliverables <span class="badge badge-danger">{{ $project->deliverables->count() }}</span>
+                <button  class="btn btn-xs btn-outline-secondary" id="add_project_deliverable" data-id="{{$project->id}}" title="Add Deliverables" style="float:right;">
+                Add
+                </button>
+            </li>
+            @foreach($project->deliverables as $deliverable)
+            <li class="list-group-item list-group-item-action">{{ $deliverable->deliverable_name }}
+                @if($deliverable->deliverable_status =='Done')
+                <div class="badge badge-success float-right">Done</div>
+                @else
+                <div class="btn-group float-right">
+                    <i class="fa fa-plus text-primary {{($disabled? 'disabled':'')}} project_task" id="{{ $deliverable->id}}" title="Add Task"></i>
+                    <i class="fa fa-edit text-success edit_project_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
+                    <i class="fa fa-times text-danger delete_project_deliverable pl-2" id="{{ $deliverable->id}}" title="Delete Deliverable"></i>
+                    <i class="fa fa-chevron-right text-dark project_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i>
+                </div>
+                @endif
+            </li>
+            <div class="list-group" style="display:none">
+                @foreach($deliverable->tasks as $task)
+                <li class="list-group-item list-group-item-action">{{ $task->task_name }}
+                    @if($task->task_status == 'Completed'||$task->task_status == 'Done')
+                        <div class="badge badge-success float-right">Done</div>
+                    @else
+                    <div class="btn-group float-right">
+                        <i class="fa fa-edit text-success editTask pl-2" id="{{ $deliverable->id}}" title="Edit Task"></i> 
+                        <i class="fa fa-times text-danger task_delete pl-2" id="{{ $deliverable->id}}" id="{{ $task->id }}" data-token="{{ csrf_token() }}" data-target="Task" title="Delete Task"></i>
+                    </div>
+                    @endif
+                </li>
+                @endforeach
+            </div>
+            @endforeach                                  
+        </ol> 
+        <ol class="list-group mb-4 shadow">
+            <li class="list-group-item list-group-item-action">
+                Documents <span class="badge badge-danger">{{ $project->documents->count() }}</span>
+                <button  class="btn btn-xs btn-outline-primary " data-name="{{ $project->opportunity->opportunity_name}}" data-owner="project_id" data-id="{{ $project->id}}" id="project_document" style="float:right;">
+                Add
+                </button>
+            </li>
+            @foreach($project->documents as $document)
+                <li class="list-group-item list-group-item-action">{{ $document->document_url }} <span id="{{ $document->id }}" class="fa fa-times text-danger" style="float:right"></span></li>
+            @endforeach                                  
+        </ol> 
     </div>
 </div>
 @endsection

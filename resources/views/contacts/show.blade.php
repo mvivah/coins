@@ -1,13 +1,6 @@
 @extends('layouts.app')
     @section('content')
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/contacts">Contacts</a></li>
-            <li class="breadcrumb-item" aria-current="page">{{$contact->account_name}}</li>
-        </ol>
-    </nav>
-        <div class="container-fluid">
+      <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
             <div class="card-body">

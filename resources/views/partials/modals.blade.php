@@ -1,6 +1,6 @@
 {{-- Errors --}}
 
-<div class="modal fade" id="warn" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="warn" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white text-center">
@@ -21,7 +21,7 @@
 </div>
 
 {{--Messages--}}
-<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-group" autocomplete="off">
@@ -53,14 +53,14 @@
         <form autocomplete="off" id="teamsForm">
             <div class="modal-body">
                 @csrf
-                <div class="row">
+                <div class="form-row">
                     <div class="col-md-12">
                         <label>Team Name:</label>
                         <input type="text" class="form-control" name="team_name" id="team_name">
                         <input type="hidden" name="team_id" id="team_id">
                     </div>
                 </div>
-                <div class="row">
+                <div class="form-row">
                 <div class="col-md-3">
                         <label>Team Code:</label>
                         <input type="text" class="form-control" name="team_code" id="team_code">
@@ -84,33 +84,33 @@
 </div>
 </div>
 
-{{-- User Roles --}}
-<div class="modal fade" id="addRole">
+{{-- User Titles --}}
+<div class="modal fade" id="addTitle">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="rolesForm" autocomplete="off" class="form-group">
+            <form id="titlesForm" autocomplete="off" class="form-group">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="roles_form_heading">Add Role</h4>
+                    <h4 class="modal-title" id="titles_form_heading">Add Title</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>           
                 <div class="modal-body">
                     @csrf
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
-                            <label>Role Name:</label>
-                            <input type="text" class="form-control" name="role_name" id="role_name">
-                            <input type="hidden" name="role_id" id="role_id">
+                            <label>Title Name:</label>
+                            <input type="text" class="form-control" name="title_name" id="title_name">
+                            <input type="hidden" name="title_id" id="title_id">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label>Description:</label>
-                            <input type="text" class="form-control" name="role_description" id="role_description">
+                            <input type="text" class="form-control" name="description" id="description">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" id="roleBtn" class="btn btn-outline-primary btn-sm">Save</button>
+                    <button type="submit" id="titleBtn" class="btn btn-outline-primary btn-sm">Save</button>
                 </div>
             </form>  
         </div>
@@ -118,7 +118,7 @@
 </div>
 
 {{--Opportunities--}}
-<div class="modal fade" id="add_opportunity" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="add_opportunity" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form class="form-group" id="opportunityForm" autocomplete="off">
@@ -136,9 +136,9 @@
                     <div class="form-row">
                         <div class="form-group col-md-9">
                             <label for="contacts">Contact Name</label>
-                                <input type="select-one" autocomplete="off" id="thisContact" class="form-control" placeholder="Type contact name here...">
-                            <select id="selectedContact" class="form-control" placeholder="Select a contact..." tabindex="1"></select>
-                            <input type="hidden" name="contact_id" id="the_contact_id">
+                            <input type="select-one" autocomplete="off" id="thisContact" class="form-control" placeholder="Type contact name here...">
+                        	<select id="selectedContact" class="form-control" placeholder="Select a contact..." tabindex="1"></select>
+                        	<input type="hidden" name="contact_id" id="the_contact_id">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="inputCountry">Country</label>
@@ -221,7 +221,7 @@
 </div>
 
 {{-- Timesheets --}}
-<div class="modal fade bs-example" id="addTimesheet" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bs-example" id="addTimesheet" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
         <form autocomplete="off" id="timesheetForm">
@@ -233,7 +233,7 @@
                 @csrf
                 <input type="hidden" name="timesheet_id" id="timesheet_id">
                 <input type="hidden" name="task_id" id="the_task_id">
-                <div class="row">
+                <div class="form-row">
                     <div class="col-md-6">
                         <label>Beneficiary:</label>
                         <select name="beneficiary" id="beneficiary" class="form-control">
@@ -244,7 +244,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="form-row">
                     <div class="col-md-8">
                         <label>Service Line:</label>
                         <select name="serviceline_id" id="the_serviceline" class="form-control" >
@@ -252,7 +252,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="form-row">
                     <div class="col-md-5">
                         <label>Select Date:</label>
                         <input type="date" name="activity_date[]" id="activity_date" class="form-control">
@@ -267,7 +267,7 @@
                     </div>
                 </div>
                 <div id="hours_row"></div>
-                <div class="row">
+                <div class="form-row">
                     <div class="col-md-12">
                     <label>Description:</label>
                         <textarea name="activity_description" id="activity_description" class="form-control"></textarea>
@@ -284,7 +284,7 @@
 
 
 {{-- Bid Scores --}}
-<div class="modal fade bs-example-modal-lg" id="addScore" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bs-example-modal-lg" id="addScore" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form autocomplete="off" id="scoresForm">
@@ -296,7 +296,7 @@
                 <div class="modal-body">
                     @csrf
                     <input type="hidden" name="opportunity_id" id="this_opportunity_id">
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-3">
                             <label>Bid opening date:</label><br>
                             <div class="input-group mb-3">
@@ -307,7 +307,7 @@
                             </div>
                         </div>             
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label>Bidding Details</label>
                             <table class="table table-bordered table-sm" id="scores_table">
@@ -340,7 +340,7 @@
 </div>
 
 {{-- Register Users --}}
-<div class="modal fade bd-example-modal-lg" id="addUser" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="addUser" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <form class="form-group" id="userForm" autocomplete="off">
@@ -354,7 +354,7 @@
             <div class="modal-body">
                     <fieldset>
                         <legend>Biodata</legend>
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-4">
                                 <label>Staff ID Number</label>
                                 <input type="text" name="staffId" id="staffId"  class="form-control" placeholder="AHC/000/00" maxlength="10">
@@ -374,7 +374,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-5">
                                 <label>Email</label>
                                 <input type="text" name="email" id="email" class="form-control" placeholder="email">
@@ -413,7 +413,7 @@
                     </div>
                     <fieldset>
                         <legend>Other Details</legend>
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-2">
                                 <label>Team</label>
                                 <select name="user_team_id" id="user_team_id" class="form-control">                            
@@ -424,20 +424,20 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label>Role</label>
-                                <select name="role_id"  id="the_role_id" class="form-control">                            
+                                <label>Title</label>
+                                <select name="title_id"  id="the_title_id" class="form-control">                            
                                     <option>Choose...</option>
-                                    @foreach(App\Role::all() as  $role)
-                                    <option value="{{$role->id}}">{{$role->role_name}}</option>
+                                    @foreach(App\Title::all() as  $title)
+                                    <option value="{{$title->id}}">{{$title->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label>Access Level</label>
-                                <select name="level_id"  id="level_id" class="form-control">                            
+                                <label>Access Role</label>
+                                <select name="role_id"  id="role_id" class="form-control">                            
                                     <option>-- Choose --</option>
-                                    @foreach(App\Level::all() as  $level)
-                                    <option value="{{$level->id}}">{{$level->name}}</option>
+                                    @foreach(App\Role::all() as  $role)
+                                    <option value="{{$role->id}}">{{$role->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -463,7 +463,7 @@
 </div>
 
 {{-- Associate Registration --}}
-<div class="modal fade" id="addAssociate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addAssociate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form class="form-group" id="associateRegister" autocomplete="off">
@@ -475,7 +475,7 @@
                 </div>
                 <div class="modal-body">
                     @csrf
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-5    ">
                             <label>Fullname:</label>
                             <input type="text" name="associate_name" id="associate_name"  class="form-control">
@@ -494,7 +494,7 @@
                             <input type="text" name="associate_email" id="associate_email" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-3">
                             <label>Country:</label>
                             <input list="assocCountry" name="associate_country" id="associate_country"  class="form-control">
@@ -515,7 +515,7 @@
                                     <input type="date" name="date_enrolled" id="date_enrolled" class="form-control">
                             </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-4">
                             <label>Expertise:</label>
                             <select name="associate_expertise" id="associate_expertise" class="form-control getSpecilization">
@@ -547,7 +547,7 @@
 </div>
 
 {{-- Assign Associate --}}
-<div class="modal fade" id="pickAssociate" tabindex="-1"  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="pickAssociate" tabindex="-1"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
 <div class="modal-dialog">
     <div class="modal-content">
         <form id="associateForm" autocomplete="off">
@@ -559,7 +559,7 @@
             </div>
             <div class="modal-body">
                 @csrf
-                <div class="row">
+                <div class="form-row">
                     <div class="col-md-12">
                         <input type="hidden" name="projectAssociate" id="projectAssociate">
                         <label>Associate Name</label>
@@ -580,7 +580,7 @@
 </div>
 
 {{-- Remove Associate --}}
-<div class="modal fade" id="removeAssociate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="removeAssociate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white text-center">
@@ -661,7 +661,7 @@
 </div>
 
 {{-- Assign Cosultant --}}
-<div class="modal fade" id="addConsultant" tabindex="-1"  role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addConsultant" tabindex="-1"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
 <div class="modal-dialog">
 <div class="modal-content">
     <form id="consultantForm" class="form-group" autocomplete="off">
@@ -673,7 +673,7 @@
         </div>
         <div class="modal-body">
             @csrf
-            <div class="row">
+            <div class="form-row">
                 <div class="col-md-8">
                     <label>Select Consultants</label>
                     <div class="form-group mb-3">
@@ -698,7 +698,7 @@
 </div>
 
 {{-- Assign Task --}}
-<div class="modal fade" tabindex="-1" id="addTask" role="dialog">
+<div class="modal fade" tabindex="-1" id="addTask">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
     <form id="taskForm" autocomplete="off">
@@ -712,13 +712,13 @@
             @csrf
             <input type="hidden" name="deliverable_id" id="the_deliverable">
             <input type="hidden" name="task_id" id="task_id">
-            <div class="row">
+            <div class="form-row">
                 <div class="col-md-12">
                     <label>Task Name</label>
                     <input type="text" class="form-control" name="task_name" id="task_name">
                 </div>
             </div>
-            <div class="row">
+            <div class="form-row">
                 <div class="col-md-6">
                     <label>Deadline</label>
                     <input type="date" name="task_deadline" id="task_deadline" class="form-control" >
@@ -727,13 +727,13 @@
                     <label>Task Status</label>
                     <select class="form-control" name="task_status" id="task_status">
                         <option value="Not Started">Not Started</option>
-                        <option value="Working on it">Working on it</option>
+                        <option value="In Progress">In Progress</option>
                         <option value="Done">Done</option>
                         <option value="Canceled">Canceled</option>
                     </select>
                 </div>
             </div>
-            <div class="row" id="staff_assignment">
+            <div class="form-row" id="staff_assignment">
                 <div class="col-md-6">
                     <label>Assigned Consultants</label>
                     <select id="taskStaff" name="user_id[]" class="form-control" multiple>
@@ -751,7 +751,7 @@
 </div>
         
 {{-- Public Holidays --}}
-<div class="modal fade" id="publicDays" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="publicDays" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
     <form class="form-group" id="holidaysForm" autocomplete="off">
@@ -763,7 +763,7 @@
         </div>
         <div class="modal-body">
                 @csrf
-            <div class="row">
+            <div class="form-row">
                 <div class="col-md-7">
                     <label>Holiday:</label>
                     <input type="text" name="holiday" id="holiday"  class="form-control">
@@ -785,7 +785,7 @@
 </div>
 
 {{-- Service Lines --}}
-<div class="modal fade" id="addServiceLine" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addServiceLine" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
     <form class="form-group"  id="servicelinesForm" autocomplete="off">
@@ -795,7 +795,7 @@
         </div>
         <div class="modal-body">
             @csrf
-            <div class="row">
+            <div class="form-row">
                 <div class="col-md-8">
                     <label>Beneficiary:</label>
                     <select type="text" name="service_beneficiary" id="service_beneficiary" class="form-control">
@@ -811,7 +811,7 @@
                     <input type="number" name="service_code" id="service_code"  class="form-control">
                 </div>
             </div>
-            <div class="row">
+            <div class="form-row">
                 <div class="col-md-12">
                     <label>Service line:</label>
                     <input type="text" name="service_name" id="service_name" class="form-control">
@@ -827,7 +827,7 @@
 </div>
 
 {{--Leave Request--}}
-<div class="modal fade" id="addleave" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addleave" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" id="leaveForm" autocomplete="off">
@@ -841,7 +841,7 @@
                     @csrf
                     <input type="hidden" name="leave_id" id="leave_id">
                     <input type="hidden" name="user_id" id="booked_for">
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-6">
                             <label>Leave Type</label>
                             <select class="form-control" name="the_leavesetting" id="the_leavesetting">
@@ -851,7 +851,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-6">
                             <label>Start Date</label>
                             <input type="date" name="leave_start" id="leave_start" class="form-control">
@@ -861,7 +861,7 @@
                             <input type="date" name="leave_end" id="leave_end" class="form-control"> 
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label>Request Details</label>
                             <textarea type="text" name="leave_detail" id="leave_detail" class="form-control"></textarea>
@@ -877,7 +877,7 @@
 </div>
 
 {{-- Leave Settings --}}
-<div class="modal fade" id="leaveSetting" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="leaveSetting" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -889,7 +889,7 @@
         <form class="form-group" id="leaveSettingForm" autocomplete="off">
         <div class="modal-body">
             @csrf
-            <div class="row">
+            <div class="form-row">
                 <div class="col-md-6">
                     <label>Leave type:</label>
                     <select class="form-control" name="leave_type" id="leave_type">
@@ -921,7 +921,7 @@
 </div>
 
 {{-- Deliverables --}}
-<div class="modal fade" id="add_deliverables" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="add_deliverables" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -936,7 +936,7 @@
                     <input type="hidden" name="deliverable_id" id="deliverable_id">
                     <input type="hidden" name="opportunity_id" id="the_opportunity">
                     <input type="hidden" name="project_id" id="the_project_id">
-                    <div class="row" id="create_deliverables">
+                    <div class="form-row" id="create_deliverables">
                         <div class="col-md-6">
                             <label>Deliverable Type:</label>
                             <br><input type="radio" name="deliverable_type" class="radio-label" value="Opportunity" checked> Opportunity &nbsp;<input type="radio" name="deliverable_type" class="radio-label" value="Project">Project
@@ -946,7 +946,7 @@
                             <input type="text" name="deliverable_name"  id="deliverable_name_project" class="form-control">
                         </div>
                     </div>
-                    <div class="row" id="use_deliverables">
+                    <div class="form-row" id="use_deliverables">
                         <div class="col-md-5">
                             <label>Select Deliverables:</label>
                             <select name="deliverable_id"  id="deliverable_ids" class="form-control">
@@ -957,7 +957,7 @@
                             <select type="text" name="deliverable_status" id="deliverable_status" class="form-control">
                                 <option value="" disabled selected>Choose Status</option>
                                 <option value="Not Started">Not Started</option>
-                                <option value="Working on it">Working on it</option>
+                                <option value="In Progress">In Progress</option>
                                 <option value="Done">Done</option>
                                 <option value="Canceled">Canceled</option>
                             </select>
@@ -977,8 +977,8 @@
     </div>
 </div>
 
-{{-- Contacts Modal --}}
-<div class="modal fade bs-example-modal-lg" id="addContact" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+{{-- Contacts --}}
+<div class="modal fade bs-example-modal-lg" id="addContact" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form class="form-group" id="contactsForm" autocomplete="off">
@@ -988,14 +988,21 @@
                 </div>           
                 <div class="modal-body">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-12">
+                    <div class="form-row">
+                        <div class="col-md-9">
                             <label>Account Name:</label>
                             <input type="text" name="account_name"  id="account_name" class="form-control">
                             <input type="hidden" name="contact_id" id="contact_id">                           
                         </div>
+                        <div class="col-md-3">
+                            <label for="contact_country">Country</label>
+                            <input list="countryLists" name="contact_country" id="contact_country" class="form-control">
+                            <datalist id="countryLists">
+                                {{ getCountry()}}                                                                          
+                            </datalist>
+                        </div> 
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-6">
                             <label>Full Address:</label>
                             <textarea name="full_address"  id="full_address" class="form-control" rows="3"></textarea>                            
@@ -1008,7 +1015,7 @@
                 <br>
                 <fieldset>
                     <legend>Contact Details</legend>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-4">
                             <label>Contact Person</label>
                             <input type="text" name="contact_person" id="contact_person" class="form-control" placeholder="Fullname">
@@ -1022,7 +1029,7 @@
                             <input type="text" name="contact_phone" id="contact_phone" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-4">
                             <label>Alternative Contact </label>
                             <input type="text" name="alternative_person" id="alternative_person" class="form-control" placeholder="Fullname">
@@ -1048,7 +1055,7 @@
 </div>
 
 {{-- Add Expertise --}}         
-<div class="modal fade" id="addExpertise" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addExpertise" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-group" autocomplete="off" id="expertiseForm">
@@ -1059,14 +1066,14 @@
                 {{-- Modal body --}}
                 <div class="modal-body">
                     @csrf
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-8">
                             <label>Field Name:</label>
                             <input type="text" name="field_name" id="field_name" class="form-control">
                             <input type="hidden" name="expertise_id" id="expertise_id">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label>Description:</label>
                             <input type="text" name="field_description" id="field_description" class="form-control">
@@ -1083,7 +1090,7 @@
 </div>
 
 {{-- Add Specialization--}}      
-<div class="modal fade" id="addSpecialization" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addSpecialization" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-group" autocomplete="off" id="specializationForm">
@@ -1096,7 +1103,7 @@
                     @csrf
                     <input type="hidden" name="expertise_id" id="the_expertise">
                     <input type="hidden" name="specialization_id" id="specialization_id">
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-10" >
                             <input type="text" name="specialization[]" id="specialization" class="form-control" placeholder="Specilaization">
                         </div>
@@ -1116,7 +1123,7 @@
 </div>
 
 {{--Documents--}}
-<div class="modal fade bs-example-modal-lg" id="addDocument" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bs-example-modal-lg" id="addDocument" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form action="{{url('documents')}}" method="POST" enctype="multipart/form-data" id="documentsForm" autocomplete="off">
@@ -1127,7 +1134,7 @@
                 </div>           
                 {{-- Modal body --}}
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="form-row">
                         <input type="hidden" id="owner_id">
                         <input type="hidden" id="fileName">
                         <div class="col-md-4"> 
@@ -1147,7 +1154,7 @@
                             <input type="file" class="form-control {{ $errors->has('document') ? ' is-invalid' : '' }}" name="document"  id="document" required>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12"> 
                             <label for="file_description">Description: </label>
                             <input class="form-control {{ $errors->has('file_description') ? ' is-invalid' : '' }}" name="file_description"  id="file_description" required>
@@ -1165,7 +1172,7 @@
 </div>
 
 {{-- Edit Project --}}
-<div class="modal fade" id="edit_Project" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit_Project" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <form class="form-group" id="editProjectForm" autocomplete="off">
@@ -1177,7 +1184,7 @@
                 <div class="modal-body">
                     @csrf
                     @method('PUT')
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-4"> 
                             <label for="project_status">Project Status: </label>
                             <select name="project_status" id="project_status" class="form-control">
@@ -1198,7 +1205,7 @@
                             <select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-6"> 
                             <label for="start_date">Start Date: </label>
                             <input type="date" name="initiation_date" id="initiation_date" class="form-control">
@@ -1220,7 +1227,7 @@
 </div>
 
 {{--Comments--}}
-<div class="modal fade" id="addComments" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addComments" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <form class="form-group" id="commentsForm" autocomplete="off">
@@ -1231,7 +1238,7 @@
                 {{-- Modal body --}}
                 <div class="modal-body">
                     @csrf
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <input type="hidden" name="comment_id" id="comment_id">
                             <input type="hidden" name="commentable_type" id="commentable_type">
@@ -1251,7 +1258,7 @@
 </div>
     
 {{--Evaluation--}}
-<div class="modal fade" id="addEvaluations" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addEvaluations" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-group" id="evaluationForm" autocomplete="off">
@@ -1265,25 +1272,25 @@
                     <input type="hidden" name="evaluationable_type" id="evaluationable_type">
                     <input type="hidden" name="evaluationable_id" id="evaluationable_id">
                     <input type="hidden" name="evaluation_id" id="evaluation_id">
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label for="Exceptional_tasks">Exceptional Tasks</label>
                             <textarea name="exceptional_tasks" id="exceptional_tasks" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label for="Results_achieved">Results Achieved</label>
                             <textarea name="results_achieved" id="results_achieved" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label for="challenges_faced">Challenges Faced</label>
                             <textarea name="challenges_faced" id="challenges_faced" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label for="improvement_plans">Improvement Plan (Actions to improve performance)</label>
                             <textarea name="improvement_plans" id="improvement_plans" class="form-control"></textarea>
@@ -1300,7 +1307,7 @@
 </div>
 
 {{--Leave Carried Forward--}}
-<div class="modal fade" id="addLeaveforward" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addLeaveforward" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-group" id="forwardedLeaveForm" autocomplete="off">
@@ -1312,7 +1319,7 @@
                 <div class="modal-body">
                     @csrf
                     <input type="hidden" name="previous_year" id="previous_year" value="{{date('Y')-1}}">
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-6">
                             <label>Staff:</label>
                             <select type="text" class="form-control" name="user_id" id="forwarding_user">
@@ -1338,7 +1345,7 @@
 </div>
 
 {{--User Assessment--}}
-<div class="modal fade bs-example-modal-lg" id="staffAssessment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bs-example-modal-lg" id="staffAssessment" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form class="form-group" id="assessmentForm" autocomplete="off">
@@ -1351,7 +1358,7 @@
                     @csrf
                     <input type="hidden" name="user_id" id="consultant_id">
                     <input type="hidden" name="assessment_period" id="assessment_period">
-                    <div class="row" id="assessment_page">
+                    <div class="form-row" id="assessment_page">
                     </div>
                 </div>
                 {{-- Modal footer --}}
@@ -1364,7 +1371,7 @@
 </div>
 
 {{--Team Targets--}}
-<div class="modal fade" id="addTargets" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="addTargets" tabindex="-1" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form class="form-group" id="targetsForm" autocomplete="off">
@@ -1376,7 +1383,7 @@
                 <div class="modal-body">
                     @csrf
                     <input type="hidden" name="target_id" id="target_id">
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-9">
                             <label for="target_category">Category</label>
                             <select type="text" name="target_category" id="target_category" class="form-control">
@@ -1393,13 +1400,13 @@
                         <input type="number" name="target_period" id="target_period" value="{{date('Y')}}" min="{{date('Y')}}" max="{{date('Y')}}" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-12">
                             <label for="target_name">Target name</label>
                         <input type="text" name="target_name" id="target_name" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-4">
                             <label for="target_team">Teams</label>
                             <select type="text" class="form-control" name="team_id[]" id="target_team" multiple>

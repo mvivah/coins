@@ -38,9 +38,9 @@ class UsersController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'mobilePhone' => 'required|string|max:20',
             'alternativePhone' => 'required|string|max:20',
-            'team_id' => 'required|integer|max:50',
-            'role_id' => 'required|integer|max:2',
-            'level_id' => 'required|integer|max:2',
+            'user_team_id' => 'required|integer',
+            'role_id' => 'required|integer',
+            'level_id' => 'required|integer',
             'reportsTo' => 'required|string',
             'userStatus' => 'required|string|max:20',
         ]);
@@ -56,7 +56,7 @@ class UsersController extends Controller
             'password' => Hash::make($data['password']),
             'mobilePhone' => $data['mobilePhone'],
             'alternativePhone' => $data['alternativePhone'],
-            'team_id' => $data['team_id'],
+            'team_id' => $data['user_team_id'],
             'role_id' => $data['role_id'],
             'level_id' => $data['level_id'],
             'reportsTo' => $data['reportsTo'],
@@ -111,18 +111,8 @@ class UsersController extends Controller
 
     public function search(Request $request)
     {
-        $users = User::where('name','LIKE','%'.$request->search."%")
-                    ->orWhere('email','LIKE','%'.$request->search."%")
-                    ->get();
-        if($users)
-        { 
-            foreach ($users as $key=> $user) {
-                $output = $user->name;
-                return $output;
-            }
-        }else{
-            return $request;
-        }
+        $users = User::where(['team_id'=>$request->team_id])->get();
+        return $users;  
     }
         
     function getUsers(){

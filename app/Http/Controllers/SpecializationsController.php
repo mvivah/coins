@@ -52,7 +52,7 @@ class SpecializationsController extends Controller
             ];
             Specialization::insert($data); 
         }
-        return ['Targets successfully added'];
+        return ['Specialization added successfully'];
     }
 
     /**
@@ -84,17 +84,18 @@ class SpecializationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Specialization $Specialization, Request $request)
+    public function update(Specialization $specialization, Request $request)
     {
         $data = $request->validate([
             "expertise_id"    => "required",
             "specialization"  => "required",
         ]);
-
-        $Specialization->update([
-            'specialization' => $data['specialization'],
-            'updated_by'=>Auth::user()->id
-        ]);
+        foreach($request->specialization as $key => $value) {
+            $specialization->update([
+                'specialization' =>  $request->specialization[$key],
+                'updated_by'=>Auth::user()->id
+            ]);
+        }
         return ['Specialization updated successfully'];
     }
 

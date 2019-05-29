@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Task;
 use Webpatser\Uuid\Uuid;
 
 class Deliverable extends Model
@@ -26,6 +26,11 @@ class Deliverable extends Model
     public function tasks(){
 
         return $this->hasMany('App\Task'); 
+
+    }
+
+    public function doneTasks(){
+        return $this->hasMany('App\Task')->where('task_status','Done')->orWhere('task_status','Completed');
 
     }
 

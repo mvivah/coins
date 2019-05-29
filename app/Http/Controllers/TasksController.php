@@ -40,6 +40,7 @@ class TasksController extends Controller
             'deliverable_id' => $data['deliverable_id'],
             'task_name'=>$data['task_name'],
             'task_deadline' => $data['task_deadline'],
+            'task_status' => $data['task_status'],
             'created_by'=>Auth::user()->id
         ]);
         
@@ -47,7 +48,6 @@ class TasksController extends Controller
             $data = [
                 'task_id'=>$task->id,
                 'user_id' => $request->user_id[$key],
-                'task_status' => $request->task_status,
                 'created_at'=>now()
             ];
         TaskUser::insert($data);

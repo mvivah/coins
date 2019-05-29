@@ -143,7 +143,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <p><i class="fa fa-home" title="Team"></i> {{$user->team->team_code}}</p>
-                                <p><i class="fa fa-user-tie" title="Title"></i> {{$user->role->role_name}}</p>
+                                <p><i class="fa fa-user-tie" title="Title"></i> {{$user->title->name}}</p>
                                 <p><i class="fas fa-user-cog" title="Reports to"></i> {{$user->reportsTo}}<p>
                             </div>
                         </div>
@@ -177,15 +177,16 @@
                     </li>
                     @foreach($user->tasks as $task)
                     <li class="list-group-item">
+                        @if($task->pivot->task_status !='Done' || $task->pivot->task_status !='Completed'|| $task->pivot->task_status !='Canceled')
                         {{ str_limit($task->task_name, $limit = 30, $end = '...') }} - {{$task->pivot->task_status}}
                         <div class="btn-group float-right">
-                            @if($task->pivot->task_status !='Done' || $task->pivot->task_status !='Completed'|| $task->pivot->task_status !='Canceled')
-                                <i class="fa fa-edit text-success edit_user_task pl-2" id="{{ $task->id}}" title="Edit Task"></i>
-                            @else
-                                <span class="badge badge-success">{{$task->pivot->task_status}}</span>
-                            @endif 
+                            <i class="fa fa-edit text-success edit_user_task pl-2" id="{{ $task->id}}" title="Edit Task"></i>
+                            <span class="badge badge-success">{{$task->pivot->task_status}}</span>
                             <i class="far fa-calendar-check text-danger add_task_timesheet pl-2" id="{{$task->id}}" title="Add Timesheet"></i>
                         </div>
+                        @else
+
+                        @endif 
                     </li>
                     @endforeach
                 </ul>

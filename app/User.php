@@ -58,7 +58,11 @@ class User extends Authenticatable
 
     public function tasks(){
 
-        return $this->belongsToMany('App\Task')->withPivot('task_status');
+        return $this->belongsToMany('App\Task');
+
+    }
+    public function doneTasks(){
+        return $this->belongsToMany('App\Task')->where('task_status','Done')->orWhere('task_status','Completed');
 
     }
     public function timesheets(){
@@ -99,9 +103,9 @@ class User extends Authenticatable
 
     }
 
-    public function role(){
+    public function title(){
 
-        return $this->belongsTo('App\Role')->withDefault(['id' =>1]);
+        return $this->belongsTo('App\Title')->withDefault(['id' =>1]);
 
     }
 
@@ -127,6 +131,9 @@ class User extends Authenticatable
 
         return $this->belongsToMany('App\Opportunity');
 
+    }
+    public function approvedUsers() {
+        return $this->hasMany('App\Opportunity')->where('approved', 1)->orderBy('email');
     }
 }
 

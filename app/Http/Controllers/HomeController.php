@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Page;
-use App\Role;
+use App\Title;
 use App\Team;
 use App\TaskUser;
 use App\Leave;
@@ -234,7 +234,7 @@ class HomeController extends Controller
 
             $leaveforwards = Leaveforward::join('users','leaveforwards.user_id','=','users.id')
                                         ->get(['users.name','leaveforwards.days_forwarded','leaveforwards.days_taken','leaveforwards.days_left']);
-            $roles = Role::all();
+            $titles = Title::all();
             $teams = Team::all();
             $expertises = Expertise::all();
             $timesheets = TaskUser::all();
@@ -250,7 +250,7 @@ class HomeController extends Controller
             $leavesettings = Leavesetting::all();
             $evaluations = Evaluation::all();
             $targets = Target::all();
-            return view('pages.admin',compact('targets','roles','teams','timesheets','leaves','associates','holidays','servicelines','leavesettings','expertises','evaluations','leaveforwards','deliverables'));
+            return view('pages.admin',compact('targets','titles','teams','timesheets','leaves','associates','holidays','servicelines','leavesettings','expertises','evaluations','leaveforwards','deliverables'));
         }else{
             abort(404);
         }

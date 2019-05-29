@@ -15,7 +15,6 @@
     <!-- Styles -->
     <link href="{{ asset("css/fontawesome-all.min.css") }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     {{-- Favicon --}}
     <link rel="icon" href="{{ asset('/files/ahlogo.png') }}" type="image/png">
     

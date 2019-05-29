@@ -71,22 +71,22 @@
             <div class="col-md-12">
                 <div class="card mb-4 shadow">
                     <div class="card-body">
-                        <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addRole" title="Add roles"></i></a>
-                        @if($roles->count()<1)
-                            <p>No User roles found...</p>
+                        <a href="#"><i class="fas fa-plus-circle text-primary mb-2" aria-hidden="true" style="float:right;" data-toggle="modal" data-target="#addTitle" title="Add titles"></i></a>
+                        @if($titles->count()<1)
+                            <p>No User titles found...</p>
                         @else
-                            <div class="table-responsive" id="rolesBody">
+                            <div class="table-responsive" id="titlesBody">
                                 <table class="table table-sm table-striped">
-                                    <thead><th>Roles</th><th>Description</th><th>Users</th><th>Actions</th></thead>
+                                    <thead><th>Titles</th><th>Description</th><th>Users</th><th>Actions</th></thead>
                                     <tbody>
-                                        @foreach($roles as $role)
+                                        @foreach($titles as $title)
                                             <tr>
-                                                <td>{{$role->role_name}}</td>
-                                                <td>{{$role->role_description}}</td>
-                                                <td>{{$role->users->count()}}</td>
+                                                <td>{{$title->name}}</td>
+                                                <td>{{$title->description}}</td>
+                                                <td>{{$title->users->count()}}</td>
                                                 <td>
-                                                    <a href="#"><i class="fa fa-edit editRole" id="{{$role->id}}"></i></a>
-                                                    <a href="#"><i class="fa fa-trash-alt text-danger" id="delRole" data-id="{{$role->id}}"></i></a>
+                                                    <a href="#"><i class="fa fa-edit editTitle" id="{{$title->id}}"></i></a>
+                                                    <a href="#"><i class="fa fa-trash-alt text-danger" id="delTitle" data-id="{{$title->id}}"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach

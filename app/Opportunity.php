@@ -48,9 +48,9 @@ class Opportunity extends Model
 
     }
 
-    public function score(){
+    public function scores(){
 
-        return $this->hasOne('App\Score');
+        return $this->hasMany('App\Score');
 
     }
 
@@ -98,7 +98,7 @@ class Opportunity extends Model
 
     public function deliverables(){
 
-        return $this->belongsToMany('App\Deliverable');
+        return $this->belongsToMany('App\Deliverable')->withPivot('deliverable_status','deliverable_completion');
 
     }
 }

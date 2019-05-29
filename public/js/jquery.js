@@ -1,4 +1,5 @@
-$(document).ready(function(){    //Data Tables
+$(document).ready(function(){
+  //Data Tables
     $('.dat thead tr').clone(true).appendTo( '.dat thead' );
     $('.dat thead tr:eq(1) th').each( function (i) {
         let title = $(this).text();
@@ -41,6 +42,17 @@ $(document).ready(function(){    //Data Tables
         responsive: true,
         fixedHeader: true
     } );
+
+    let mytable = $('.tabledata').DataTable({
+      responsive: true,
+      fixedHeader: true,
+      dom: 'Bfrtip',
+      buttons: [
+          'excelHtml5',
+          'csvHtml5',
+          'pdfHtml5'
+      ]
+    });
 
     //Add rows for scores
     let i=0;
@@ -123,6 +135,11 @@ function cleanSource(html) {
 }
 })
 
-$(".opportunity_taskview").click(function(){
-    $(this).toggleClass("down"); 
+$(function() {
+  $('.list-group-item').on('click', function() {
+    $('.fas', this)
+      .toggleClass('fa-angle-right')
+      .toggleClass('fa-angle-down');
+  });
+
 });

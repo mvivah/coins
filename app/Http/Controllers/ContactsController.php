@@ -46,19 +46,21 @@ class ContactsController extends Controller
     {
 
         $data = $request->validate([
-            'account_name'=>'required|string|max:200',
-            'full_address'=>'required|string|max:200',
-            'alternate_address'=>'nullable|string|max:200',
-            'contact_person'=>'nullable|string|max:30',
-            'contact_email'=>'nullable|email|max:100',
-            'contact_phone'=>'nullable|string|max:20',
-            'alternative_person'=>'nullable|string|max:20',
-            'alternative_person_email'=>'nullable|email|max:100',
-            'alternative_person_phone'=>'nullable|string|max:20',
+            'account_name'=>'required|string',
+            'contact_country'=>'required|string',
+            'full_address'=>'required|string',
+            'alternate_address'=>'nullable|string',
+            'contact_person'=>'nullable|string',
+            'contact_email'=>'nullable|email',
+            'contact_phone'=>'nullable|string',
+            'alternative_person'=>'nullable|string',
+            'alternative_person_email'=>'nullable|email',
+            'alternative_person_phone'=>'nullable|string',
         ]);
 
         $contact = Contact::create([
             "account_name"=>$data['account_name'],
+            'country'=> $data['contact_country'],
             'full_address'=> $data['full_address'],
             'alternate_address'=> $data['alternate_address'],
             'contact_person'=> $data['contact_person'],
@@ -117,19 +119,21 @@ class ContactsController extends Controller
         //return $request;
         //validate the received data
         $data = $request->validate([
-            'account_name'=>'nullable|string|max:200',
-            'full_address'=>'nullable|string|max:200',
-            'alternate_address'=>'nullable|string|max:200',
-            'contact_person'=>'nullable|string|max:30',
-            'contact_email'=>'nullable|email|max:100',
-            'contact_phone'=>'nullable|string|max:20',
-            'alternative_person'=>'nullable|string|max:20',
-            'alternative_person_email'=>'nullable|email|max:100',
-            'alternative_person_phone'=>'nullable|string|max:20',
+            'account_name'=>'nullable|string',
+            'contact_country'=>'required|string',
+            'full_address'=>'nullable|string',
+            'alternate_address'=>'nullable|string',
+            'contact_person'=>'nullable|string',
+            'contact_email'=>'nullable|email',
+            'contact_phone'=>'nullable|string',
+            'alternative_person'=>'nullable|string',
+            'alternative_person_email'=>'nullable|email',
+            'alternative_person_phone'=>'nullable|string',
         ]);
 
         $run = $contact->update([
             'account_name' => $data['account_name'],
+            'country'=> $data['contact_country'],
             'full_address' => $data['full_address'],
             'alternate_address' => $data['alternate_address'],
             'contact_person' => $data['contact_person'],

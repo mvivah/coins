@@ -16,13 +16,13 @@ let FIELD_IDS = [];
 let ERROR_COUNT = 0
 let station;
 
+//Contacts
 try{
-    //Save contacts
     document.getElementById('contactsForm').addEventListener('submit', function(e){
         e.preventDefault();
         const CONTACT_INDEX = document.getElementById('contact_id');
         const CONTACT_ID = (CONTACT_INDEX == null)? null:CONTACT_INDEX.value;
-        FIELD_IDS = ['account_name','full_address','contact_person','contact_email','contact_phone'];
+        FIELD_IDS = ['account_name','contact_country','full_address','contact_person','contact_email','contact_phone'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
@@ -52,30 +52,51 @@ try{
         }
     });
 
-}
-catch(e){
-
-}
-
-try{
     //Edit contact
-    document.querySelector('.editContact').addEventListener('click', e =>{
-        axios.get(`/contacts/${e.target.id}/edit`)
-        .then( response => {
-            data = response.data
-            document.getElementById('account_name').value = data.account_name;
-            document.getElementById('full_address').value = data.full_address;
-            document.getElementById('alternate_address').value = data.alternate_address;
-            document.getElementById('contact_person').value = data.contact_person;
-            document.getElementById('contact_email').value = data.contact_email;
-            document.getElementById('contact_phone').value = data.contact_phone;
-            document.getElementById('alternative_person').value = data.alternative_person;
-            document.getElementById('alternative_person_email').value = data.alternative_person_email;
-            document.getElementById('alternative_person_phone').value = data.alternative_person_phone;
-            document.getElementById('contact_id').value = data.id;
-            $('#addContact').modal('show');
-        })
-        .catch( error => console.log(error) );
+    document.querySelectorAll('.editContact').forEach(element =>{
+        element.addEventListener('click', e =>{
+            axios.get(`/contacts/${e.target.id}/edit`)
+            .then( response => {
+                data = response.data
+                document.getElementById('account_name').value = data.account_name;
+                document.getElementById('contact_country').value = data.country;
+                document.getElementById('full_address').value = data.full_address;
+                document.getElementById('alternate_address').value = data.alternate_address;
+                document.getElementById('contact_person').value = data.contact_person;
+                document.getElementById('contact_email').value = data.contact_email;
+                document.getElementById('contact_phone').value = data.contact_phone;
+                document.getElementById('alternative_person').value = data.alternative_person;
+                document.getElementById('alternative_person_email').value = data.alternative_person_email;
+                document.getElementById('alternative_person_phone').value = data.alternative_person_phone;
+                document.getElementById('contact_id').value = data.id;
+                $('#addContact').modal('show');
+            })
+            .catch( error => console.log(error) );
+        });
+    });
+
+    //Add opportunity for contact
+    document.querySelectorAll('.contactOpportunity').forEach(element =>{
+        element.addEventListener('click', e =>{
+            axios.get(`/contacts/${e.target.id}/edit`)
+            .then( response =>{
+                data = response.data
+                if(data.length != 0){
+                    document.getElementById('thisContact').value = data.account_name;
+                    document.getElementById('thisContact').setAttribute('readonly','readonly');
+                    document.getElementById('country').value = data.country;
+                    document.getElementById('country').setAttribute('readonly','readonly');
+                    document.getElementById('the_contact_id').value = data.id;
+                    $('#add_opportunity').modal('show');
+                }else{
+                    showAlert('error',`No contacts found...`);
+                    location.reload()
+                }
+            })
+            .catch( e =>{
+                console.error(e)
+            })
+        });
     });
 }
 catch(e){
@@ -899,8 +920,8 @@ try{
             document.getElementById('mobilePhone').value = data.mobilePhone;
             document.getElementById('alternativePhone').value = data.alternativePhone;
             document.getElementById('user_team_id').value = data.team_id;
-            document.getElementById('the_role_id').value = data.role_id;
-            document.getElementById('level_id').value = data.level_id;
+            document.getElementById('the_title_id').value = data.title_id;
+            document.getElementById('role_id').value = data.role_id;
             document.getElementById('reportsTo').value = data.reportsTo;
             document.getElementById('userStatus').value = data.userStatus;
             document.getElementById('user_id').value = data.id;
@@ -1284,33 +1305,33 @@ try{
         })
     });
 
-    //Add Roles
-    document.getElementById('rolesForm').addEventListener('submit', function(e){
+    //Add titles
+    document.getElementById('titlesForm').addEventListener('submit', function(e){
         e.preventDefault();
-        const ROLE_INDEX = document.getElementById('role_id');
-        const ROLE_ID = (ROLE_INDEX == null)? null:ROLE_INDEX.value;
-        FIELD_IDS = ['role_id','role_name','role_description'];
+        const title_INDEX = document.getElementById('title_id');
+        const title_ID = (title_INDEX == null)? null:title_INDEX.value;
+        FIELD_IDS = ['title_id','title_name','description'];
 
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( ROLE_ID !=null ){
-                axios.post(`/roles/${ROLE_ID}`,formData,{
+            if( title_ID !=null ){
+                axios.post(`/titles/${title_ID}`,formData,{
                     method: 'PUT'
                 })
                 .then( response => {
-                    $('#rolesForm')[0].reset();
-                    $('#addRole').modal('hide');
+                    $('#titlesForm')[0].reset();
+                    $('#addtitle').modal('hide');
                     showAlert('success',response.data);
                     location.reload();
                 } )
                 .catch( error => backendValidation(error.response.data.errors) );
             }
             else{
-                axios.post('/roles',formData)
+                axios.post('/titles',formData)
                 .then( response => {
-                    $('#rolesForm')[0].reset();
-                    $('#addRole').modal('hide');
+                    $('#titlesForm')[0].reset();
+                    $('#addtitle').modal('hide');
                     showAlert('success',response.data);
                     location.reload();
                 })
@@ -1319,18 +1340,18 @@ try{
         }
     });
 
-   //Edit role
-   editButtons = document.querySelectorAll('.editRole');
+   //Edit title
+   editButtons = document.querySelectorAll('.edittitle');
    editButtons.forEach( editButton => {
         editButton.addEventListener('click', e =>{
-            axios.get(`/roles/${e.target.id}/edit`)
+            axios.get(`/titles/${e.target.id}/edit`)
                 .then( response => {
                 data = response.data
-                document.getElementById('role_name').value = data.role_name;
-                document.getElementById('role_description').value = data.role_description;
-                document.getElementById('role_id').value = data.id;
-                document.getElementById('roles_form_heading').innerText = 'Update Role';
-                $('#addRole').modal('show');
+                document.getElementById('title_name').value = data.name;
+                document.getElementById('description').value = data.description;
+                document.getElementById('title_id').value = data.id;
+                document.getElementById('titles_form_heading').innerText = 'Update title';
+                $('#addtitle').modal('show');
             } )
             .catch( error => backendValidation(error.response.data.errors) );
         });
@@ -1645,7 +1666,7 @@ try{
         e.preventDefault();
         const USER_INDEX = document.getElementById('user_id');
         const USER_ID = (USER_INDEX == null)? null:USER_INDEX.value;
-        FIELD_IDS = USER_INDEX==null? ['saffId','name','gender','email','password','password-confirm','mobilePhone','alternativePhone','user_team_id','the_role_id','level_id','reportsTo','userStatus']:['saffId','name','gender','email','mobilePhone','alternativePhone','user_team_id','the_role_id','level_id','reportsTo','userStatus'];
+        FIELD_IDS = USER_INDEX==null? ['saffId','name','gender','email','password','password-confirm','mobilePhone','alternativePhone','user_team_id','the_title_id','role_id','reportsTo','userStatus']:['saffId','name','gender','email','mobilePhone','alternativePhone','user_team_id','the_title_id','role_id','reportsTo','userStatus'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
@@ -1659,10 +1680,7 @@ try{
                     showAlert('success',response.data);
                     location.reload()
                 } )
-                .catch( error => {
-                    console.log(error)
-                    backendValidation(error.response.data.errors) 
-                });
+                .catch( error =>backendValidation(error.response.data.errors));
             }
             else{
                 axios.post('/users',formData)

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Role;
+use App\Title;
 use Session;
 use Auth;
-class RolesController extends Controller
+class TitlesController extends Controller
 {
     
     public function __construct()
@@ -38,10 +38,10 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        Role::create(request()->validate(
+        Title::create(request()->validate(
             [
-                'role_name'=>'required|string|max:50',
-                'role_description'=>'required|string|max:200',
+                'name'=>'required|string|max:50',
+                'description'=>'required|string|max:200',
                 'created_by'=>Auth::user()->id
             ]));
         return $request;
@@ -53,9 +53,9 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Role $role)
+    public function show(Title $title)
     {
-        return response()->json($role);
+        return response()->json($title);
     }
     /**
      * Show the form for editing the specified resource.
@@ -63,9 +63,9 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Role $role)
+    public function edit(Title $title)
     {
-        return response()->json($role);
+        return response()->json($title);
     }
 
     /**
@@ -75,18 +75,18 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, Title $title)
     {
         $data = $request->validate([
-            'role_name'=>'required',
-            'role_description'=>'required',
+            'name'=>'required',
+            'description'=>'required',
         ]);
         
-        $role->update([
-            'role_name' => $data['role_name'],
-            'role_description'=>$data['role_description'],
+        $title->update([
+            'name' => $data['name'],
+            'description'=>$data['description'],
             'updated_by'=>Auth::user()->id]);
-        return ['Role updated successfully'];
+        return ['title updated successfully'];
     }
 
     /**
@@ -95,8 +95,8 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy(Title $title)
     {
-        $role->delete();
+        $title->delete();
     }
 }

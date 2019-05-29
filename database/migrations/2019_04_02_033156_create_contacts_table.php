@@ -17,8 +17,9 @@ class CreateContactsTable extends Migration
             $table->uuid('id');
             $table->primary('id');
             $table->string('account_name');
-            $table->longText('full_address')->nullable();
-            $table->longText('alternate_address')->nullable();
+            $table->string('country');
+            $table->text('full_address')->nullable();
+            $table->text('alternate_address')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('contact_email')->nullable();
             $table->string('contact_phone')->nullable();

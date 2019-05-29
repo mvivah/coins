@@ -80,11 +80,13 @@ Route::get('/myteam', 'TeamsController@myteam');
 Route::get('/getteamleader/{team}', 'TeamsController@getteamleader');
 Route::post('/teams/{team}', 'TeamsController@update');
 
-
+//Routing everything about titles
+Route::resource('/titles', 'TitlesController');
+Route::post('/titles/{title}', 'TitlesController@update');
 
 //Routing everything about roles
 Route::resource('/roles', 'RolesController');
-Route::post('/roles/{role}', 'RolesController@update');
+Route::post('/roles/{roles}', 'RolesController@update');
 
 //Routing everything about holidays
 Route::resource('/holidays', 'HolidaysController');
@@ -120,8 +122,8 @@ Route::post('/getSpecilization','SpecializationsController@getSpecilization')->n
 //Routing everything about users
 Route::resource('/users', 'UsersController');
 Route::post('/users/{user}', 'UsersController@update');
-//User Live Search
-Route::get('/search', 'UsersController@search');
+Route::get('/teamusers/{team_id}', 'UsersController@search');
+
 Route::resource('/associates', 'AssociatesController');
 Route::get('getassociates','AssociatesController@getassociates')->name('getassociates');
 Route::get('/getAssociate/{associate}', 'AssociatesController@getAssociate')->name('getAssociate');

@@ -19,8 +19,8 @@
                         <i class="fa fa-bars"></i> Bids
                     </button>
                 @endif
-                <button id="opportunity_comment" data-id="{{ $opportunity->id}}" class="btn btn-outline-primary" title="Add Comment">
-                    <i class="fa fa-comment"></i> Comments
+                <button id="opportunity_score" data-id="{{ $opportunity->id}}" class="btn btn-outline-primary" title="Add score">
+                    <i class="fa fa-score"></i> scores
                 </button>
                 <button id="opportunity_evaluation" data-id="{{$opportunity->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Opportunity Evaluation">
                     <i class="fas fa-clock"></i> Evaluations
@@ -33,13 +33,11 @@
             <div id="opportunity_preview">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{{$opportunity->opportunity_name}}</strong>
-
-                        <span class="float-right"> <strong>{{$opportunity->om_number}}</strong></span>
+                        <span class="float-left"><strong>{{$opportunity->om_number}} - </strong></span> {{$opportunity->opportunity_name}}
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
-                            <div class="col-sm-8">
+                            <div class="col-sm-7">
                                 <div>
                                     <strong>{{$opportunity->contact->account_name}}</strong>
                                 </div>
@@ -51,7 +49,7 @@
                                 <div>Funder: {{$opportunity->funder}}</div>
                                 <div>Opportunity Type: {{$opportunity->type}}</div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <h6 class="mb-2"><strong>{{$opportunity->team->team_code}} - {{$opportunity->team->team_name}}</strong></h6>
                                 <div>
                                 
@@ -62,91 +60,92 @@
                             </div>
                         </div>
                                   
-                                <div class="table-responsive-sm">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Deliverable</th>
-                                                <th>Status</th>
-                                                <th>Due date</th>
-                                                <th>Progress</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($deliverables as $deliverable)
-                                            <tr>
-                                                <td>{{$deliverable->deliverable_name}}</td>
-                                                <td>{{$deliverable->deliverable_status}}</td>
-                                                <td>{{$deliverable->deliverable_completion}}</td>
-                                                <td>
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: {{$deliverable->id}}%;" aria-valuenow="{{$deliverable->id}}" aria-valuemin="0" aria-valuemax="100">{{$deliverable->id}}</div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <div class="table-responsive-sm">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Deliverable</th>
+                                        <th>Tasks</th>
+                                        <th>Status</th>
+                                        <th>Due date</th>
+                                        <th>Progress</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($opportunity->deliverables as $deliverable)
+                                    <tr>
+                                        <td>{{$deliverable->deliverable_name}}</td>
+                                        <td>{{$deliverable->tasks->count()}}</td>
+                                        <td>{{$deliverable->pivot->deliverable_status}}</td>
+                                        <td>{{$deliverable->pivot->deliverable_completion}}</td>
+                                        <td>
+                                            <?php
+                                            if($deliverable->doneTasks->count()!=0 && $deliverable->tasks->count()!=0){
+                                                $progress = round($deliverable->doneTasks->count()/$deliverable->tasks->count() *100);
+                                            }else{
+                                                $progress = 0;
+                                            }
+                                            ?>
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" style="width: {{$progress}}%;" aria-valuenow="{{$progress}}" aria-valuemin="0" aria-valuemax="100">{{$progress}}%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
-                            <div class="row">
-                                <div class="col-lg-4 col-sm-5 mr-auto">
-                                    <table class="table table-clear">
-                                        <tbody>
-                                            @foreach($opportunity_tasks as $task)
-                                                <tr>
-                                                    <td>
-                                                        <strong>{{$task->task_name}}</strong> From{{$task->deliverable->deliverable_name}}
-                                                    </td>
-                                                    <td>{{$task->task_status}}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                  
-                                  <div class="col-lg-4 col-sm-5 ml-auto">
-                                  <table class="table table-clear">
-                                  <tbody>
-                                  <tr>
-                                  <td>
-                                  <strong>Deliverables</strong>
-                                  </td>
-                                  <td>{{$opportunity->deliverables->count()}}</td>
-                                  </tr>
-                                  <tr>
-                                  <td>
-                                  <strong>Probability</strong>
-                                  </td>
-                                <td>{{$opportunity->probability}}%</td>
-                                  </tr>
-                                  <tr>
-                                  <td>
-                                  <strong>Total Revenue</strong>
-                                  </td>
-                                  <td>
-                                  <strong>${{$opportunity->revenue}}</strong>
-                                  </td>
-                                  </tr>
-                                  </tbody>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-5 ml-auto">
+                                <table class="table table-clear">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <strong>Deliverables</strong>
+                                            </td>
+                                            <td>{{$opportunity->deliverables->count()}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Probability</strong>
+                                            </td>
+                                            <td>{{$opportunity->probability}}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Total Revenue</strong>
+                                            </td>
+                                            <td>
+                                                <strong>${{$opportunity->revenue}}</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-12 col-md-12">
-                                <div class="list-group">
-                                    <li class="list-group-item"><h3>Comments</h3></li>
-                                    @foreach($opportunity->comments as $comment)
-                                        <li class="list-group-item list-group-item-action flex-column align-items-start">
-                                            <p class="mb-1">{{$comment->comment_body}}</p>
-                                            <div class="d-flex w-100 flex-row-reverse">
-                                            <small class="text-muted">
-                                                {{$comment->user->name}} - 
-                                                {{Carbon\Carbon::parse($comment->created_at)->diffForHumans()}}
-                                            </small>
-                                            </div>
-                                        </li>
-                                    @endforeach
+                            <div class="col-md-12">
+                                <h3>Bid scores</h3>
+                                <div class="table-responsive-sm">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Firm Name</th>
+                                                <th>Technical Score</th>
+                                                <th>Financial Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($opportunity->scores as $score)
+                                            <tr>
+                                                <td>{{$score->firm_name}}</td>
+                                                <td>{{$score->technical_score}}</td>
+                                                <td>{{$score->financial_score}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -189,22 +188,41 @@
                     @endif
                 </li>
                 @foreach($opportunity->deliverables as $deliverable)
-                <li class="list-group-item list-group-item-action">{{ $deliverable->deliverable_name }}
+                <li class="list-group-item list-group-item-action">
+                    {{ $deliverable->deliverable_name }}
                     @if($deliverable->deliverable_status !='Done' || $deliverable->deliverable_status !='Completed')
-                    <div class="btn-group float-right">
-                        @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                            <i class="fa fa-plus text-success {{($disabled? 'disabled':'')}} opportunity_task" id="{{ $deliverable->id}}" title="Add Task"></i> 
-                            <i class="fa fa-edit text-primary edit_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
-                            <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
-                        @endif
-                        <i class="fa fa-chevron-right text-dark opportunity_taskview pl-3" id="{{ $deliverable->id}}" title="View Tasks"></i> 
-                    </div>
+                        <div class="btn-group float-right">
+                            @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                                <i class="fa fa-plus text-success {{($disabled? 'disabled':'')}} opportunity_task" id="{{ $deliverable->id}}" data-id="{{ $opportunity->id}}" title="Add Task"></i> 
+                                <i class="fa fa-edit text-primary edit_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" title="Edit Deliverable"></i> 
+                                <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
+                            @endif
+                            <a href="#item-{{$deliverable->id}}" data-toggle="collapse">
+                                <i class="fa fa-chevron-right text-dark pl-3" title="View Tasks"></i>
+                            </a>
+                        </div>
                     @else
-                    <span class="badge badge-success">Done</span>
+                        <span class="badge badge-success">Done</span>
                     @endif
+
+                    @foreach($deliverable->tasks as $task)
+                        <li class="list-group-item list-group-item-action collapse" id="item-{{$deliverable->id}}">
+                            {{ $task->task_name }}
+                            @if($task->task_status !='Done' || $task->task_status !='Completed')
+                            <div class="btn-group float-right">
+                                @if(Gate::check('isAdmin') || Gate::check('isDirector')) 
+                                    <i class="fa fa-edit text-primary edit_deliverable_task pl-2" id="{{ $task->id}}" title="Edit Task"></i> 
+                                    <i class="fa fa-times text-danger delete_deliverable_task pl-2" id="{{ $task->id}}" data-token="{{ csrf_token() }}" data-source="deliverable" title="Delete Task"></i>
+                                @endif 
+                            </div>
+                            @else
+                            <span class="badge badge-success">Done</span>
+                            @endif
+                        </li>
+                    @endforeach
                 </li>
             @endforeach                                  
         </ol>
     </div>
-    </div>
+</div>
 @endsection

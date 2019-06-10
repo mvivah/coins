@@ -1,57 +1,16 @@
 $(document).ready(function(){
-  //Data Tables
-    $('.dat thead tr').clone(true).appendTo( '.dat thead' );
-    $('.dat thead tr:eq(1) th').each( function (i) {
-        let title = $(this).text();
-        $(this).html(`<input type="text" class="form-control" placeholder="Search ${title}" />`);
-
-        $( 'input', this ).on( 'keyup change', function () {
-            if ( table.column(i).search() !== this.value ) {
-                table
-                    .column(i)
-                    .search( this.value )
-                    .draw();
-            }
-        } );
-    } );
-
-    let table = $('.dat').DataTable( {
-        orderCellsTop: true,
+    $('.tabledata').DataTable({
+        fixedHeader: true,
+        "pageLength": 25,
         responsive: true,
-        fixedHeader: true
-    } );
-
-
-    $('.dat2 thead tr').clone(true).appendTo( '.dat2 thead' );
-    $('.dat2 thead tr:eq(1) th').each( function (i) {
-        let title = $(this).text();
-        $(this).html(`<input type="text" class="form-control" placeholder="Search ${title}"/>`);
-
-        $( 'input', this ).on( 'keyup change', function () {
-            if ( tables.column(i).search() !== this.value ) {
-                tables
-                    .column(i)
-                    .search( this.value )
-                    .draw();
-            }
-        } );
-    } );
-
-    let tables = $('.dat2').DataTable( {
-        orderCellsTop: true,
-        responsive: true,
-        fixedHeader: true
-    } );
-
-    let mytable = $('.tabledata').DataTable({
-      responsive: true,
-      fixedHeader: true,
-      dom: 'Bfrtip',
-      buttons: [
-          'excelHtml5',
-          'csvHtml5',
-          'pdfHtml5'
-      ]
+        "processing": true,
+        autoFill: true,
+        dom: 'lBfrtip',
+        buttons: [
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ]
     });
 
     //Add rows for scores
@@ -76,70 +35,5 @@ $(document).ready(function(){
         var button_id = $(this).attr("id");   
         $('#row'+button_id+'').remove();  
    });
-
-   $(window).scroll(function () {
-    var top = $(document).scrollTop();
-    if(top > 50)
-      $('#home > .navbar').removeClass('navbar-transparent');
-    else
-      $('#home > .navbar').addClass('navbar-transparent');
-});
-
-$("a[href='#']").click(function(e) {
-  e.preventDefault();
-});
-
-var $button = $("<div id='source-button' class='btn btn-primary btn-xs'>&lt; &gt;</div>").click(function(){
-  var html = $(this).parent().html();
-  html = cleanSource(html);
-  $("#source-modal pre").text(html);
-  $("#source-modal").modal();
-});
-
-$('.bs-component [data-toggle="popover"]').popover();
-$('.bs-component [data-toggle="tooltip"]').tooltip();
-
-$(".bs-component").hover(function(){
-  $(this).append($button);
-  $button.show();
-}, function(){
-  $button.hide();
-});
-
-function cleanSource(html) {
-  html = html.replace(/×/g, "&times;")
-             .replace(/«/g, "&laquo;")
-             .replace(/»/g, "&raquo;")
-             .replace(/←/g, "&larr;")
-             .replace(/→/g, "&rarr;");
-
-  var lines = html.split(/\n/);
-
-  lines.shift();
-  lines.splice(-1, 1);
-
-  var indentSize = lines[0].length - lines[0].trim().length,
-      re = new RegExp(" {" + indentSize + "}");
-
-  lines = lines.map(function(line){
-    if (line.match(re)) {
-      line = line.substring(indentSize);
-    }
-
-    return line;
-  });
-
-  lines = lines.join("\n");
-
-  return lines;
-}
-})
-
-$(function() {
-  $('.list-group-item').on('click', function() {
-    $('.fas', this)
-      .toggleClass('fa-angle-right')
-      .toggleClass('fa-angle-down');
-  });
 
 });

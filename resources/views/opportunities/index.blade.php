@@ -1,12 +1,10 @@
 @extends('layouts.app')
 	@section('content')
-	<div class="row">
-		<div class="col-md-12">
-        <button class="btn btn-outline-danger mb-2 btn-xs" id="create_opportunity" style="@if(Gate::check('isConsultant'))	display:none @endif">
-			<i class="fa fa-cart-plus"></i> Create Opportunity
-		</button>
 		<div class="row">
 			<div class="col-md-12 mb-2 shadow-sm">
+					<button class="btn btn-outline-danger mb-2 btn-xs" id="create_opportunity" style="@if(Gate::check('isConsultant'))	display:none @endif">
+						<i class="fa fa-cart-plus"></i> Create Opportunity
+					</button>
 				<form id="opportunitiesFilterForm">
 					@csrf
 					<div class="form-row">
@@ -95,10 +93,9 @@
 				</div>
 			</div>
 		</div>
-
 		<div class="row">
 			<div class="table-responsive">
-				<table class="table table-hover dat" >
+				<table class="table table-hover tabledata" >
 					<thead>
 						<tr>
 							<th>OM</th>
@@ -132,6 +129,4 @@
 				</table>
 			</div>
 		</div>
-	</div>
-</div>
 @endSection

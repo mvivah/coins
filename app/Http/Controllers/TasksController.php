@@ -68,7 +68,7 @@ class TasksController extends Controller
             'task_status'=>'required',
         ]);
 
-        $run = TaskUser::where(['task_id'=>$data['task_id']])->update(['task_status'=>$data['task_status'],'updated_by'=>Auth::user()->id]);
+        $taskuser->update(['task_status'=>$data['task_status'],'updated_by'=>Auth::user()->id]);
         return ['Task updated successfully'];
     }
 }

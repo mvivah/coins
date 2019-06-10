@@ -20,7 +20,13 @@
                         <div class="row p-0">
                             <div class="col-md-12">
                                 <table class="table table-sm">
+                                    <?php
+                                    $scores = [];
+                                    ?>
                                     @foreach($user->assessments as $assessment)
+                                    <?php
+                                    
+                                    ?>
                                     <tr><td>{{$assessment->category}}</td><td>{{$assessment->score+0}}</td></tr>
                                     @endforeach
                                     {{-- @foreach($user->scores as $score)

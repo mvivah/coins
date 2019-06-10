@@ -16,12 +16,9 @@
                         <i class="fa fa-edit"></i> Edit
                     </button>
                     <button id="opportunity_bid_scores" data-id="{{ $opportunity->id}}" class="btn btn-outline-dark" title="Add Bid Scores">
-                        <i class="fa fa-bars"></i> Bids
+                        <i class="fa fa-bars"></i> Bidscores
                     </button>
                 @endif
-                <button id="opportunity_score" data-id="{{ $opportunity->id}}" class="btn btn-outline-primary" title="Add score">
-                    <i class="fa fa-score"></i> scores
-                </button>
                 <button id="opportunity_evaluation" data-id="{{$opportunity->id}}" class="btn btn-outline-danger {{($disabled? 'disabled':'')}}" title="Opportunity Evaluation">
                     <i class="fas fa-clock"></i> Evaluations
                 </button>

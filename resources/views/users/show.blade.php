@@ -54,12 +54,12 @@
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Start Date</th>
-                                            <th scope="col">End Date</th>
-                                            <th scope="col">Duration</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Options</th>
+                                            <th>Type</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Duration</th>
+                                            <th>Status</th>
+                                            <th>Options</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -93,24 +93,26 @@
                             </div>
                             <div class="card-body">
                                 @if($timesheets->count()>0)
-                                    <table class="table table-sm  table-hover dat2">
+                                    <table class="table table-sm tabledata">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Activity Description</th>
-                                                <th scope="col">Duration</th>
-                                                <th scope="col">Beneficiary</th>
-                                                <th scope="col">Service Line</th>
+                                                <th>Date</th>
+                                                <th>Activity Description</th>
+                                                <th>Duration</th>
+                                                <th>Beneficiary</th>
+                                                <th>Service Line</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                     <tbody>
                                         @foreach($timesheets as $timesheet)
                                         <tr>
-                                            <td><a href="#"><i class="fa fa-edit editTimesheet" id="{{$timesheet->id}}" title="Edit"></i></a>{{$timesheet->activity_date}}</td>
+                                            <td>{{$timesheet->activity_date}}</td>
                                             <td>{{$timesheet->activity_description}}</td>
                                             <td>{{$timesheet->duration}} Hours</td>
                                             <td>{{$timesheet->beneficiary}}</td>
                                             <td>{{$timesheet->serviceline->service_name}}</td>
+                                            <td><a href="#"><i class="fa fa-edit editTimesheet" id="{{$timesheet->id}}" title="Edit"></i></a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -150,6 +152,25 @@
                     </div>
                 </div>
                 <ul class="list-group mt-2">
+                    <li class="list-group-item">
+                        <h5>Tasks <span class="badge badge-light text-danger">{{$user->tasks->count()}}</span></h5>
+                    </li>
+                    @foreach($user->tasks as $task)
+                    <li class="list-group-item">
+                        @if($task->pivot->task_status !='Done' || $task->pivot->task_status !='Completed'|| $task->pivot->task_status !='Canceled')
+                        {{ str_limit($task->task_name, $limit = 30, $end = '...') }}
+                        <div class="btn-group float-right">
+                            <i class="fa fa-edit text-success edit_user_task pl-2" id="{{ $task->id}}" title="Edit Task"></i>
+                            <span class="badge badge-success">{{$task->pivot->task_status}}</span>
+                            <i class="far fa-calendar-check text-danger add_task_timesheet pl-2" id="{{$task->id}}" title="Add Timesheet"></i>
+                        </div>
+                        @else
+
+                        @endif 
+                    </li>
+                    @endforeach
+                </ul>
+                <ul class="list-group mt-2">
                     <li class="list-group-item active"><h5>Opportunities <span class="badge badge-light text-danger">{{$user->opportunities->count()}}</span></h5></li>
                     @foreach($user->opportunities as $opportunity)
                     <li class="list-group-item">
@@ -169,26 +190,6 @@
                     </li>
                     @endforeach
                     <a href="/projects" class="list-group-item"><small class="text-muted" style="float:right;">View All</small></a>
-                </ul>
-
-                <ul class="list-group mt-2">
-                    <li class="list-group-item">
-                        <h5>Tasks <span class="badge badge-light text-danger">{{$user->tasks->count()}}</span></h5>
-                    </li>
-                    @foreach($user->tasks as $task)
-                    <li class="list-group-item">
-                        @if($task->pivot->task_status !='Done' || $task->pivot->task_status !='Completed'|| $task->pivot->task_status !='Canceled')
-                        {{ str_limit($task->task_name, $limit = 30, $end = '...') }} - {{$task->pivot->task_status}}
-                        <div class="btn-group float-right">
-                            <i class="fa fa-edit text-success edit_user_task pl-2" id="{{ $task->id}}" title="Edit Task"></i>
-                            <span class="badge badge-success">{{$task->pivot->task_status}}</span>
-                            <i class="far fa-calendar-check text-danger add_task_timesheet pl-2" id="{{$task->id}}" title="Add Timesheet"></i>
-                        </div>
-                        @else
-
-                        @endif 
-                    </li>
-                    @endforeach
                 </ul>
             </div>
         </div>

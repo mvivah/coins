@@ -1388,8 +1388,8 @@
                             <label for="target_category">Category</label>
                             <select type="text" name="target_category" id="target_category" class="form-control">
                                 <option value="" disabled selected> -Select Category- </option>
-                                <option value="Technical performance- Quantitative">Technical performance- Quantitative</option>
-                                <option value="Technical Performance-Qualitative">Technical Performance-Qualitative</option>
+                                <option value="Technical Performance- Quantitative">Quantitative Performance</option>
+                                <option value="Technical Performance-Qualitative">Qualitative Performance</option>
                                 <option value="Business Development">Business Development</option>
                                 <option value="Personnel Development">Personnel Development</option>
                                 <option value="Team Development and Management">Team Development</option>

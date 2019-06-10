@@ -10,9 +10,10 @@
         <title>{{ config("app.name") }}</title>
 
         <!-- Bootstrap core CSS -->
+        <!-- Bootstrap core CSS -->
         <link href="{{ asset("css/app.css") }}" rel="stylesheet">
         <link href="{{ asset("css/dashboard.css") }}" rel="stylesheet">
-        <link href="{{ asset("css/dataTables.bootstrap4.css") }}" rel="stylesheet">
+        <link href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css" rel="stylesheet">
         <link href="{{ asset("css/fontawesome-all.min.css") }}" rel="stylesheet">
         <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" rel="stylesheet">
         <!-- Favicon -->
@@ -20,19 +21,34 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-dark fixed-top bg-secondary flex-md-nowrap p-0 shadow">
-            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/"><span data-feather="home"></span> {{ config("app.name") }}</a>
-            <ul class="navbar-nav px-3">
-                <li class="nav-item text-nowrap">
-                    <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <span data-feather="power"></span>
-                        {{ __('Logout') }}
-                    </a>
-                </li>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </ul>
+        <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light flex-md-nowrap p-0 shadow-sm">
+            <a class="navbar-brand mr-0" href="/">{{ config("app.name") }}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav px-3 ml-auto">
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ Auth::user()->name }}</a>
+                            <ul class="dropdown-menu">
+                            <a class="dropdown-item" href="/support"><i data-feather="life-buoy"></i> Support</a>
+                            <a class="dropdown-item" href="/users/{{Auth::user()->id}}"><i data-feather="info"></i> Profile</a>
+                            @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                            <a class="dropdown-item" href="/teams/{{Auth::user()->team_id}}"><i data-feather="grid"></i> My Team</a>
+                            @endif
+                            <a class="dropdown-item" href="/users"><i data-feather="users"></i>  Staff</a>
+                                <a class="dropdown-item" href="/admin"><i data-feather="settings"></i> Admin</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i data-feather="power"></i>
+                                {{ __('Logout') }}
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </nav>
         <div class="container-fluid">
         <div class="row">
@@ -106,35 +122,25 @@
                 @yield("content")
             </main>
         </div>
-            {{-- Footer Area --}}
-            <footer id="footer" class="container-fluid fixed-bottom">
-                <div class="row">
-                <div class="col-lg-12">
-                    <ul class="list-unstyled">
-                        <li class="float-lg-right"><a href="#top"><i class="fas fa-angle-up" style="font-size:3rem;"></i></a></li>
-                    </ul>
-                </div>
-                </div>
-            </footer>
         </div>
         {{-- Forms and Modals --}}
         @include("partials.modals")
         <!-- Scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="{{ asset("js/app.js") }}"></script>
-        <script src="{{ asset("js/popper.min.js") }}"></script>
-        <script src="{{ asset("js/Chart.bundle.min.js") }}"></script>
-        <script src="{{ asset("js/Chart.min.js") }}"></script>
-        <script src="{{ asset("js/jquery.dataTables.js") }}"></script>
-        <script src="{{ asset("js/dataTables.bootstrap4.js") }}"></script>
-        <script src="{{ asset("js/jquery.js") }}"></script>
-        <script src="{{ asset("js/axios.min.js") }}"></script>
-        <script src="{{ asset("js/script.js") }}"></script>
-        <script src="{{ asset("js/feather.min.js") }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.21.0/feather.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+        <script src="{{ asset("js/jquery.js") }}"></script>
+        <script src="{{ asset("js/script.js") }}"></script>
         <script>
           feather.replace()
         </script>

@@ -6,7 +6,7 @@
             <button class="btn btn-outline-danger mb-2 btn-xs" data-toggle="modal" data-target="#addContact"><i class="fas fa-contacts-cog"></i> Add contacts</button>
             @endcan
             <div class="table-responsive">
-                <table class="table table-sm table-hover tabledata">
+                <table class="table table-sm table-striped tabledata">
                     <thead>
                         <tr>
                             <th>Contact Name</th>
@@ -32,7 +32,7 @@
                             <td>
                                 <a href="/contacts/{{$contact->id}}"><i class="fa fa-eye" title="View contact"></i></a>
                                 <a href="#"><i class="fa fa-edit editContact" id="{{$contact->id}}" title="Edit contact"></i></a>
-                                <a href="#"><i class="far fa-file-alt contactOpportunity" id="{{$contact->id}}" title="Add Opportunity"></i></a>
+                                <a href="#"><i class="fas fa-cart-plus contactOpportunity text-danger" id="{{$contact->id}}" title="Add Opportunity"></i></a>
                             </td>
                             @else
                             @endif

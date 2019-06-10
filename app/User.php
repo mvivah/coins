@@ -58,9 +58,10 @@ class User extends Authenticatable
 
     public function tasks(){
 
-        return $this->belongsToMany('App\Task');
+        return $this->belongsToMany('App\Task')->where('task_status','!=','Done')->orWhere('task_status','!=','Completed');
 
     }
+    
     public function doneTasks(){
         return $this->belongsToMany('App\Task')->where('task_status','Done')->orWhere('task_status','Completed');
 

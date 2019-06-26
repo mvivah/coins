@@ -433,11 +433,11 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label>Access Role</label>
-                                <select name="role_id"  id="role_id" class="form-control">                            
+                                <label>Access Level</label>
+                                <select name="level_id"  id="level_id" class="form-control">                            
                                     <option>-- Choose --</option>
-                                    @foreach(App\Role::all() as  $role)
-                                    <option value="{{$role->id}}">{{$role->name}}</option>
+                                    @foreach(App\Level::all() as  $level)
+                                    <option value="{{$level->id}}">{{$level->name}}</option>
                                     @endforeach
                                 </select>
                             </div>

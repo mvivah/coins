@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('alternativePhone')->nullable();
             $table->unsignedBigInteger('team_id');
             $table->unsignedBigInteger('title_id');
-            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('level_id');
             $table->string('reportsTo');
             $table->string('userStatus');
             $table->rememberToken();
@@ -36,7 +36,7 @@ class CreateUsersTable extends Migration
 
             $table->foreign('team_id')->references('id')->on('teams');
             $table->foreign('title_id')->references('id')->on('titles');
-            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('level_id')->references('id')->on('levels');
             $table->timestamps();
         });
     }

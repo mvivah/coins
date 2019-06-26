@@ -36,4 +36,8 @@ $(document).ready(function(){
         $('#row'+button_id+'').remove();  
    });
 
+   //
+   $(".rotate").click(function () {
+    $(this).toggleClass("down");
+})
 });

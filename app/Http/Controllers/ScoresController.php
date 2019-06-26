@@ -52,7 +52,7 @@ class ScoresController extends Controller
             Score::insert($data); 
         }
          
-        return redirect('opportunities')->with('success', 'Bid Scores added successfully');
+        return ['Bid Scores added successfully'];
     }
     /**
      * Update the specified resource in storage.

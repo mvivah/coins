@@ -58,7 +58,7 @@
                         </div>
                                   
                         <div class="table-responsive-sm">
-                            <table class="table table-striped">
+                            <table class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
                                         <th>Deliverable</th>
@@ -125,7 +125,7 @@
                             <div class="col-md-12">
                                 <h3>Bid scores</h3>
                                 <div class="table-responsive-sm">
-                                    <table class="table table-striped">
+                                    <table class="table table-bordered table-sm">
                                         <thead>
                                             <tr>
                                                 <th>Firm Name</th>
@@ -155,7 +155,7 @@
                 <li class="list-group-item list-group-item-action">
                     Consultants
                     @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                    <a href="#" class="btn btn-xs btn-outline-primary {{($disabled? 'disabled':'')}}" id="opportunity_user" data-id="{{ $opportunity->id}}" style="float:right;" title="Assign Consultants">
+                    <a href="#" class="btn btn-sm btn-outline-primary {{($disabled? 'disabled':'')}}" id="opportunity_user" data-id="{{ $opportunity->id}}" style="float:right;" title="Assign Consultants">
                     Add
                     </a>
                     @endif
@@ -167,7 +167,7 @@
             <ol class="list-group mb-4 shadow">
                 <li class="list-group-item list-group-item-action">
                     Documents
-                    <a href="#" class="btn btn-xs btn-outline-primary {{($disabled? 'disabled':'')}}" data-name="{{ $opportunity->opportunity_name}}" data-owner="opportunity_id" data-id="{{ $opportunity->id}}" id="opportunity_document" style="float:right;" title="Add Document">
+                    <a href="#" class="btn btn-sm btn-outline-primary {{($disabled? 'disabled':'')}}" data-name="{{ $opportunity->opportunity_name}}" data-owner="opportunity_id" data-id="{{ $opportunity->id}}" id="opportunity_document" style="float:right;" title="Add Document">
                     Add
                     </a>
                 </li>
@@ -179,7 +179,7 @@
                 <li class="list-group-item list-group-item-action">
                     Derivelables
                     @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                    <a href="#" class="btn btn-xs btn-outline-primary {{($disabled? 'disabled':'')}}" data-id="{{ $opportunity->id}}" id="add_opportunity_deliverable" style="float:right;" title="Add Deliverable">
+                    <a href="#" class="btn btn-sm btn-outline-primary {{($disabled? 'disabled':'')}}" data-id="{{ $opportunity->id}}" id="add_opportunity_deliverable" style="float:right;" title="Add Deliverable">
                         Add
                     </a>
                     @endif
@@ -195,7 +195,7 @@
                                 <i class="fa fa-times text-danger delete_opportunity_deliverable pl-2" id="{{ $deliverable->id}}" data-token="{{ csrf_token() }}" data-source="Opportunity" title="Delete Deliverable"></i>
                             @endif
                             <a href="#item-{{$deliverable->id}}" data-toggle="collapse">
-                                <i class="fa fa-chevron-right text-dark pl-3" title="View Tasks"></i>
+                                <i class="fa fa-chevron-right text-dark pl-3 rotate" title="View Tasks"></i>
                             </a>
                         </div>
                     @else

@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Role;
-class RolesTableSeeder extends Seeder
+use App\Level;
+class LevelsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,14 +11,14 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        $roles = [
+        $levels = [
             ['id' => 1,'name' =>'Admin', 'created_by' => 'fdf3cda0-13f0-11e9-9a86-ab5a0fb32b10',],
             ['id' => 2,'name' =>'Director', 'created_by' => 'fdf3cda0-13f0-11e9-9a86-ab5a0fb32b10'],
             ['id' => 3,'name' =>'Consultant', 'created_by' => 'fdf3cda0-13f0-11e9-9a86-ab5a0fb32b10'],
             ['id' => 4,'name' =>'Project Manager', 'created_by' => 'fdf3cda0-13f0-11e9-9a86-ab5a0fb32b10',],
         ];
-        foreach($roles as $role){
-            Role::create($role);
+        foreach($levels as $level){
+            Level::create($level);
         }
     }
 }

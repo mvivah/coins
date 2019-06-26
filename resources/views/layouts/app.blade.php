@@ -21,7 +21,7 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light flex-md-nowrap p-0 shadow-sm">
+        <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark flex-md-nowrap p-0 shadow-sm">
             <a class="navbar-brand mr-0" href="/">{{ config("app.name") }}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -29,15 +29,53 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav px-3 ml-auto">
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ Auth::user()->name }}</a>
+                        <a class="nav-link dropdown-toggle" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-fw fa-bell"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="alertsDropdown">
+                            <h6 class="dropdown-header">New Alerts:</h6>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                  <span class="text-success">
+                                    <strong>
+                                      <i class="fa fa-long-arrow-up fa-fw"></i>Status Update</strong>
+                                  </span>
+                                  <span class="small float-right text-muted">11:21 AM</span>
+                                  <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                <span class="text-danger">
+                                    <strong><i class="fa fa-long-arrow-down fa-fw"></i>Status Update</strong>
+                                </span>
+                                <span class="small float-right text-muted">11:21 AM</span>
+                                  <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">
+                                  <span class="text-success">
+                                    <strong>
+                                      <i class="fa fa-long-arrow-up fa-fw"></i>Status Update</strong>
+                                  </span>
+                                  <span class="small float-right text-muted">11:21 AM</span>
+                                  <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
+                                </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item small" href="#">View all alerts</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fas fa-user-circle"></i> {{ Auth::user()->name }}</a>
                             <ul class="dropdown-menu">
-                            <a class="dropdown-item" href="/support"><i data-feather="life-buoy"></i> Support</a>
                             <a class="dropdown-item" href="/users/{{Auth::user()->id}}"><i data-feather="info"></i> Profile</a>
-                            @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-                            <a class="dropdown-item" href="/teams/{{Auth::user()->team_id}}"><i data-feather="grid"></i> My Team</a>
-                            @endif
                             <a class="dropdown-item" href="/users"><i data-feather="users"></i>  Staff</a>
-                                <a class="dropdown-item" href="/admin"><i data-feather="settings"></i> Admin</a>
+                            @if(Gate::check('isAdmin') || Gate::check('isDirector'))
+                                <a class="dropdown-item" href="/teams/{{Auth::user()->team_id}}"><i data-feather="grid"></i> Team</a>
+                            @endif
+                            @if(Gate::check('isAdmin'))
+                            <a class="dropdown-item" href="/admin"><i data-feather="settings"></i> Admin</a>
+                            @endif
+                            <a class="dropdown-item" href="/help"><i data-feather="life-buoy"></i> Help</a>
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i data-feather="power"></i>
                                 {{ __('Logout') }}
@@ -109,7 +147,7 @@
             </div>
             </nav>
 
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-2 mt-2">
+            <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-2 mt-2">
                 {{-- Notifications Area --}}
                 <div class="row">
                     <div class="col-md-6 offset-md-9 mb-0">

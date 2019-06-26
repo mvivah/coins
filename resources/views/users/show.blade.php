@@ -37,7 +37,7 @@
                                 @foreach($timesummary as $task)
                                     <tr><td>{{$task->beneficiary}}</td><td><b>{{$task->duration}}</b></td></tr>
                                 @endforeach
-                                <tr><td><b>Total Worked</b></td><td><b>{{$worked}} Hours</b></td></tr>
+                                <tr><td><b>Hours Worked</b></td><td><b>{{$worked}}</b></td></tr>
                             </table>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                             <div class="col-sm-4 mx-auto">
                                 <i class="fas fa-6x fa-user-tie"></i>
                                 <br />
-                                <button id="editUser" data-id="{{$user->id}}" class="btn btn-outline-danger btn-block mt-3 btn-xs" title="Edit Profile" style="@if(Gate::check('isConsultant'))display:none @endif"><i class="fa fa-edit"></i> Edit</button>
+                                <button id="editUser" data-id="{{$user->id}}" class="btn btn-outline-danger btn-block mt-3 btn-sm" title="Edit Profile" style="@if(Gate::check('isConsultant'))display:none @endif"><i class="fa fa-edit"></i> Edit</button>
                             </div>
                             <div class="col-sm-8">
                                 <h5>{{$user->name}}</h5>

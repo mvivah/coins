@@ -37,7 +37,7 @@
                         </div>
                         <div class="row p-0">
                             <div class="col-sm-4 mx-auto">
-                                <a href="/users/{{$user->id}}" class="btn btn-primary btn-xs">Details</a>
+                                <a href="/users/{{$user->id}}" class="btn btn-primary btn-sm">Details</a>
                             </div>
                         </div>
                     </div>

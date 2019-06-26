@@ -3,7 +3,7 @@
 @extends('layouts.app')
     @section('content')
         @if(Gate::check('isAdmin') || Gate::check('isDirector'))
-		    <a href="#" class="btn btn-outline-danger mb-2 btn-xs" data-toggle="modal" data-target="#addUser"><i class="fas fa-user-plus"></i> Add User</a>
+		    <a href="#" class="btn btn-outline-danger mb-2 btn-sm" data-toggle="modal" data-target="#addUser"><i class="fas fa-user-plus"></i> Add User</a>
 	    @endif
         <table class="table table-sm table-striped tabledata">
             <thead>

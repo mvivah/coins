@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="form-row mt-2">
-                    <button type="button" id="projectFilter-btn"  class="btn btn-primary btn-xs mx-auto">Search <i class="fa fa-search"></i></button>
+                    <button type="button" id="projectFilter-btn"  class="btn btn-primary btn-sm mx-auto">Search <i class="fa fa-search"></i></button>
                 </div>
             </form>
         </div>

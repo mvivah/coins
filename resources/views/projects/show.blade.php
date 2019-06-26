@@ -153,11 +153,11 @@
                                             <td>{{ $associate->associate_name }}</td>
                                             <td>
                                                 @if( $associate->pivot->availability != 1 )
-                                                <button id="{{$associate->id}}" class="btn btn-outline-danger btn-xs {{($disabled? 'disabled':'')}}" title="Checkin">
+                                                <button id="{{$associate->id}}" class="btn btn-outline-danger btn-sm {{($disabled? 'disabled':'')}}" title="Checkin">
                                                     Off
                                                 </button>
                                                 @else
-                                                <button id="{{$associate->id}}" class="btn btn-outline-success btn-xs {{($disabled? 'disabled':'')}}" title="Checkout">
+                                                <button id="{{$associate->id}}" class="btn btn-outline-success btn-sm {{($disabled? 'disabled':'')}}" title="Checkout">
                                                     On
                                                 </button>
                                                 @endif
@@ -170,11 +170,11 @@
                                         <td>{{ $user->name }}</td>
                                         <td>
                                             @if( $user->pivot->availability != 1 )
-                                            <button id="{{$user->id}}" class="btn btn-outline-danger btn-xs {{($disabled? 'disabled':'')}}" title="Checkin">
+                                            <button id="{{$user->id}}" class="btn btn-outline-danger btn-sm {{($disabled? 'disabled':'')}}" title="Checkin">
                                                 Off
                                             </button>
                                             @else
-                                            <button id="{{$user->id}}" class="btn btn-outline-success btn-xs {{($disabled? 'disabled':'')}}" title="Checkout">
+                                            <button id="{{$user->id}}" class="btn btn-outline-success btn-sm {{($disabled? 'disabled':'')}}" title="Checkout">
                                                 On
                                             </button>
                                             @endif
@@ -194,7 +194,7 @@
         <ol class="list-group mb-4 shadow">
             <li class="list-group-item list-group-item-action">
             Consultants <span class="badge badge-danger">{{ $project->users->count() }}</span>
-            <a href="#"  class="btn btn-xs btn-outline-primary" data-id="{{ $project->id}}" id="user-project" style="float:right;" title="Assign Consultants">
+            <a href="#"  class="btn btn-sm btn-outline-primary" data-id="{{ $project->id}}" id="user-project" style="float:right;" title="Assign Consultants">
             Add
             </a>
             </li>
@@ -202,18 +202,18 @@
                 <li class="list-group-item list-group-item-action responsible_users" id="{{ $user->id }}">{{ $user->name }}
                     <div class="btn-group" style="float:right">
                         @if( $user->pivot->availability != 1 )
-                        <button id="{{$user->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
+                        <button id="{{$user->id}}" class="btn btn-outline-danger btn-sm staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
                             Off
                         </button>
                         @else
-                        <button id="{{$user->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
+                        <button id="{{$user->id}}" class="btn btn-outline-success btn-sm staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
                             On
                         </button>
                         @endif
-                        <button class="btn btn-outline-dark btn-xs user_logs" id="{{$user->id}}" title="Print Logs">
+                        <button class="btn btn-outline-dark btn-sm user_logs" id="{{$user->id}}" title="Print Logs">
                             <i class="fas fa-print"></i>
                         </button>
-                        <button class="btn btn-xs btn-outline-danger project_staffdel" data-token="{{ csrf_token() }}" id="{{ $user->id }}">
+                        <button class="btn btn-sm btn-outline-danger project_staffdel" data-token="{{ csrf_token() }}" id="{{ $user->id }}">
                             <i  class="fa fa-times text-danger" style="float:right"></i>
                         </button>
                     </div>
@@ -223,7 +223,7 @@
         <ol class="list-group mb-4 shadow">
             <li class="list-group-item list-group-item-action">
                 Associates <span class="badge badge-danger">{{ $project->associates->count() }}</span>
-                <button class="btn btn-xs btn-outline-secondary" id="assignAssociate" data-id="{{ $project->id}}"  style="float:right;">
+                <button class="btn btn-sm btn-outline-secondary" id="assignAssociate" data-id="{{ $project->id}}"  style="float:right;">
                     Add
                 </button>
             </li>
@@ -231,18 +231,18 @@
                 <li class="list-group-item list-group-item-action">{{ $associate->associate_name }}
                     <div class="btn-group" style="float:right">
                         @if( $associate->pivot->availability != 1 )
-                        <button id="{{$associate->id}}" class="btn btn-outline-danger btn-xs staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
+                        <button id="{{$associate->id}}" class="btn btn-outline-danger btn-sm staffCheckins {{($disabled? 'disabled':'')}}" title="Checkin">
                             Off
                         </button>
                         @else
-                        <button id="{{$associate->id}}" class="btn btn-outline-success btn-xs staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
+                        <button id="{{$associate->id}}" class="btn btn-outline-success btn-sm staffCheckouts{{($disabled? 'disabled':'')}}" title="Checkout">
                             On
                         </button>
                         @endif
-                        <button class="btn btn-outline-dark btn-xs associate_logs" id="{{$associate->id}}" title="Print Logs">
+                        <button class="btn btn-outline-dark btn-sm associate_logs" id="{{$associate->id}}" title="Print Logs">
                             <i class="fas fa-print"></i>
                         </button>
-                        <button class="btn btn-xs btn-outline-danger removeAssociate" data-token="{{ csrf_token() }}" id="{{ $associate->id }}">
+                        <button class="btn btn-sm btn-outline-danger removeAssociate" data-token="{{ csrf_token() }}" id="{{ $associate->id }}">
                             <i  class="fa fa-times text-danger" style="float:right"></i>
                         </button>                
                     </div>
@@ -252,7 +252,7 @@
         <ol class="list-group mb-4 shadow">
             <li class="list-group-item list-group-item-action">
                 Deliverables <span class="badge badge-danger">{{ $project->deliverables->count() }}</span>
-                <button  class="btn btn-xs btn-outline-secondary" id="add_project_deliverable" data-id="{{$project->id}}" title="Add Deliverables" style="float:right;">
+                <button  class="btn btn-sm btn-outline-secondary" id="add_project_deliverable" data-id="{{$project->id}}" title="Add Deliverables" style="float:right;">
                 Add
                 </button>
             </li>
@@ -276,8 +276,8 @@
                         <div class="badge badge-success float-right">Done</div>
                     @else
                     <div class="btn-group float-right">
-                        <i class="fa fa-edit text-success editTask pl-2" id="{{ $deliverable->id}}" title="Edit Task"></i> 
-                        <i class="fa fa-times text-danger task_delete pl-2" id="{{ $deliverable->id}}" id="{{ $task->id }}" data-token="{{ csrf_token() }}" data-target="Task" title="Delete Task"></i>
+                        <i class="fa fa-edit text-success edit_project_task pl-2" id="{{ $deliverable->id}}" title="Edit Task"></i> 
+                        <i class="fa fa-times text-danger task_project_delete pl-2" id="{{ $deliverable->id}}" id="{{ $task->id }}" data-token="{{ csrf_token() }}" data-target="Task" title="Delete Task"></i>
                     </div>
                     @endif
                 </li>
@@ -288,7 +288,7 @@
         <ol class="list-group mb-4 shadow">
             <li class="list-group-item list-group-item-action">
                 Documents <span class="badge badge-danger">{{ $project->documents->count() }}</span>
-                <button  class="btn btn-xs btn-outline-primary " data-name="{{ $project->opportunity->opportunity_name}}" data-owner="project_id" data-id="{{ $project->id}}" id="project_document" style="float:right;">
+                <button  class="btn btn-sm btn-outline-primary " data-name="{{ $project->opportunity->opportunity_name}}" data-owner="project_id" data-id="{{ $project->id}}" id="project_document" style="float:right;">
                 Add
                 </button>
             </li>

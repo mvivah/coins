@@ -2,7 +2,7 @@
 	@section('content')
 		<div class="row">
 			<div class="col-md-12 mb-2 shadow-sm">
-					<button class="btn btn-outline-danger mb-2 btn-xs" id="create_opportunity" style="@if(Gate::check('isConsultant'))	display:none @endif">
+					<button class="btn btn-outline-danger mb-2 btn-sm" id="create_opportunity" style="@if(Gate::check('isConsultant'))	display:none @endif">
 						<i class="fa fa-cart-plus"></i> Create Opportunity
 					</button>
 				<form id="opportunitiesFilterForm">

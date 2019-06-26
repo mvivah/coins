@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     @can('isAdmin')
-    <button class="btn btn-outline-danger m-2 btn-xs" data-toggle="modal" data-target="#addAssociate"><i class="fas fa-user-graduate"></i> Add Associates</button>
+    <button class="btn btn-outline-danger m-2 btn-sm" data-toggle="modal" data-target="#addAssociate"><i class="fas fa-user-graduate"></i> Add Associates</button>
     @endcan
     <div class="table-responsive">
         <table class="table table-sm table-hover dat">

@@ -220,6 +220,8 @@ try{
         saveTask(['task_name','task_deadline','task_status','taskStaff']);
     });
 
+    //Edit Opportunity Tasks
+
     //Add Opportunity Deliverable
     document.getElementById('add_opportunity_deliverable').addEventListener('click', e =>{
         e.preventDefault();

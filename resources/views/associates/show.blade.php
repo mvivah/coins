@@ -34,7 +34,7 @@
                         <div class="col-sm-4 mx-auto">
                             <i class="fas fa-6x fa-user-tie"></i>
                             <br />
-                            <button id="editAssociate" data-id="{{$associate->id}}" class="btn btn-xs btn-outline-danger btn-block mt-3" title="Edit Profile" style="@if(Gate::check('isConsultant'))display:none @endif"><i class="fa fa-edit"></i> Edit</button>
+                            <button id="editAssociate" data-id="{{$associate->id}}" class="btn btn-sm btn-outline-danger btn-block mt-3" title="Edit Profile" style="@if(Gate::check('isConsultant'))display:none @endif"><i class="fa fa-edit"></i> Edit</button>
                         </div>
                         <div class="col-sm-8">
                             <h5>{{$associate->name}}</h5>

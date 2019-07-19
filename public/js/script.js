@@ -1,7 +1,6 @@
 const THISDAY = new Date();
 const THISMONTH = THISDAY.getMonth();
 const THISYEAR = THISDAY.getFullYear();
-
 const GET_DAY_NAME = (dt)=>{
     const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return DAYS[dt.getDay()];
@@ -13,7 +12,7 @@ const GET_MONTH_NAME = (dt)=>{
 };
 
 let FIELD_IDS = [];
-let ERROR_COUNT = 0
+let ERROR_COUNT = 0;
 let station;
 
 //Contacts
@@ -21,12 +20,13 @@ try{
     document.getElementById('contactsForm').addEventListener('submit', function(e){
         e.preventDefault();
         const CONTACT_INDEX = document.getElementById('contact_id');
-        const CONTACT_ID = (CONTACT_INDEX == null)? null:CONTACT_INDEX.value;
+        const CONTACT_ID = (CONTACT_INDEX === null)? null:CONTACT_INDEX.value;
         FIELD_IDS = ['account_name','contact_country','full_address','contact_person','contact_email','contact_phone'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( CONTACT_ID !== null ){
+                console.log(`The contact id ${CONTACT_ID}`);
                 axios.post(`/contacts/${CONTACT_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -57,7 +57,7 @@ try{
         element.addEventListener('click', e =>{
             axios.get(`/contacts/${e.target.id}/edit`)
             .then( response => {
-                data = response.data
+                data = response.data;
                 document.getElementById('account_name').value = data.account_name;
                 document.getElementById('contact_country').value = data.country;
                 document.getElementById('full_address').value = data.full_address;
@@ -80,8 +80,8 @@ try{
         element.addEventListener('click', e =>{
             axios.get(`/contacts/${e.target.id}/edit`)
             .then( response =>{
-                data = response.data
-                if(data.length != 0){
+                data = response.data;
+                if(data.length !== 0){
                     document.getElementById('thisContact').value = data.account_name;
                     document.getElementById('thisContact').setAttribute('readonly','readonly');
                     document.getElementById('country').value = data.country;
@@ -90,12 +90,12 @@ try{
                     $('#add_opportunity').modal('show');
                 }else{
                     showAlert('error',`No contacts found...`);
-                    location.reload()
+                    location.reload();
                 }
             })
             .catch( e =>{
-                console.error(e)
-            })
+                console.error(e);
+            });
         });
     });
 }
@@ -108,13 +108,13 @@ try{
     document.getElementById('opportunityForm').addEventListener('submit', function(e){
         e.preventDefault();
         const OPPORTUNITY_INDEX = document.getElementById('opportunity_id');
-        const OPPORTUNITY_ID = (OPPORTUNITY_INDEX == null)? null:OPPORTUNITY_INDEX.value;
+        const OPPORTUNITY_ID = (OPPORTUNITY_INDEX === null)? null:OPPORTUNITY_INDEX.value;
         FIELD_IDS = ['opportunity_name','the_contact_id','country','funder','type','revenue','lead_source','sales_stage','external_deadline','internal_deadline','probability'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
 
             let formData = new FormData(this);
-            if( OPPORTUNITY_ID !=null ){
+            if( OPPORTUNITY_ID !== null ){
                 axios.post(`/opportunities/${OPPORTUNITY_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -136,17 +136,17 @@ try{
                 })
                 .catch(err=>{
                     console.error(err);
-                })
+                });
             }
         }
     });
 
     //Edit Opportunity
 
-    document.getElementById('editOpportunity').addEventListener('click', e =>{;
+    document.getElementById('editOpportunity').addEventListener('click', e =>{
         axios.get(`/opportunities/${e.target.dataset.id}/edit`)
         .then( response=>{
-            data = response.data
+            data = response.data;
             document.getElementById('opportunity_name').value = data.opportunity_name;
             document.getElementById('the_contact_id').value = data.contact_id;
             document.getElementById('thisContact').value = data[0];
@@ -181,7 +181,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( SCORE_ID !=null ){
+            if( SCORE_ID != null ){
                 axios.post(`/scores/${SCORE_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -646,7 +646,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( ASSOCIATE_ID !=null ){
+            if( ASSOCIATE_ID != null ){
                 axios.post(`/associates/${ASSOCIATE_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -975,96 +975,6 @@ try{
                 })
                 .catch( error => backendValidation(error.response.data.errors) );
             }
-
-            // let leaveStart = document.getElementById('leaveStart').value;
-            // console.log(leaveStart)
-            // let start = new Date(leaveStart);
-            // let startTime= start.getTime();//Returns the number of milliseconds since midnight Jan 1 1970, and a specified date
-            // let firstDate = start.getDate();//Returns the day of the month (from 1-31)
-            // let startMonth = GET_MONTH_NAME(start);//Returns the name of the month (from January-December)
-        
-            // //End date
-            // let leaveStop = document.getElementById('leaveStop').value;
-            // let stop = new Date(leaveStop);
-            // let stopTime = stop.getTime();
-                
-            // //Calculating the leave duration excluding weekends
-            // let diffDays = Math.round(Math.abs((stopTime - startTime)/(ONEDAY)));
-            // console.log(diffDays)
-            // let lists = [];
-            // let listbooked = [];
-
-            // //loop through the selected days to make an array of days(names)
-            // for(let i=0; i<=diffDays; i++){
-            //     let currentDate = firstDate++;
-            //     let nextName = GET_DAY_NAME(new Date(`${currentDate}/${startMonth}/${THISYEAR}`));
-            //     let bookedDates = `${THISYEAR}-${startMonth}-${currentDate}`;
-            //     //Make an array of booked days(Names)
-            //     lists.push(nextName);
-            //     //Make an array of booked dates
-            //     listbooked.push(bookedDates);
-            // }
-
-            // let max = diffDays+1;
-            // if(lists.length == max){
-
-            //     //The function to determine the occurance of weekends from the booked days
-            //     let getOccurrence = (array, value) =>{
-            //         let count = 0;
-            //         array.forEach((v) => (v === value && count++));
-            //         return count;
-            //     }
-
-            //     //Skipping saturdays and sundays
-            //     let noSunday = getOccurrence(lists, 'Sunday');
-            //     let noSaturday = getOccurrence(lists, 'Saturday');
-            //     let except  = noSunday + noSaturday;
-            //     booked_days = max - except;
-
-            // }
-
-            // if(PUBLIC_HOLIDAYS.length == data.length){
-            //     let booked = parseInt(sessionStorage.getItem('booked'));
-            //     let matched = [];
-            //     listbooked.forEach((date1)=>PUBLIC_HOLIDAYS.forEach((date2)=>{
-            //         if( date1 === date2 ){
-            //             matched.push(date1);
-            //         }
-            //     }));
-            //     let matchingDays = matched.length;
-            //     let actualLeave = booked - matchingDays;
-            //     // Save the duration in session storage
-            //     sessionStorage.setItem('actual',actualLeave);
-            // }
-
-            // axios.get('/leavesettings')
-            // .then( response => {
-            //     data = response.data
-            //     let leave_types = [];
-            //     leave_types.push(data.id)
-            //     let leave_type = document.getElementById('leavesetting_id').value;
-            //     let leaveDuration  = sessionStorage.getItem('actual');
-            //     let leaveBookable = data.bookable_days;
-            //     leave_type.forEach(() =>{
-            //         if(leaveDuration>leaveBookable){
-            //             return false;
-            //         }
-            //     });
-            // })
-            // .catch( error => backendValidation(error.response.data.errors) );
-
-            // axios.get('/leaveforwards')
-            // .then( response => console.log(response.data) )
-            // .catch( error => backendValidation(error.response.data.errors) );
-
-            // let formData = new FormData();
-            // formData.append('leavesetting_id',document.getElementById('leavesetting_id').value)
-            // formData.append('start_date', document.querySelector('input[name=leaveStart]').value)
-            // formData.append('end_date',document.querySelector('input[name=leaveStop]').value)
-            // formData.append('leave_detail', document.getElementById('leave_detail').value)
-            // formData.append('duration', sessionStorage.getItem('actual'))
-            // formData.append('leave_status', document.querySelector('input[name=leave_status]').value)           
-        }else{
         }
     });
 
@@ -1141,7 +1051,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( LEAVESETTING_ID !=null ){
+            if( LEAVESETTING_ID != null ){
                 axios.post(`/leavesettings/${LEAVESETTING_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1200,7 +1110,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( SERVICELINE_ID !=null ){
+            if( SERVICELINE_ID != null ){
                 axios.post(`/servicelines/${SERVICELINE_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1266,7 +1176,7 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             
-            if( HOLIDAY_ID !=null ){
+            if( HOLIDAY_ID != null ){
                 axios.post(`/holidays/${HOLIDAY_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1317,7 +1227,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( title_ID !=null ){
+            if( title_ID != null ){
                 axios.post(`/titles/${title_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1369,7 +1279,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( TEAM_ID !=null ){
+            if( TEAM_ID != null ){
                 axios.post(`/teams/${TEAM_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1424,7 +1334,7 @@ try{
 
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( EXPERTISE_ID !=null ){
+            if( EXPERTISE_ID != null ){
                 axios.post(`/expertise/${EXPERTISE_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1492,7 +1402,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( SPECIALIZATION_ID !=null ){
+            if( SPECIALIZATION_ID != null ){
                 axios.post(`/specialization/${SPECIALIZATION_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1540,7 +1450,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
-            if( TARGET_ID !=null ){
+            if( TARGET_ID != null ){
                 axios.post(`/targets/${TARGET_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1594,7 +1504,7 @@ try{
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(document.getElementById('forwardedLeaveForm'));
-            if( LEAVEFORWAD_ID !=null ){
+            if( LEAVEFORWAD_ID != null ){
                 axios.post(`/leaveforwards/${LEAVEFORWAD_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -1668,7 +1578,7 @@ try{
         e.preventDefault();
         const USER_INDEX = document.getElementById('user_id');
         const USER_ID = (USER_INDEX == null)? null:USER_INDEX.value;
-        FIELD_IDS = USER_INDEX==null? ['saffId','name','gender','email','password','password-confirm','mobilePhone','alternativePhone','user_team_id','the_title_id','role_id','reportsTo','userStatus']:['saffId','name','gender','email','mobilePhone','alternativePhone','user_team_id','the_title_id','role_id','reportsTo','userStatus'];
+        FIELD_IDS = USER_INDEX== null? ['saffId','name','gender','email','password','password-confirm','mobilePhone','alternativePhone','user_team_id','the_title_id','role_id','reportsTo','userStatus']:['saffId','name','gender','email','mobilePhone','alternativePhone','user_team_id','the_title_id','role_id','reportsTo','userStatus'];
         let validateForm = UIValidate(FIELD_IDS,ERROR_COUNT);
         if( validateForm === 0 ){
             let formData = new FormData(this);
@@ -1745,7 +1655,7 @@ catch(e){
 
 }
 
-let exportExcel = (tableId, filename=NULL)=>{
+let exportExcel = (tableId, filename= null)=>{
     let downloadLink;
     let dataType = 'application/vnd.ms-excel';
     let tableSelect = document.getElementById(tableId);
@@ -2162,7 +2072,7 @@ let storeDeliverable = (FIELD_IDS) =>{
         }
     }
     else{
-        if( the_opportunity_id!=null ){
+        if( the_opportunity_id!= null ){
             axios.post(`/deliverableopportunities/${DELIVERABLE_ID}`,formData,{
                 method: 'PUT'
             })

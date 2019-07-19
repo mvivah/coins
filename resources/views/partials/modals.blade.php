@@ -1151,7 +1151,7 @@
                         </div>
                         <div class="col-md-8"> 
                             <label for="document">Attach File: </label>
-                            <input type="file" class="form-control {{ $errors->has('document') ? ' is-invalid' : '' }}" name="document"  id="document" required>
+                            <input type="file" class="form-control-file {{ $errors->has('document') ? ' is-invalid' : '' }}" name="document"  id="document" required>
                         </div>
                     </div>
                     <div class="form-row">

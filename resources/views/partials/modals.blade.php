@@ -735,7 +735,7 @@
             </div>
             <div class="form-row" id="staff_assignment">
                 <div class="col-md-6">
-                    <label>Assigned Consultants</label>
+                    <label>Available Consultants</label>
                     <select id="taskStaff" name="user_id[]" class="form-control" multiple>
                     </select>
                 </div>
@@ -866,6 +866,9 @@
                             <label>Request Details</label>
                             <textarea type="text" name="leave_detail" id="leave_detail" class="form-control"></textarea>
                         </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12" id="leave_msg"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

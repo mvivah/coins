@@ -94,6 +94,7 @@
 			</div>
 		</div>
 		<div class="row">
+            <div class="col-md-12">
 			<div class="table-responsive">
 				<table class="table table-hover tabledata" >
 					<thead>
@@ -128,5 +129,6 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
+        </div>
+    </div>
 @endSection

@@ -60,7 +60,7 @@ class LeavesController extends Controller
             break;
             case 'Compassionate':
                 if( $duration > $bookable){
-                    $msg .='allows only '.$bookable.' days';
+                    $msg .='allows only up to'.$bookable.' days';
                 }else{
                     $msg .='Passed';
                 }

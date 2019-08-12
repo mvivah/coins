@@ -26,7 +26,6 @@ try{
         if( validateForm === 0 ){
             let formData = new FormData(this);
             if( CONTACT_ID !== null ){
-                console.log(`The contact id ${CONTACT_ID}`);
                 axios.post(`/contacts/${CONTACT_ID}`,formData,{
                     method: 'PUT'
                 })
@@ -967,11 +966,13 @@ try{
                 axios.post('/leaves',formData)
                 .then( response =>{
                     data = response.data
-                    console.log(data)
-                    $('#leaveForm')[0].reset();
-                    $('#addleave').modal('hide');
+                    document.getElementById('')
+                    `<p class="text-danger">${data}</p>`
+                    // $('#leaveForm')[0].reset();
+                    // $('#addleave').modal('hide');
                     // showAlert('success',data);
                     // location.reload()
+
                 })
                 .catch( error => backendValidation(error.response.data.errors) );
             }

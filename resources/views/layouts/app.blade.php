@@ -22,7 +22,7 @@
 
     <body>
         <nav class="navbar navbar-light bg-light navbar-expand-lg fixed-top flex-md-nowrap p-0 shadow-sm">
-            <a class="navbar-brand mr-0" href="/">{{ config("app.name") }}</a>
+            <a class="navbar-brand mr-0" href="/"><img src="{{ asset("/files/ahlogo.png") }}" alt="logo" class="mx-3"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

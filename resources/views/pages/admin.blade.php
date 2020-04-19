@@ -1,5 +1,54 @@
 @extends('layouts.app')
     @section('content')
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Reports</h3>
+                <div class="tabbable-panel">
+                    <div class="tabbable-line">
+                        <ul class="nav nav-tabs ">
+                            <li class="active">
+                                <a href="#tab_default_1" data-toggle="tab">Company or Individual </a>
+                            </li>
+                            <li>
+                                <a href="#tab_default_2" data-toggle="tab">Report title & Category </a>
+                            </li>
+                            <li>
+                                <a href="#tab_default_3" data-toggle="tab">Your Reports </a>
+                            </li>
+                            <li>
+                                <a href="#tab_default_4" data-toggle="tab">Documents </a>
+                            </li>
+                            <li>
+                                <a href="#tab_default_5" data-toggle="tab">T&C </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_default_1">
+                                <p>Tab 1.</p>
+                                <p>lorem</p>
+                                </div>
+                            <div class="tab-pane" id="tab_default_2">
+                                <p>Tab 2.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            </div>
+                            <div class="tab-pane" id="tab_default_3">
+                                <p>Tab 3.</p>
+                                <p>Consectetur deleniti quisquam natus eius commodi.</p>
+                            </div>
+                            <div class="tab-pane" id="tab_default_4">
+                                <p>Tab 4.</p>
+                                <p>Consectetur deleniti quisquam natus eius commodi.</p>
+                            </div>
+                            <div class="tab-pane" id="tab_default_5">
+                                <p>Tab 5.</p>
+                                <p>Consectetur deleniti quisquam natus eius commodi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="row">
             <div class="col-md-6">
                 <div class="card mb-4 shadow">
@@ -94,7 +143,7 @@
                                 </table>
                             </div>
                         @endif
-                    </div>  
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,7 +161,7 @@
                                         <th>Beneficiary</th>
                                         <th>Service Line</th>
                                         <th></th>
-                                    </thead>                   
+                                    </thead>
                                     <tbody>
                                             @foreach($servicelines as $serviceline)
                                         <tr>
@@ -124,7 +173,7 @@
                                             </td>
                                         </tr>
                                         @endforeach
-                                    </tbody>                                 
+                                    </tbody>
                                 </table>
                             </div>
                             @endif
@@ -144,7 +193,7 @@
                                         <th>Type</th>
                                         <th>Deliverable Name</th>
                                         <th></th>
-                                    </thead>                   
+                                    </thead>
                                     <tbody>
                                             @foreach($deliverables as $deliverable)
                                         <tr>
@@ -156,7 +205,7 @@
                                             </td>
                                         </tr>
                                         @endforeach
-                                    </tbody>                                 
+                                    </tbody>
                                 </table>
                             </div>
                         @endif
@@ -247,7 +296,7 @@
                                 @endif
                             </table>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -281,7 +330,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-md-12">
                 <a href="#"><i class="fas fa-plus-circle text-primary mb-2" style="float:right; size:3x;" aria-hidden="true"  data-toggle="modal" data-target="#addExpertise" title="Add Expertise"></i></a>
@@ -306,13 +355,13 @@
                                                 @if($expertise->specializations->count()<1)
                                                 <p>No records found...</p>
                                                 @else
-                                                @foreach($expertise->specializations as $specialization)               
+                                                @foreach($expertise->specializations as $specialization)
                                                     <li class="list-group-item btn-sm">{{ $specialization->specialization}}
                                                         <div class="btn-group" style="float:right">
                                                         <a href="#"><i class="fa fa-edit editSpecialization" id="{{$specialization->id}}"></i></a>
                                                         <a href="#"><i class="fa fa-trash-alt text-danger delSpecialization" id="{{$specialization->id}}"></i></a>
                                                         </div>
-                                                    </li>         
+                                                    </li>
                                                 @endforeach
                                                 @endif
                                             </div>

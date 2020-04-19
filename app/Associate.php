@@ -26,7 +26,9 @@ class Associate extends Model
     }
 
     public function documents(){
-        return $this->hasMany('App\Document');
+
+      return $this->hasMany('App\Document');
+
     }
     
     public function comments(){
